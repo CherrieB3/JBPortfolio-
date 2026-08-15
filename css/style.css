@@ -1,0 +1,653 @@
+/* =========================================================
+   Jasmine Bontha — Portfolio design system
+   Space/comet motif. See CLAUDE.md for the rationale.
+   ========================================================= */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* space + surfaces */
+  --bg: #050314;
+  --bg-soft: #0b0821;
+  --panel: rgba(255, 255, 255, .05);
+  --panel-border: rgba(255, 255, 255, .1);
+  --paper: #fdfdfb;
+  --ink: #100c26;
+
+  /* text on dark */
+  --text: #ffffff;
+  --text-dim: #d3d4e6;
+  --text-mute: #9d9fc0;
+
+  /* vivid rainbow — decorative use on dark surfaces / non-text */
+  --c-red: #ff4b3e;
+  --c-orange: #ff9f1c;
+  --c-yellow: #ffd93d;
+  --c-green: #4ade80;
+  --c-blue: #4d5bff;
+  --c-purple: #a78bfa;
+  --c-pink: #ff3fd8;
+
+  /* deep rainbow — AA-safe for text on light (nav) surfaces */
+  --d-red: #c62828;
+  --d-orange: #b24b00;
+  --d-gold: #8a6d00;
+  --d-green: #1e7a46;
+  --d-blue: #2a3fcc;
+  --d-purple: #6b3fa0;
+
+  --gradient-rainbow: linear-gradient(90deg, var(--c-red), var(--c-orange), var(--c-yellow), var(--c-green), var(--c-blue), var(--c-purple));
+  --gradient-cta: linear-gradient(90deg, var(--c-pink), var(--c-blue));
+
+  --radius-lg: 30px;
+  --radius-md: 20px;
+  --radius-sm: 12px;
+  --nav-h: 76px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 63, 216, .14), transparent 30%),
+    radial-gradient(circle at 80% 30%, rgba(77, 91, 255, .14), transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(74, 222, 128, .10), transparent 30%);
+  z-index: -2;
+  pointer-events: none;
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.stars .star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: star-twinkle var(--dur, 3.4s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: calc(var(--max-op, .5) * .2); transform: scale(.75); }
+  50% { opacity: var(--max-op, .5); transform: scale(1.1); }
+}
+
+h1, h2, h3, .hand {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.eyebrow {
+  color: var(--text-mute);
+  letter-spacing: 3px;
+  font-size: .8rem;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.gradient {
+  background: var(--gradient-rainbow);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+a { color: inherit; }
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 8%; }
+
+/* reduced motion: calm every decorative animation down */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+/* =========================================================
+   Nav
+   ========================================================= */
+
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.nav-inner {
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8%;
+}
+
+/* single list: About, Projects, [logo], Playground, Contact — the
+   logo sits in the middle slot so nav reads as one evenly-spaced row */
+.nav-links {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.logo {
+  font-size: 1.9rem;
+  color: var(--d-blue);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logo .spark { width: 20px; height: 20px; }
+
+.nav-links a {
+  text-decoration: none;
+  padding: 4px 2px;
+  border-bottom: 2px solid transparent;
+  transition: border-color .25s, opacity .25s;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible { opacity: .7; }
+
+.nav-links a.is-active { border-color: currentColor; }
+
+.nav-links li:nth-child(1) a { color: var(--d-red); }
+.nav-links li:nth-child(2) a { color: var(--d-orange); }
+.nav-links li:nth-child(4) a { color: var(--d-green); }
+.nav-links li:nth-child(5) a { color: var(--d-blue); }
+
+.nav-underline {
+  height: 4px;
+  width: 100%;
+  background: var(--gradient-rainbow);
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .nav-toggle { display: block; }
+  .nav-links {
+    position: fixed;
+    top: calc(var(--nav-h) + 4px);
+    left: 0; right: 0;
+    background: var(--paper);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 10px 8% 22px;
+    transform: translateY(-120%);
+    transition: transform .3s ease;
+  }
+  .nav-links.is-open { transform: translateY(0); }
+  .nav-links li { padding: 10px 0; border-top: 1px solid rgba(0,0,0,.06); }
+  .nav-links li.logo-slot { order: -1; border-top: none; padding-top: 2px; }
+}
+
+/* =========================================================
+   Comet trail — one continuous rainbow ribbon coiling down the page
+   in a smooth, spring-like left-right swirl (behind content); a
+   twinkling star, sized to span across the ribbon, rides it at the
+   current scroll position, in front of content. Fully smooth curve
+   — no rough/jagged edges — same shape on every load.
+   ========================================================= */
+
+.comet-trail {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.comet-trail svg { display: block; overflow: visible; }
+
+.comet-trail .trail-seg {
+  fill: url(#trailGradient);
+  opacity: .92;
+}
+
+.comet-star {
+  position: fixed;
+  top: 0; left: 0;
+  width: 52px; height: 52px;
+  z-index: 150;
+  pointer-events: auto;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.comet-star .star-glyph {
+  display: block;
+  width: 100%; height: 100%;
+  filter:
+    drop-shadow(0 0 7px rgba(93, 130, 255, .85))
+    drop-shadow(0 0 16px rgba(77, 91, 255, .55));
+  animation: spin 9s linear infinite;
+}
+
+.comet-star svg {
+  width: 100%; height: 100%;
+  animation: twinkle 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes twinkle {
+  from { transform: scale(.9); }
+  to   { transform: scale(1.08); }
+}
+
+@media (max-width: 760px) {
+  .comet-star { width: 34px; height: 34px; }
+}
+
+/* =========================================================
+   Buttons / cards / spark mark
+   ========================================================= */
+
+.btn {
+  display: inline-block;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 50px;
+  background: var(--gradient-cta);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform .25s, box-shadow .25s;
+}
+
+.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(77, 91, 255, .35); }
+.btn:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid var(--c-yellow); outline-offset: 3px; }
+
+.spark { display: inline-block; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  transition: transform .4s, box-shadow .4s;
+}
+
+.card:hover { transform: translateY(-10px); box-shadow: 0 0 40px rgba(77, 91, 255, .25); }
+.card h3 { font-family: 'Kalam', cursive; margin-bottom: 12px; font-size: 1.4rem; }
+.card p { color: var(--text-dim); }
+.tbd { color: var(--text-mute); font-style: italic; }
+
+/* =========================================================
+   Page section scaffolding
+   ========================================================= */
+
+main { padding-top: var(--nav-h); position: relative; z-index: 1; }
+
+.page-hero {
+  padding: 80px 8% 60px;
+  min-height: 46vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero h1 { font-size: clamp(2.8rem, 6vw, 4.5rem); }
+
+section { padding: 60px 8% 100px; position: relative; }
+
+footer {
+  position: relative;
+  z-index: 1;
+  padding: 90px 8%;
+  text-align: center;
+  border-top: 1px solid var(--panel-border);
+}
+
+footer .footer-title { font-size: clamp(2rem, 4vw, 3rem); }
+footer .footer-email {
+  display: inline-block;
+  margin-top: 22px;
+  font-family: 'Kalam', cursive;
+  font-size: 1.2rem;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px dashed transparent;
+}
+footer .footer-email:hover { color: var(--c-pink); border-color: var(--c-pink); }
+footer .socials { margin-top: 18px; display: flex; gap: 22px; justify-content: center; }
+footer .socials a { text-decoration: none; color: var(--text-dim); }
+footer .socials a:hover { color: var(--c-pink); }
+
+@media (max-width: 760px) {
+  .container, section, .nav-inner, .page-hero { padding-left: 6%; padding-right: 6%; }
+}
+
+/* =========================================================
+   Home — hero ribbon + mascot
+   ========================================================= */
+
+.hero {
+  min-height: calc(100vh - var(--nav-h));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding: 40px 8% 0;
+  position: relative;
+}
+
+.hero-ribbon {
+  position: absolute;
+  top: 6%;
+  left: 0;
+  width: min(70vw, 900px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-text { max-width: 620px; position: relative; z-index: 1; }
+.hero-text h1 { font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 20px; }
+.hero-text h2 { font-family: 'Inter', sans-serif; font-weight: 400; color: var(--text-dim); margin-bottom: 32px; font-size: 1.15rem; max-width: 520px; }
+
+.mascot-wrap {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: min(38vw, 380px);
+}
+
+.mascot { width: 100%; height: auto; animation: float 5s ease-in-out infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-22px); }
+}
+
+.tagline-strip {
+  position: relative;
+  padding: 140px 8% 160px;
+  overflow: hidden;
+}
+
+.tagline-strip .strip-ribbon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.tagline-strip .lines {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 640px;
+}
+
+.tagline-strip .lines span {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.tagline-strip .lines span:nth-child(1) { margin-left: 4%; }
+.tagline-strip .lines span:nth-child(2) { margin-left: 14%; }
+.tagline-strip .lines span:nth-child(3) { margin-left: 8%; }
+
+.home-projects .projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
+
+@media (max-width: 900px) {
+  .hero { padding-top: 20px; }
+  .hero-ribbon { width: 100vw; opacity: .8; }
+  .mascot-wrap { width: 55vw; margin: 0 auto; }
+  .tagline-strip .lines span:nth-child(2),
+  .tagline-strip .lines span:nth-child(3) { margin-left: 4%; }
+}
+
+/* =========================================================
+   About
+   ========================================================= */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.about-copy p { color: var(--text-dim); font-size: 1.05rem; line-height: 1.8; margin-bottom: 18px; max-width: 46ch; }
+
+.avatar-frame {
+  position: relative;
+  width: min(70vw, 340px);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.avatar-frame .ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, .5);
+  transition: transform .5s ease, border-color .5s ease;
+}
+
+.avatar-frame .ring.outer { inset: -14px; border-color: rgba(255, 255, 255, .25); }
+
+.avatar-frame:hover .ring { transform: scale(1.05); border-color: var(--c-blue); }
+
+.avatar-face { width: 62%; }
+
+.avatar-hint {
+  margin-top: 16px;
+  text-align: center;
+  color: var(--text-mute);
+  font-family: 'Kalam', cursive;
+}
+
+.rabbit-icon { width: 46px; opacity: .85; }
+
+@media (max-width: 900px) {
+  .about-grid { grid-template-columns: 1fr; text-align: left; }
+}
+
+/* =========================================================
+   Projects — galaxy of planets
+   ========================================================= */
+
+.galaxy {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  aspect-ratio: 1 / 1;
+  margin: 40px auto 0;
+}
+
+.galaxy .ring {
+  position: absolute;
+  border: 2px solid;
+  border-radius: 50%;
+  opacity: .55;
+}
+
+.galaxy .core {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 34px; height: 34px;
+}
+
+.planet {
+  position: absolute;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: transform .3s;
+}
+
+.planet:hover, .planet:focus-visible { transform: scale(1.12); }
+
+.planet-card {
+  position: absolute;
+  width: 240px;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 20px 22px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+  opacity: 0;
+  transform: translateY(8px) rotate(-2deg);
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  z-index: 5;
+}
+
+.planet-card h4 { font-family: 'Kalam', cursive; margin-bottom: 6px; }
+.planet-card p { font-size: .92rem; color: #3a3660; }
+
+.planet:hover + .planet-card,
+.planet:focus-visible + .planet-card,
+.planet-card:hover {
+  opacity: 1;
+  transform: translateY(0) rotate(-1deg);
+  pointer-events: auto;
+}
+
+.projects-list-fallback {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 700px) {
+  .galaxy { display: none; }
+}
+
+.projects-list-fallback { display: none; }
+
+@media (max-width: 700px) {
+  .projects-list-fallback { display: grid; }
+}
+
+/* =========================================================
+   Playground
+   ========================================================= */
+
+.playground-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
+}
+
+.sticker-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  padding: 30px 24px;
+  text-align: center;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+.sticker-card:nth-child(odd) { transform: rotate(-2deg); }
+.sticker-card:nth-child(even) { transform: rotate(2deg); }
+
+.sticker-card:hover {
+  transform: rotate(0deg) translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(255, 63, 216, .18);
+}
+
+.sticker-card .emoji { font-size: 2.2rem; margin-bottom: 12px; display: block; }
+
+/* =========================================================
+   Contact
+   ========================================================= */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.contact-direct a {
+  display: block;
+  font-family: 'Kalam', cursive;
+  font-size: 1.4rem;
+  color: var(--text);
+  text-decoration: none;
+  margin-bottom: 14px;
+  border-bottom: 1px dashed transparent;
+}
+
+.contact-direct a:hover { border-color: var(--c-pink); color: var(--c-pink); }
+
+form.contact-form { display: flex; flex-direction: column; gap: 18px; }
+
+.contact-form label { display: block; font-size: .85rem; letter-spacing: 1px; color: var(--text-mute); margin-bottom: 6px; text-transform: uppercase; }
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus { outline: 2px solid var(--c-blue); }
+
+@media (max-width: 800px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
