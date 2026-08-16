@@ -23,9 +23,9 @@ just its content.
   body copy. This replaced the original `Syne` display font when the site
   was redesigned from Jasmine's storyboards (see `Untitled_Artwork 2.pdf`,
   Aug 2026) to match their looser, hand-drawn/marker aesthetic.
-- Vanilla JS only (`js/main.js`): mobile nav toggle, active-nav-link
-  marking, and the comet scroll-rail (see below). Prefer extending this file
-  over adding a library for new interactivity.
+- Vanilla JS only (`js/main.js`): mobile nav toggle and active-nav-link
+  marking. Prefer extending this file over adding a library for new
+  interactivity.
 - No raster image assets — the mascot, spark mark, rabbit icon, and planets
   are all inline SVG/CSS. This was a deliberate choice (avoids an asset
   pipeline, keeps everything crisp and themeable) as well as the fix for the
@@ -57,8 +57,8 @@ Background `#050314` (deep space); nav/paper surfaces `#fdfdfb`; body text
 on dark: `#ffffff` / `#d3d4e6` / `#9d9fc0` (heading / subhead / muted).
 
 `--gradient-rainbow` (red→orange→yellow→green→blue→purple) is the site's
-signature: nav underline, comet rail, hero ribbon, `.gradient` text accent.
-Don't introduce off-palette colors — extend by opacity/tint of these instead.
+signature: nav underline, hero ribbon, `.gradient` text accent. Don't
+introduce off-palette colors — extend by opacity/tint of these instead.
 
 **Type**
 - Display / headings / nav / logo: `Kalam`, weight 700 (400 for lighter
@@ -69,13 +69,13 @@ Don't introduce off-palette colors — extend by opacity/tint of these instead.
   the site's visual signature, not a bug to "fix" for looking large.
 
 **Motif**
-- Cosmic theme: starfield background, soft radial-gradient glows, a rainbow
-  "comet trail" ribbon, and a chibi astronaut-with-bunny-ears mascot (nods
-  to "rabbit enthusiast"). New sections should feel like part of the same
-  universe rather than introducing a different visual language.
+- Cosmic theme: starfield background, soft radial-gradient glows, and a
+  chibi astronaut-with-bunny-ears mascot (nods to "rabbit enthusiast"). New
+  sections should feel like part of the same universe rather than
+  introducing a different visual language.
 - The 4-point spark/sparkle mark (`✦`, drawn as a small inline SVG) is a
-  recurring accent — logo, galaxy core, hero ribbon tip, comet-star. Reuse
-  it as a bullet/flourish rather than inventing a new icon for the same job.
+  recurring accent — logo, galaxy core, hero ribbon tip. Reuse it as a
+  bullet/flourish rather than inventing a new icon for the same job.
 - Cards (`.card`): translucent white fill, soft border, rounded corners
   (`30px`), lift + glow on hover.
 
@@ -86,20 +86,6 @@ Don't introduce off-palette colors — extend by opacity/tint of these instead.
   Playground / Contact — the logo sits in the middle slot as one evenly
   spaced row (a specific storyboard detail — don't move the logo back to
   the left without checking with Jasmine).
-
-## Comet scroll-rail (site-wide component)
-
-A fixed vertical rainbow rail runs down the right edge of every page
-(`.comet-rail` in every HTML file, driven by `initCometRail()` in
-`js/main.js`). It fills in with the rainbow gradient as the user scrolls
-(SVG `stroke-dasharray`/`dashoffset` against real scroll percentage) and a
-twinkling spark (`.comet-star`, CSS-animated — a stand-in for the "gif star"
-originally requested, since the project has no image-asset pipeline) rides
-the exact point on the path via `path.getPointAtLength()`. Clicking the star
-scrolls to top. This is the literal implementation of "the rainbow trail
-acts as scroll navigation" — treat it as a persistent site-wide fixture, not
-a per-page decoration; if a future page doesn't include the same
-`.comet-rail` markup block, the scroll wayfinding breaks on that page.
 
 ## Content & voice
 
@@ -146,8 +132,8 @@ a per-page decoration; if a future page doesn't include the same
 
 ## Repo structure
 
-- `index.html` — home (hero with mascot + comet ribbon, tagline strip,
-  featured-projects teaser, footer).
+- `index.html` — home (hero with mascot, tagline strip, featured-projects
+  teaser, footer).
 - `about.html` — bio copy (placeholder, marked `[TBD]`), hover avatar frame,
   rabbit icon.
 - `projects.html` — galaxy of hover/focus-able "planet" project cards, with
@@ -157,7 +143,7 @@ a per-page decoration; if a future page doesn't include the same
 - `contact.html` — direct links + a contact form that is **not yet wired to
   a backend** (marked inline; needs a form service or endpoint before launch).
 - `css/style.css` — the entire design system and every component's styles.
-- `js/main.js` — nav toggle/active-link logic + the comet scroll-rail.
+- `js/main.js` — nav toggle/active-link logic + starfield generation.
 - `README.md` — one-line project description.
 - Real content (bios, case studies, project details, social links) still
   needs to replace the `[TBD]` placeholders throughout — see rule 6.

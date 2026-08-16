@@ -1,6 +1,6 @@
 /* =========================================================
    Jasmine Bontha — Portfolio design system
-   Space/comet motif. See CLAUDE.md for the rationale.
+   Cosmic motif. See CLAUDE.md for the rationale.
    ========================================================= */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -211,68 +211,6 @@ a { color: inherit; }
   .nav-links.is-open { transform: translateY(0); }
   .nav-links li { padding: 10px 0; border-top: 1px solid rgba(0,0,0,.06); }
   .nav-links li.logo-slot { order: -1; border-top: none; padding-top: 2px; }
-}
-
-/* =========================================================
-   Comet trail — one continuous rainbow ribbon coiling down the page
-   in a smooth, spring-like left-right swirl (behind content); a
-   twinkling star, sized to span across the ribbon, rides it at the
-   current scroll position, in front of content. Fully smooth curve
-   — no rough/jagged edges — same shape on every load.
-   ========================================================= */
-
-.comet-trail {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.comet-trail svg { display: block; overflow: visible; }
-
-.comet-trail .trail-seg {
-  fill: url(#trailGradient);
-  opacity: .92;
-}
-
-.comet-star {
-  position: fixed;
-  top: 0; left: 0;
-  width: 52px; height: 52px;
-  z-index: 150;
-  pointer-events: auto;
-  cursor: pointer;
-  background: none;
-  border: none;
-}
-
-.comet-star .star-glyph {
-  display: block;
-  width: 100%; height: 100%;
-  filter:
-    drop-shadow(0 0 7px rgba(93, 130, 255, .85))
-    drop-shadow(0 0 16px rgba(77, 91, 255, .55));
-  animation: spin 9s linear infinite;
-}
-
-.comet-star svg {
-  width: 100%; height: 100%;
-  animation: twinkle 1.6s ease-in-out infinite alternate;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-@keyframes twinkle {
-  from { transform: scale(.9); }
-  to   { transform: scale(1.08); }
-}
-
-@media (max-width: 760px) {
-  .comet-star { width: 34px; height: 34px; }
 }
 
 /* =========================================================
