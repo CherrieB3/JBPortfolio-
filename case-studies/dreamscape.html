@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamScape — Case Study — Jasmine Bontha</title>
+    <meta name="description" content="A speculative app for visualizing and reflecting on dreams, designed in a 24-hour UX Club designathon at UT Dallas.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body data-page="projects" style="--case-accent: var(--c-purple);">
+    <div class="stars"></div>
+
+    <header class="site-nav">
+        <nav class="nav-inner" aria-label="Primary">
+            <ul class="nav-links">
+                <li><a href="../index.html#about" data-page="about">About</a></li>
+                <li><a href="../index.html#projects" data-page="projects">Projects</a></li>
+                <li class="logo-slot">
+                    <a class="logo" href="../index.html" aria-label="Jasmine Bontha — Home">
+                        <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="currentColor" /></svg>
+                        Jasmine
+                    </a>
+                </li>
+                <li><a href="../index.html#playground" data-page="playground">Playground</a></li>
+                <li><a href="../index.html#contact" data-page="contact">Contact</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+        </nav>
+        <div class="nav-underline" aria-hidden="true"></div>
+    </header>
+
+    <main>
+        <section class="page-hero case-hero" style="min-height:auto; padding-bottom:0;">
+            <a class="case-back" href="../index.html#projects"><span class="arrow">←</span> Back to Projects</a>
+            <p class="eyebrow">24-HOUR DESIGNATHON • UX CLUB, UT DALLAS • OCT 25–26, 2025</p>
+            <h1>🌙 DreamScape</h1>
+            <p class="case-hook">A speculative app for visualizing and reflecting on dreams, designed around the
+                prompt: what might people use in the future?</p>
+        </section>
+
+        <section class="case-section">
+            <h2>Overview</h2>
+            <p>DreamScape is a speculative, futuristic app designed during UT Dallas's UX Club 24-hour designathon,
+                built around the prompt of imagining an app people might use in the future. It visualizes and
+                documents users' dreams for self-reflection and mental wellness — converting REM sleep data into
+                visual, textual, and interactive formats while filtering sensitive content. With a
+                glassmorphism-inspired interface and an AI companion named Snoozy, the app offers an immersive, safe,
+                and emotionally engaging way to explore the subconscious.</p>
+        </section>
+
+        <section class="case-section">
+            <h2>The Problem</h2>
+            <p>Dreams fade quickly after waking, leaving behind only fragments of emotion or imagery. Despite their
+                deep connection to our subconscious, there's currently no reliable way to record or revisit them —
+                which limits opportunities for self-reflection, mental health insight, and creative exploration.
+                Existing sleep-tracking apps focus on metrics like duration or heart rate, overlooking the emotional
+                and visual depth of dreaming. DreamScape addresses that gap by imagining a secure, immersive way to
+                visualize and understand our dreams.</p>
+        </section>
+
+        <section class="case-section">
+            <h2>Research</h2>
+            <p>Research shows that visualizing and reflecting on dreams can offer real mental health benefits when
+                privacy and safety are prioritized. Clinicians and care teams can use patient-generated
+                visualizations to encourage self-reflection, motivate behavior change, and inform treatment — and
+                both patients and clinicians point to the value of a digital intermediary, or "digital navigator," to
+                help interpret these visualizations accurately (Chang et al., 2023, MDPI).</p>
+            <p>Privacy is a central concern, especially for users with lived experience of mental illness. People are
+                generally willing to share personal health data to improve care and support research, but only when
+                there are real safeguards against misuse, discrimination, or unintended exposure — which points to
+                granular control over shared data, easy revocation, and privacy-first design as best practices (Diva
+                Portal; Medium).</p>
+            <p>Dream content can be shaped by pre-sleep media exposure, which affects recall, vividness, and
+                emotional tone — for higher-fidelity REM recordings, minimizing external visual stimuli before sleep
+                is recommended (PMC). Trauma sensitivity matters too: visualizing dream content can be distressing,
+                so trauma-informed design — filtering, blurring, and opt-in access for potentially distressing
+                content — helps protect psychological safety without losing the reflective or therapeutic benefit
+                (NCBI).</p>
+            <p>Effective UX for neurotechnology and privacy-sensitive tools depends on just-in-time consent prompts,
+                layered transparency, contextual integrity, and periodic reminders to review privacy settings — with
+                regulatory engagement essential, since dream-decoding technologies raise genuinely new ethical and
+                safety questions.</p>
+            <h3>Design implications</h3>
+            <ul class="case-list">
+                <li>Exportable visualizations for clinicians, with digital-navigator support</li>
+                <li>Privacy-by-default, with two-factor and biometric protections</li>
+                <li>Trauma-informed safety through filtered, flagged, or blurred content and in-app grounding
+                    supports</li>
+                <li>High-quality REM capture through a controlled pre-sleep environment</li>
+                <li>Early engagement with policymakers to help establish ethical standards for sensitive
+                    neurotechnology</li>
+            </ul>
+            <p>These findings directly shaped DreamScape's design — aiming for something clinically useful,
+                privacy-conscious, trauma-informed, and ethically responsible.</p>
+        </section>
+
+        <section class="case-section">
+            <h2>How We Built It</h2>
+            <div class="case-grid-2">
+                <div class="card">
+                    <h4>Figma</h4>
+                    <p>Designed the interface using a glassmorphic system: soft blurs, gradients, and layered
+                        transparency for depth.</p>
+                </div>
+                <div class="card">
+                    <h4>Spline</h4>
+                    <p>Created the 3D visual elements, including Snoozy, the AI companion who guides users through
+                        their dream recordings.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-section">
+            <h2>What I Learned</h2>
+            <ul class="case-list">
+                <li>Balancing speculative design with realism was crucial for keeping the concept engaging rather
+                    than far-fetched</li>
+                <li>Explored UI motion and glassmorphism — transparent, layered surfaces that helped the interface
+                    feel dreamlike</li>
+                <li>Learned how much storytelling does to ground an experimental idea, making it feel emotionally
+                    resonant and user-centered</li>
+            </ul>
+        </section>
+
+        <section class="case-section">
+            <h2>Final Prototype &amp; Presentation</h2>
+            <p>See the work in full — the interactive prototype, the pitch deck, and the research board it grew
+                from.</p>
+            <div class="case-links">
+                <a class="btn" href="https://www.figma.com/proto/tGSuZnt90sJURlK7vrsUot/TheApp?page-id=0%3A1&node-id=195-44&m=draw&scaling=scale-down&content-scaling=fixed&starting-point-node-id=220%3A484&t=al7d6f4lJZmUnPwI-1" target="_blank" rel="noopener">View Prototype ✦</a>
+                <a href="https://www.figma.com/slides/T82kmCIE6atAVeX7BgOY8l/DreamScape?node-id=1-311&t=cNRLU24Pud1xGSB0-1" target="_blank" rel="noopener">View Presentation</a>
+                <a href="https://www.figma.com/board/hyp6nlV7BqqQg6ZqCKtqlp/Planning?node-id=0-1&t=Ye2wFCF2TyRbEtIe-1" target="_blank" rel="noopener">Research &amp; Planning Board</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <h2 class="hand footer-title">Let's build something <span class="gradient">amazing</span></h2>
+        <p class="eyebrow" style="margin-top:20px;">GET IN TOUCH</p>
+        <a class="footer-email" href="mailto:jasminebontha@example.com">jasminebontha@example.com</a>
+        <div class="socials">
+            <a href="../index.html#about">About</a>
+            <a href="../index.html#projects">Projects</a>
+            <a href="../index.html#playground">Playground</a>
+            <a href="../index.html#contact">Contact</a>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

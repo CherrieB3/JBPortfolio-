@@ -15,23 +15,41 @@ just its content.
 
 ## Tech stack & constraints
 
-- Static multi-page site: `css/style.css` (shared stylesheet) + `js/main.js`
-  (shared behavior) + one HTML file per page. No build step, no framework,
-  no package.json — keep it that way unless a real need arises (see rule 3).
-- Google Fonts loaded via `<link>` on every page: `Kalam` (weights 400/700)
-  for headings, nav, and the logo's handwritten mark; `Inter` (300–500) for
-  body copy. This replaced the original `Syne` display font when the site
-  was redesigned from Jasmine's storyboards (see `Untitled_Artwork 2.pdf`,
-  Aug 2026) to match their looser, hand-drawn/marker aesthetic.
-- Vanilla JS only (`js/main.js`): mobile nav toggle and active-nav-link
-  marking. Prefer extending this file over adding a library for new
-  interactivity.
+- Static single-page site: `index.html` holds Home/About/Projects/
+  Playground/Contact as one continuous page with anchor sections
+  (`#about`, `#projects`, `#playground`, `#contact`); nav links scroll to
+  them instead of loading separate URLs (see "Single-page navigation"
+  below). `case-studies/*.html` are the exception — full project write-ups
+  stay as separate detail pages linked out from the Projects section, the
+  way a one-pager still needs somewhere to put real depth. Shared
+  `css/style.css` + `js/main.js`. No build step, no framework, no
+  package.json — keep it that way unless a real need arises (see rule 3).
+- Google Fonts loaded via `<link>` on every page: `Shantell Sans` (weights
+  400/700) for headings, nav, and the logo's handwritten mark; `Inter`
+  (300–500) for body copy. The original `Syne` display font was replaced
+  with `Kalam` when the site was redesigned from Jasmine's storyboards (see
+  `Untitled_Artwork 2.pdf`, Aug 2026) to match their looser, hand-drawn/
+  marker aesthetic; `Kalam` was then swapped for `Shantell Sans` (still a
+  handwriting-derived, marker-inspired face, so the hand-drawn voice holds)
+  because Kalam's thick, bouncy letterforms read as too casual/comic for a
+  site now carrying real professional case studies — Shantell Sans keeps
+  the personal, sketchbook feel while reading more like a considered
+  designer's brand mark.
+- Vanilla JS only (`js/main.js`): mobile nav toggle, active-nav-link
+  marking, and the home-page comet trail (see below). Prefer extending this
+  file over adding a library for new interactivity.
 - No raster image assets — the mascot, spark mark, rabbit icon, and planets
   are all inline SVG/CSS. This was a deliberate choice (avoids an asset
   pipeline, keeps everything crisp and themeable) as well as the fix for the
   old dangling `astronaut.png` reference. Keep new illustration work in this
   same inline-SVG, line-art style rather than introducing image files unless
   Jasmine explicitly wants to swap in real artwork/photography.
+- Exception: `images/doodle-1.svg` through `doodle-5.svg` are real files (not
+  inline) on purpose — they're floating placeholder sketch slots on the About
+  page (see below) that Jasmine can overwrite directly with her own drawings
+  without touching any HTML/CSS. Any future "swap this for my own art" request
+  should follow this same pattern (a real file in `images/`, referenced by
+  `<img src>`) rather than going back to inline SVG.
 
 ## Design system
 
@@ -57,13 +75,14 @@ Background `#050314` (deep space); nav/paper surfaces `#fdfdfb`; body text
 on dark: `#ffffff` / `#d3d4e6` / `#9d9fc0` (heading / subhead / muted).
 
 `--gradient-rainbow` (red→orange→yellow→green→blue→purple) is the site's
-signature: nav underline, hero ribbon, `.gradient` text accent. Don't
-introduce off-palette colors — extend by opacity/tint of these instead.
+signature: nav underline, comet trail, hero ribbon, `.gradient` text accent.
+Don't introduce off-palette colors — extend by opacity/tint of these instead.
 
 **Type**
-- Display / headings / nav / logo: `Kalam`, weight 700 (400 for lighter
-  accents). This is the "hand-marker" voice of the site — keep headings
-  feeling written, not typeset.
+- Display / headings / nav / logo: `Shantell Sans`, weight 700 (400 for
+  lighter accents). This is the "hand-marker" voice of the site — keep
+  headings feeling written, not typeset, but note it's meant to read as a
+  refined, considered hand rather than a bouncy comic one.
 - Body: `Inter`, weights 300–500.
 - Hero H1 is intentionally oversized (`clamp(3rem, 7vw, 5.5rem)`) — this is
   the site's visual signature, not a bug to "fix" for looking large.
@@ -86,6 +105,48 @@ introduce off-palette colors — extend by opacity/tint of these instead.
   Playground / Contact — the logo sits in the middle slot as one evenly
   spaced row (a specific storyboard detail — don't move the logo back to
   the left without checking with Jasmine).
+
+## Single-page navigation
+
+`index.html` is one continuous page — About/Projects/Playground/Contact are
+`<section id="about|projects|playground|contact">` anchors, not separate
+URLs, and nav/footer links point at `#about` etc. (the logo points at
+`#top`, an id on `<body>`). Two mechanics make this work and matter if you
+touch nav or section markup:
+- `#about, #projects, #playground, #contact { scroll-margin-top: var(--nav-h); }`
+  in `css/style.css` — without it, a clicked anchor lands with its heading
+  hidden under the fixed nav.
+- `initScrollSpy()` in `js/main.js` (IntersectionObserver-based) toggles
+  `.is-active` on the nav link matching whichever section is currently in
+  view, replacing the old "highlight based on which page you're on" logic.
+  It only activates if those section ids exist in the DOM, so it's a no-op
+  elsewhere.
+
+`case-studies/*.html` are the one exception to "single page" — full project
+write-ups stay as separate pages linked from the Projects section (a
+one-pager still needs somewhere to put real depth). Their nav/footer/back
+links point at `../index.html#about` etc.; keep that pattern for any new
+case-study page. Their own `initNav()` still uses the older
+`body[data-page]` static match (they set `data-page="projects"`), since
+scroll-spying doesn't apply to a page that isn't the anchor-section one.
+
+## Comet trail
+
+The nav-underline's rainbow strip visually continues down `index.html` as
+one filled ribbon (`.comet-trail` markup, driven by `initCometTrail()` in
+`js/main.js`, guarded so it's a no-op if that markup isn't present — which
+is why it's absent from `case-studies/*.html`). Because the whole site is
+now one page, the trail runs the full length of it — hero through footer,
+including the About/Projects/Playground/Contact sections — not just a short
+home-page hero anymore. It sweeps in a smooth, spring-like S-curve from
+edge to edge of the viewport rather than hugging one side, and actively
+steers around every heading, paragraph, link, card, and form on the page
+(`OBSTACLE_SELECTOR` in the JS) so it never overlaps or sits under text —
+if a new section's element should also be avoided, add its selector there.
+A twinkling star rides the ribbon at the current scroll position and
+scrolls to top on click; the ribbon itself only reveals up to the star's
+position, so it reads as a trail the comet leaves behind rather than a
+path already laid out ahead of it.
 
 ## Content & voice
 
@@ -132,21 +193,46 @@ introduce off-palette colors — extend by opacity/tint of these instead.
 
 ## Repo structure
 
-- `index.html` — home (hero with mascot, tagline strip, featured-projects
-  teaser, footer).
-- `about.html` — bio copy (placeholder, marked `[TBD]`), hover avatar frame,
-  rabbit icon.
-- `projects.html` — galaxy of hover/focus-able "planet" project cards, with
-  a list fallback for small screens.
-- `playground.html` — grid of loose-experiment tiles; explicitly allowed to
-  feel rougher than the rest of the site (see rule 4). Content is placeholder.
-- `contact.html` — direct links + a contact form that is **not yet wired to
-  a backend** (marked inline; needs a form service or endpoint before launch).
+- `index.html` — the entire site as one page. In scroll order: hero (comet
+  trail, mascot, tagline strip, featured-projects teaser) → `#about` (real
+  bio pulled from Jasmine's previous Framer portfolio, hover avatar frame,
+  rabbit icon, a "sketchbook" of 5 floating placeholder doodles — hover/
+  focus shows an info tooltip, below 700px it becomes a static list; the
+  doodle art itself is still placeholder, see `images/` below) → `#projects`
+  (galaxy of hover/focus-able "planet" project cards — Comet Commute,
+  Elevator Accessibility, DreamScape, Lucky's First Day — each linking out
+  to a full write-up, see `case-studies/` below, with a list fallback for
+  small screens) → `#playground` (grid of loose-experiment tiles; explicitly
+  allowed to feel rougher than the rest of the site, see rule 4; content is
+  placeholder) → `#contact` (direct links + a contact form **not yet wired
+  to a backend**, marked inline; social links LinkedIn/Behance/Dribbble are
+  still `[TBD]` — Jasmine's previous portfolio didn't expose them in a
+  fetchable form) → one shared footer. See "Single-page navigation" above
+  for how the anchors/scrollspy work. Every planet's tooltip and fallback
+  card includes a "View case study" link (`.view-case`); keep tooltip cards
+  positioned adjacent to/overlapping their planet (not detached) — CSS
+  `:hover` drops the instant the pointer leaves `.planet`, and
+  `.planet-card` is `pointer-events: none` at rest, so a gap between planet
+  and card breaks the ability to mouse from one onto the other.
+- `case-studies/` — one HTML page per case study (`comet-commute.html`,
+  `elevator-accessibility.html`, `dreamscape.html`), real UT Dallas
+  coursework/designathon projects with real research, decisions, and
+  outcomes. Each sets `--case-accent` on `<body>` (a rainbow token matching
+  its planet's color) that themes its back-link, section-heading
+  underlines, and list bullets. Reuses `.page-hero`, `.card`, `.btn`, and
+  the shared nav/footer rather than introducing new page chrome. Lucky's
+  First Day has no page here — it's an existing standalone site, linked to
+  directly.
+- `images/` — the one exception to "no raster/external image assets": 5
+  small swappable placeholder SVGs (`doodle-1.svg`…`doodle-5.svg`) used in
+  the About section, meant to be directly overwritten with Jasmine's own art.
 - `css/style.css` — the entire design system and every component's styles.
-- `js/main.js` — nav toggle/active-link logic + starfield generation.
+- `js/main.js` — nav toggle/scrollspy active-link logic, the comet trail,
+  and starfield generation.
 - `README.md` — one-line project description.
-- Real content (bios, case studies, project details, social links) still
-  needs to replace the `[TBD]` placeholders throughout — see rule 6.
+- Remaining placeholder content: the About section's sketchbook doodle
+  captions/art, all of Playground, and the contact form's backend wiring —
+  see rule 6.
 
 ## Available skills
 
