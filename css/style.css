@@ -108,6 +108,22 @@ h1, h2, h3, .hand {
   color: transparent;
 }
 
+/* A calmer two-color alternative to the full rainbow — same clip-text
+   technique, reused for spots (like the repeated footer heading) where
+   the full six-stop gradient would be one rainbow accent too many. */
+.gradient-soft {
+  background: var(--gradient-cta);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Single-hue accents for small emphasis words — an alternative to reaching
+   for the full rainbow gradient every time a word needs a highlight. */
+.accent-pink { color: var(--c-pink); }
+.accent-yellow { color: var(--c-yellow); }
+.accent-green { color: var(--c-green); }
+
 a { color: inherit; }
 
 .container { max-width: 1280px; margin: 0 auto; padding: 0 8%; }
@@ -954,12 +970,34 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 .case-hook { color: var(--text-dim); font-size: 1.15rem; max-width: 62ch; margin-top: 14px; }
 
 .case-section {
-  max-width: 760px;
+  max-width: 720px;
+  margin: 0 auto;
   padding: 34px 8% 0;
   position: relative;
 }
 
 .case-section:last-of-type { padding-bottom: 60px; }
+
+/* A wider band for sections built from grids/cards rather than running
+   prose — alternating narrow/wide widths down the page is what keeps a
+   long case study from reading as one monotonous left-pinned column. */
+.case-section--wide { max-width: 980px; }
+
+/* Pairs an intro paragraph with a list/card side by side on wide screens
+   (e.g. "the problem" + "key problems identified") instead of stacking
+   everything straight down a single column. Falls back to stacked below
+   the breakpoint. */
+.case-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px 56px;
+  align-items: start;
+}
+
+@media (min-width: 860px) {
+  .case-split { grid-template-columns: 1fr 1fr; }
+  .case-split h3 { margin-top: 0; }
+}
 
 .case-section h2 {
   font-size: clamp(1.5rem, 3vw, 2.1rem);
@@ -1015,15 +1053,171 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 .case-links a:not(.btn):hover,
 .case-links a:not(.btn):focus-visible { border-color: currentColor; }
 
+/* A featured pull-quote treatment — set apart from the surrounding prose
+   sections by a wider centered band and a large decorative accent quote
+   mark, so the closing thought reads as a moment rather than one more
+   paragraph in the same left-pinned column. */
+.case-section--quote {
+  max-width: 820px;
+  padding-top: 54px;
+}
+
+.case-section--quote::before {
+  content: '\201C';
+  position: absolute;
+  top: 4px; left: 8%;
+  font-family: 'Darumadrop One', cursive;
+  font-size: 4.5rem;
+  line-height: 1;
+  color: var(--case-accent, var(--c-blue));
+  opacity: .35;
+}
+
 .case-reflection {
   font-family: 'Darumadrop One', cursive;
   font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   line-height: 1.7;
   color: var(--text);
-  max-width: 62ch;
+  max-width: 68ch;
+  margin: 0 auto;
 }
+
+/* Snapshot strip — Role/Team/Timeline/Methods at a glance, right under the
+   hero, so the context a reviewer needs first doesn't wait for prose. */
+.case-meta { padding: 8px 8% 0; }
+
+.case-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 22px 32px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 28px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+}
+
+.case-meta-grid dt {
+  font-size: .72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  border-left: 3px solid var(--case-accent, var(--c-blue));
+  padding-left: 8px;
+  margin-bottom: 6px;
+}
+
+.case-meta-grid dd {
+  margin: 0;
+  color: var(--text);
+  font-size: .98rem;
+  line-height: 1.5;
+}
+
+/* Numbered feature/step list — same rhythm as .case-list but with a filled
+   accent numeral instead of a dot, for "core features" style rundowns. */
+.case-list--numbered { counter-reset: case-step; }
+.case-list--numbered li { padding-left: 36px; }
+.case-list--numbered li::before { content: none; }
+.case-list--numbered li::after {
+  counter-increment: case-step;
+  content: counter(case-step);
+  position: absolute;
+  left: 0; top: 0;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--case-accent, var(--c-blue));
+  background: transparent;
+  color: var(--text);
+  font-family: 'Darumadrop One', cursive;
+  font-size: .78rem;
+  line-height: 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Visual placeholder — an honest stand-in for screenshots/mockups that
+   don't exist yet, rather than fabricated imagery (see CLAUDE.md rule 6).
+   Swap for real screens the same way the About page's doodle slots get
+   swapped for real art. */
+.case-visual {
+  max-width: 760px;
+  margin: 24px auto 30px;
+  padding: 46px 24px;
+  text-align: center;
+  border: 2px dashed var(--panel-border);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+}
+
+.case-visual .spark {
+  width: 34px; height: 34px;
+  color: var(--case-accent, var(--c-blue));
+  opacity: .7;
+  margin-bottom: 14px;
+}
+
+.case-visual p {
+  color: var(--text-dim);
+  font-size: .92rem;
+  margin-bottom: 0;
+}
+
+.case-visual figcaption {
+  margin-top: 8px;
+  font-size: .85rem;
+  font-style: italic;
+  color: var(--text-dim);
+}
+
+/* Prev/next case-study nav, echoing the reference format's footer links. */
+.case-prevnext {
+  max-width: 980px;
+  margin: 6px auto 0;
+  padding: 34px 8% 55px;
+  border-top: 1px solid var(--panel-border);
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.case-prevnext a {
+  display: flex;
+  flex-direction: column;
+  max-width: 260px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.case-prevnext a:last-child { text-align: right; align-items: flex-end; }
+
+.case-prevnext .dir-label {
+  font-size: .72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 6px;
+}
+
+.case-prevnext .dir-title {
+  font-family: 'Darumadrop One', cursive;
+  font-size: 1.05rem;
+}
+
+.case-prevnext a:hover .dir-title,
+.case-prevnext a:focus-visible .dir-title { text-decoration: underline; }
 
 @media (max-width: 760px) {
   .case-section { padding-left: 6%; padding-right: 6%; }
+  .case-meta { padding-left: 6%; padding-right: 6%; }
+  .case-prevnext { padding-left: 6%; padding-right: 6%; }
+}
+
+@media (max-width: 500px) {
+  .case-prevnext a:last-child { text-align: left; align-items: flex-start; }
 }

@@ -360,6 +360,15 @@ function initCometTrail() {
 
   const RAINBOW_REPEAT = 480; // px of one full color cycle, tiled via spreadMethod="repeat"
   const RAINBOW_SPEED = 1.6; // how much faster the rainbow flows than you scroll
+  const IDLE_FLOW_SPEED = 0.02; // px/ms the rainbow keeps drifting even at rest — a full cycle every ~24s
+  const EASE = 0.1; // how quickly the star catches up to its scroll target — <1 so it glides, not snaps
+  const WOBBLE_X = 5, WOBBLE_Y = 3.5; // px — a small orbiting drift, so the star never sits perfectly still
+
+  // Eased/wobbled star position, in document coordinates. null until the
+  // first tick, so that tick can hard-set it (no glide-in from empty state).
+  let displayX = null, displayY = null;
+  let idleFlowOffset = 0;
+  let lastTick = null;
 
   function layout() {
     const docHeight = document.documentElement.scrollHeight;
@@ -370,7 +379,7 @@ function initCometTrail() {
     svg.setAttribute('height', docHeight);
     svg.setAttribute('viewBox', `0 0 ${w} ${docHeight}`);
     // A short repeating band, not one gradient stretched over the whole
-    // document — update() then slides it as you scroll, so the rainbow
+    // document — tick() then slides it continuously, so the rainbow
     // itself flows rather than sitting fixed to a document position.
     gradient.setAttribute('x1', '0'); gradient.setAttribute('y1', '0');
     gradient.setAttribute('x2', '0'); gradient.setAttribute('y2', RAINBOW_REPEAT);
@@ -384,7 +393,12 @@ function initCometTrail() {
     el.setAttribute('class', 'trail-seg');
     svg.appendChild(el);
 
-    update();
+    // The path geometry just changed (resize/font-load), so the eased
+    // position from the old path is meaningless — reset it and let tick()
+    // hard-snap to the new target on its next frame instead of gliding
+    // across an unrelated shape.
+    displayX = displayY = null;
+    tick(performance.now());
   }
 
   function pointAtLength(target) {
@@ -400,26 +414,64 @@ function initCometTrail() {
     return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f };
   }
 
-  function update() {
-    if (!samples.length) return;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-    const point = pointAtLength(totalLength * pct);
-    star.style.transform = `translate(${point.x}px, ${point.y - window.scrollY}px) translate(-50%, -50%)`;
+  // Paints one frame — called continuously by the rAF loop below (not just
+  // on scroll), so the comet keeps drifting and the rainbow keeps flowing
+  // even at rest, instead of freezing solid the instant scrolling stops.
+  // Also called directly (not via the loop) from layout(), so a resize
+  // repaints immediately instead of waiting on the next scheduled frame.
+  function tick(now) {
+    if (samples.length) {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      const target = pointAtLength(totalLength * pct);
 
-    // Slide the repeating rainbow band with scroll position so the colors
-    // visibly flow as you scroll, instead of sitting fixed to a document
-    // position. Modulo keeps the offset bounded over a long page.
-    const offset = (window.scrollY * RAINBOW_SPEED) % RAINBOW_REPEAT;
-    gradient.setAttribute('gradientTransform', `translate(0, ${-offset})`);
+      if (displayX === null) {
+        displayX = target.x;
+        displayY = target.y;
+      } else {
+        // Ease toward the scroll target rather than snapping straight to
+        // it, so the star glides/trails behind fast scrolling like
+        // something with a little inertia, instead of teleporting.
+        displayX += (target.x - displayX) * EASE;
+        displayY += (target.y - displayY) * EASE;
+      }
 
-    // Reveal the ribbon only up to just past the star's current position —
-    // a small lead so the trail reads as continuing under the star rather
-    // than stopping short of it — leaving everything below hidden until
-    // the star actually reaches it. The trail must never appear ahead of
-    // where the star currently is.
-    const docHeight = document.documentElement.scrollHeight;
-    revealRect.setAttribute('height', Math.min(docHeight, point.y + 30));
+      // A slow, gentle orbit layered on top of the eased position — keeps
+      // the star lightly adrift even when scroll is perfectly still,
+      // instead of parking dead motionless.
+      const t = now / 1000;
+      const wobbleX = Math.sin(t * 0.9) * WOBBLE_X;
+      const wobbleY = Math.cos(t * 0.6) * WOBBLE_Y;
+
+      const x = displayX + wobbleX;
+      const y = displayY + wobbleY;
+      star.style.transform = `translate(${x.toFixed(1)}px, ${(y - window.scrollY).toFixed(1)}px) translate(-50%, -50%)`;
+
+      // Slide the repeating rainbow band with scroll position, plus a
+      // constant slow drift of its own, so the colors keep flowing even
+      // while the page sits still. Modulo keeps the offset bounded.
+      const dt = lastTick === null ? 0 : now - lastTick;
+      idleFlowOffset = (idleFlowOffset + dt * IDLE_FLOW_SPEED) % RAINBOW_REPEAT;
+      const offset = (window.scrollY * RAINBOW_SPEED + idleFlowOffset) % RAINBOW_REPEAT;
+      gradient.setAttribute('gradientTransform', `translate(0, ${-offset})`);
+
+      // Reveal the ribbon only up to just past the star's current (eased)
+      // position — a small lead so the trail reads as continuing under the
+      // star rather than stopping short of it. Using the eased position
+      // rather than the raw scroll target keeps this in sync with where
+      // the star is actually drawn, so the trail never appears ahead of it.
+      const docHeight = document.documentElement.scrollHeight;
+      revealRect.setAttribute('height', Math.min(docHeight, Math.max(0, y + 30)));
+    }
+    lastTick = now;
+  }
+
+  // The one persistent rAF chain — started once below, in initCometTrail,
+  // never re-started by layout()/resize (that would stack up duplicate
+  // chains, each repainting every frame for no reason).
+  function loop(now) {
+    tick(now);
+    requestAnimationFrame(loop);
   }
 
   // A quick glow pulse on the star each time a new scroll gesture begins —
@@ -435,7 +487,9 @@ function initCometTrail() {
     star.classList.add('is-pulsing');
   }
 
-  let ticking = false;
+  // The persistent loop() above already repaints every frame regardless of
+  // scroll, so this listener only needs to track "is a scroll gesture
+  // active" for the pulse effect — not trigger a repaint itself.
   window.addEventListener('scroll', () => {
     if (!scrollActive) {
       scrollActive = true;
@@ -443,10 +497,6 @@ function initCometTrail() {
     }
     clearTimeout(scrollIdleTimer);
     scrollIdleTimer = setTimeout(() => { scrollActive = false; }, 150);
-
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => { update(); ticking = false; });
   }, { passive: true });
 
   window.addEventListener('resize', layout);
@@ -456,6 +506,7 @@ function initCometTrail() {
     document.fonts.ready.then(layout);
   }
   layout();
+  requestAnimationFrame(loop);
 
   star.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
