@@ -3,6 +3,33 @@
    Cosmic motif. See CLAUDE.md for the rationale.
    ========================================================= */
 
+/* Self-hosted rather than linked from fonts.googleapis.com: privacy-focused
+   browsers and extensions (Brave's shields, Safari's cross-site tracking
+   prevention, many ad blockers) block Google Fonts requests by default,
+   which silently fell back to a generic serif/cursive system font — the
+   nav, logo, and every heading on the live GitHub Pages deploy rendered in
+   the wrong typeface for anyone with those protections on, even though
+   the page itself loaded fine. Self-hosting removes the third-party
+   request entirely, so the type is never at the mercy of the visitor's
+   browser privacy settings. Latin-subset .woff2 only (this site has no
+   non-Latin copy) — same files Google itself would have served.
+   Regenerate from https://fonts.google.com if new weights are needed. */
+@font-face {
+  font-family: 'Darumadrop One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/darumadrop-one-v14-latin-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/inter-v20-latin-var.woff2') format('woff2-variations'), url('../fonts/inter-v20-latin-var.woff2') format('woff2');
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
