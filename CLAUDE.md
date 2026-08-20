@@ -70,13 +70,20 @@ dark background, and deeper/darker equivalents for text on the light nav bar
 | Blue | `#4d5bff` | `#2a3fcc` |
 | Purple | `#a78bfa` | `#6b3fa0` |
 | Pink (accent only) | `#ff3fd8` | — |
+| Teal (accent only) | `#2dd4bf` | — |
 
 Background `#050314` (deep space); nav/paper surfaces `#fdfdfb`; body text
-on dark: `#ffffff` / `#d3d4e6` / `#9d9fc0` (heading / subhead / muted).
+on dark: `#ffffff` / `#d3d4e6` / `#9d9fc0` (heading / subhead / muted). Teal
+was added from Jasmine's cosmic-creature moodboard reference (a mint/teal
+the original 7-hue set didn't have); like pink, it's decorative/accent-only
+— no deep/text-on-white counterpart, since it isn't used in nav or as body
+text.
 
 `--gradient-rainbow` (red→orange→yellow→green→blue→purple) is the site's
 signature: nav underline, comet trail, hero ribbon, `.gradient` text accent.
-Don't introduce off-palette colors — extend by opacity/tint of these instead.
+`--gradient-cta` (pink → blue) is a calmer two-hue alternative used for the
+CTA button. Don't introduce off-palette colors — extend by opacity/tint of
+these instead.
 
 **Type**
 - Display / headings / nav / logo: `Shantell Sans`, weight 700 (400 for
@@ -138,9 +145,13 @@ one filled ribbon (`.comet-trail` markup, driven by `initCometTrail()` in
 is why it's absent from `case-studies/*.html`). Because the whole site is
 now one page, the trail runs the full length of it — hero through footer,
 including the About/Projects/Playground/Contact sections — not just a short
-home-page hero anymore. It sweeps in a smooth, spring-like S-curve from
-edge to edge of the viewport rather than hugging one side, and actively
-steers around every heading, paragraph, link, card, and form on the page
+home-page hero anymore. It runs down the middle-right of the page with a
+short, gentle sway (like a wire loosely held vertically, not a taut
+straight line or the old wide edge-to-edge sweep), and the stroke widens
+only where the path actually curves/dodges — otherwise it holds one
+reference width — rather than a round brush's constant width everywhere
+or a calligraphy nib's width-by-direction. It actively steers around
+every heading, paragraph, link, card, and form on the page
 (`OBSTACLE_SELECTOR` in the JS) so it never overlaps or sits under text —
 if a new section's element should also be avoided, add its selector there.
 A twinkling star rides the ribbon at the current scroll position and
@@ -194,11 +205,13 @@ path already laid out ahead of it.
 ## Repo structure
 
 - `index.html` — the entire site as one page. In scroll order: hero (comet
-  trail, mascot, tagline strip, featured-projects teaser) → `#about` (real
-  bio pulled from Jasmine's previous Framer portfolio, hover avatar frame,
-  rabbit icon, a "sketchbook" of 5 floating placeholder doodles — hover/
-  focus shows an info tooltip, below 700px it becomes a static list; the
-  doodle art itself is still placeholder, see `images/` below) → `#projects`
+  trail, mascot, tagline strip) → `#about` (real bio pulled from Jasmine's
+  previous Framer portfolio, hover avatar frame, rabbit icon, a
+  "sketchbook" of 5 doodles floating around the bio/avatar content — each
+  one will be a drawing of a personal object, with its hover/focus tooltip
+  a fun fact about Jasmine tied to that object; below 700px it becomes a
+  static list; both the art and the fun-fact captions are still
+  placeholder, see `images/` below) → `#projects`
   (galaxy of hover/focus-able "planet" project cards — Comet Commute,
   Elevator Accessibility, DreamScape, Lucky's First Day — each linking out
   to a full write-up, see `case-studies/` below, with a list fallback for
@@ -230,9 +243,10 @@ path already laid out ahead of it.
 - `js/main.js` — nav toggle/scrollspy active-link logic, the comet trail,
   and starfield generation.
 - `README.md` — one-line project description.
-- Remaining placeholder content: the About section's sketchbook doodle
-  captions/art, all of Playground, and the contact form's backend wiring —
-  see rule 6.
+- Remaining placeholder content: the About section's sketchbook doodle art
+  (each should become a drawing of a personal object) and fun-fact
+  captions (each a fun fact about Jasmine tied to that object), all of
+  Playground, and the contact form's backend wiring — see rule 6.
 
 ## Available skills
 

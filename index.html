@@ -13,7 +13,9 @@
     <div class="comet-trail" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg" focusable="false">
             <defs>
-                <linearGradient id="trailGradient" gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+                <!-- Full six-stop rainbow. reflect (not repeat) mirrors the run at each
+                     tile boundary (red...purple...red) so there's no hard seam. -->
+                <linearGradient id="trailGradient" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
                     <stop offset="0%" stop-color="#ff4b3e" />
                     <stop offset="20%" stop-color="#ff9f1c" />
                     <stop offset="40%" stop-color="#ffd93d" />
@@ -63,22 +65,40 @@
 
     <main>
         <section class="hero">
-            <svg class="hero-ribbon" viewBox="0 0 900 420" fill="none" aria-hidden="true">
+            <!-- Decorative only (aria-hidden) — a slim hand-drawn comet living in the
+                 hero's left margin gutter, entirely left of .hero-text's own padding, so
+                 it never crosses the heading/tagline/button regardless of how much they
+                 wrap. Purple tail (bottom) to red head (top), both tips faded out via the
+                 gradient's own alpha, with the thicker mid-stroke's dasharray-cut ends
+                 tapering it to a point rather than a flat-cut bar. Sits behind .hero-text
+                 (z-index 0 vs 1) so copy stays readable on top of it either way. -->
+            <svg class="hero-ribbon" viewBox="0 0 90 480" fill="none" aria-hidden="true">
                 <defs>
-                    <linearGradient id="heroRibbon" x1="0" y1="0" x2="880" y2="0" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#ff4b3e" />
-                        <stop offset="25%" stop-color="#ff9f1c" />
-                        <stop offset="45%" stop-color="#ffd93d" />
-                        <stop offset="65%" stop-color="#4ade80" />
-                        <stop offset="85%" stop-color="#4d5bff" />
-                        <stop offset="100%" stop-color="#a78bfa" />
+                    <!-- Full rainbow again, purple tail to red head, still fading out
+                         at both true tips via stop-opacity. -->
+                    <linearGradient id="heroRibbon" x1="30" y1="440" x2="55" y2="50" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#a78bfa" stop-opacity="0" />
+                        <stop offset="12%" stop-color="#a78bfa" stop-opacity="1" />
+                        <stop offset="32%" stop-color="#4d5bff" />
+                        <stop offset="50%" stop-color="#4ade80" />
+                        <stop offset="68%" stop-color="#ffd93d" />
+                        <stop offset="85%" stop-color="#ff9f1c" stop-opacity="1" />
+                        <stop offset="100%" stop-color="#ff4b3e" stop-opacity="0" />
                     </linearGradient>
                 </defs>
-                <path
-                    d="M55,110 C10,85 25,45 65,55 C115,68 150,115 250,100 C390,80 500,55 640,100 C740,132 800,190 870,235"
-                    stroke="url(#heroRibbon)" stroke-width="26" stroke-linecap="round" />
+                <!-- Thin full-length wisp — the faded tips read as a comet trailing off
+                     into nothing, past where the thicker body below stops. -->
+                <path d="M 30 440 C 55 400, 10 350, 45 300 C 75 255, 15 210, 45 160 C 70 120, 20 90, 55 50"
+                    stroke="url(#heroRibbon)" stroke-width="5" stroke-linecap="round" opacity=".55" />
+                <!-- Thicker body, shown only over its middle stretch (pathLength +
+                     dasharray) so both ends taper to the round linecap instead of a flat
+                     cut — a "slight taper" without needing a hand-built variable-width
+                     outline. -->
+                <path d="M 30 440 C 55 400, 10 350, 45 300 C 75 255, 15 210, 45 160 C 70 120, 20 90, 55 50"
+                    stroke="url(#heroRibbon)" stroke-width="13" stroke-linecap="round"
+                    pathLength="100" stroke-dasharray="58 100" stroke-dashoffset="-21" />
                 <path d="M12 30 L14.5 39.5 L24 42 L14.5 44.5 L12 54 L9.5 44.5 L0 42 L9.5 39.5 Z"
-                    transform="translate(50,30)" fill="white" />
+                    transform="translate(46,40) scale(.6)" fill="white" />
             </svg>
 
             <div class="hero-text">
@@ -91,32 +111,18 @@
             </div>
 
             <div class="mascot-wrap">
-                <svg class="mascot" viewBox="0 0 320 460" fill="none" role="img"
-                    aria-label="Illustrated chibi astronaut with bunny ears, waving">
-                    <path d="M120,70 C110,20 95,-10 118,5 C138,20 140,55 130,80 Z" fill="rgba(255,255,255,.9)"
-                        stroke="#4d5bff" stroke-width="4" stroke-linejoin="round" />
-                    <path d="M200,70 C210,20 225,-10 202,5 C182,20 180,55 190,80 Z" fill="rgba(255,255,255,.9)"
-                        stroke="#4d5bff" stroke-width="4" stroke-linejoin="round" />
-                    <path d="M85,240 C65,270 60,300 78,330" stroke="#4d5bff" stroke-width="9" stroke-linecap="round"
-                        fill="none" />
-                    <circle cx="76" cy="333" r="11" fill="rgba(255,255,255,.9)" stroke="#4d5bff" stroke-width="4" />
-                    <path d="M225,230 C262,208 278,168 264,138" stroke="#4d5bff" stroke-width="9" stroke-linecap="round"
-                        fill="none" />
-                    <circle cx="266" cy="135" r="11" fill="rgba(255,255,255,.9)" stroke="#4d5bff" stroke-width="4" />
-                    <path
-                        d="M95,220 C88,282 100,345 150,363 L172,363 C222,345 232,282 225,220 C208,198 112,198 95,220 Z"
-                        fill="rgba(255,255,255,.07)" stroke="#4d5bff" stroke-width="5" stroke-linejoin="round" />
-                    <path d="M150,363 C138,382 172,392 156,412 C144,424 176,430 164,448" stroke="#4d5bff"
-                        stroke-width="6" stroke-linecap="round" fill="none" opacity=".8" />
-                    <circle cx="160" cy="140" r="95" fill="rgba(255,255,255,.06)" stroke="#4d5bff" stroke-width="5" />
-                    <circle cx="160" cy="146" r="68" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="3" />
-                    <circle cx="132" cy="140" r="7" fill="#4d5bff" />
-                    <circle cx="188" cy="140" r="7" fill="#4d5bff" />
-                    <path d="M140,165 Q160,180 180,165" stroke="#4d5bff" stroke-width="4" stroke-linecap="round"
-                        fill="none" />
-                    <path d="M40 8 L42 15 L49 17 L42 19 L40 26 L38 19 L31 17 L38 15 Z" fill="white" opacity=".85" />
-                    <path d="M280 60 L281.5 65 L286 66.5 L281.5 68 L280 73 L278.5 68 L274 66.5 L278.5 65 Z" fill="white"
-                        opacity=".7" />
+                <!-- Temporary placeholder — swap for real character art when ready.
+                     Real file in images/ (not inline SVG) so it can be replaced
+                     directly, same pattern as the About section's doodle slots. -->
+                <img class="mascot" src="images/mascot-placeholder.svg"
+                    alt="Placeholder — mascot art coming soon">
+                <svg class="hero-spark hero-spark-a" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 0 C13 6 14 9 24 12 C14 15 13 18 12 24 C11 18 10 15 0 12 C10 9 11 6 12 0 Z"
+                        fill="#ff3fd8" />
+                </svg>
+                <svg class="hero-spark hero-spark-b" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 0 C13 6 14 9 24 12 C14 15 13 18 12 24 C11 18 10 15 0 12 C10 9 11 6 12 0 Z"
+                        fill="#2dd4bf" />
                 </svg>
             </div>
         </section>
@@ -138,34 +144,22 @@
             <div class="lines">
                 <span>UX <span class="accent-pink">DESIGNER</span></span>
                 <span>Graphic <span class="accent-yellow">ARTIST</span></span>
-                <span>and rabbit <span class="accent-green">enthusiast</span> 🐇</span>
+                <span>and rabbit <span class="accent-teal">enthusiast</span> 🐇</span>
             </div>
-        </section>
-
-        <section class="home-projects">
-            <h2 class="hand section-title" style="font-size:clamp(2.2rem,4.5vw,3.4rem); margin-bottom:50px;">Featured
-                Projects</h2>
-            <div class="projects-grid">
-                <div class="card">
-                    <h3>🚗 Comet Commute</h3>
-                    <p>Real-time parking and predictive commute suggestions, built into UT Dallas's campus app.</p>
-                    <a class="view-case" href="case-studies/comet-commute.html">View case study <span class="arrow">→</span></a>
-                </div>
-                <div class="card">
-                    <h3>♿ Elevator Accessibility</h3>
-                    <p>Audio, haptic, and RFID concepts for independent elevator navigation.</p>
-                    <a class="view-case" href="case-studies/elevator-accessibility.html">View case study <span class="arrow">→</span></a>
-                </div>
-                <div class="card">
-                    <h3>🌙 DreamScape</h3>
-                    <p>A speculative dream-visualization app designed in a 24-hour UX Club designathon.</p>
-                    <a class="view-case" href="case-studies/dreamscape.html">View case study <span class="arrow">→</span></a>
-                </div>
-            </div>
-            <p style="margin-top:40px;"><a class="btn" href="#projects">See all projects</a></p>
         </section>
 
         <section id="about" class="page-hero">
+            <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                    <linearGradient id="aboutRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#4d5bff" />
+                        <stop offset="50%" stop-color="#a78bfa" />
+                        <stop offset="100%" stop-color="#ff3fd8" />
+                    </linearGradient>
+                </defs>
+                <path d="M-20,180 C150,260 220,120 380,160 C520,190 560,80 700,120 C850,155 900,280 1020,220"
+                    stroke="url(#aboutRibbon)" stroke-width="90" stroke-linecap="round" opacity=".18" />
+            </svg>
             <div class="about-grid">
                 <div class="about-copy">
                     <h2>About</h2>
@@ -206,13 +200,14 @@
                     <p class="avatar-hint">hover ✦</p>
                 </div>
             </div>
-        </section>
 
-        <section aria-label="Sketchbook — placeholder art to be replaced">
-            <p class="eyebrow" style="text-align:center;">HOVER OR TAB THROUGH THE SKETCHBOOK ✦</p>
+            <p class="eyebrow about-doodles-label">HOVER OR TAB THROUGH THE SKETCHBOOK ✦</p>
 
+            <!-- Sketchbook doodles — floating around the About content rather
+                 than their own separate section below it. Each .doodle has an
+                 individual aria-label, so no group label needed here. -->
             <div class="about-doodles">
-                <svg class="rabbit-icon" viewBox="0 0 100 70" fill="none" aria-hidden="true" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
+                <svg class="rabbit-icon" viewBox="0 0 100 70" fill="none" aria-hidden="true">
                     <path d="M20,25 C15,10 8,0 15,2 C24,5 26,18 24,28" stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round" />
                     <path d="M32,25 C30,8 26,-2 34,2 C41,6 40,18 36,28" stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round" />
                     <ellipse cx="30" cy="45" rx="24" ry="18" stroke="#a78bfa" stroke-width="3" fill="none" />
@@ -220,67 +215,67 @@
                     <circle cx="34" cy="42" r="2.5" fill="#a78bfa" />
                 </svg>
 
-                <button class="doodle doodle-1" aria-label="Sketch placeholder one — hover for details">
+                <button class="doodle doodle-1" aria-label="Object drawing placeholder one — hover for a fun fact">
                     <img src="images/doodle-1.svg" alt="">
                 </button>
-                <div class="planet-card" style="top:2%; left:2%;">
-                    <h4>✏️ Sketch one</h4>
-                    <p>Swap <code>images/doodle-1.svg</code> for your own drawing. Caption: <span class="tbd">[TBD]</span></p>
+                <div class="planet-card" style="top:2%; left:13%;">
+                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <p>Drawing swaps in at <code>images/doodle-1.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
-                <button class="doodle doodle-2" aria-label="Sketch placeholder two — hover for details">
+                <button class="doodle doodle-2" aria-label="Object drawing placeholder two — hover for a fun fact">
                     <img src="images/doodle-2.svg" alt="">
                 </button>
-                <div class="planet-card" style="top:80%; left:2%;">
-                    <h4>🎨 Sketch two</h4>
-                    <p>Swap <code>images/doodle-2.svg</code> for your own drawing. Caption: <span class="tbd">[TBD]</span></p>
+                <div class="planet-card" style="top:64%; left:17%;">
+                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <p>Drawing swaps in at <code>images/doodle-2.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
-                <button class="doodle doodle-3" aria-label="Sketch placeholder three — hover for details">
+                <button class="doodle doodle-3" aria-label="Object drawing placeholder three — hover for a fun fact">
                     <img src="images/doodle-3.svg" alt="">
                 </button>
-                <div class="planet-card" style="top:0%; left:48%;">
-                    <h4>🖌️ Sketch three</h4>
-                    <p>Swap <code>images/doodle-3.svg</code> for your own drawing. Caption: <span class="tbd">[TBD]</span></p>
+                <div class="planet-card" style="top:2%; left:56%;">
+                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <p>Drawing swaps in at <code>images/doodle-3.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
-                <button class="doodle doodle-4" aria-label="Sketch placeholder four — hover for details">
+                <button class="doodle doodle-4" aria-label="Object drawing placeholder four — hover for a fun fact">
                     <img src="images/doodle-4.svg" alt="">
                 </button>
-                <div class="planet-card" style="top:84%; left:44%;">
-                    <h4>🖍️ Sketch four</h4>
-                    <p>Swap <code>images/doodle-4.svg</code> for your own drawing. Caption: <span class="tbd">[TBD]</span></p>
+                <div class="planet-card" style="top:68%; left:58%;">
+                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <p>Drawing swaps in at <code>images/doodle-4.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
-                <button class="doodle doodle-5" aria-label="Sketch placeholder five — hover for details">
+                <button class="doodle doodle-5" aria-label="Object drawing placeholder five — hover for a fun fact">
                     <img src="images/doodle-5.svg" alt="">
                 </button>
-                <div class="planet-card" style="top:34%; left:56%;">
-                    <h4>✦ Sketch five</h4>
-                    <p>Swap <code>images/doodle-5.svg</code> for your own drawing. Caption: <span class="tbd">[TBD]</span></p>
+                <div class="planet-card" style="top:34%; left:66%;">
+                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <p>Drawing swaps in at <code>images/doodle-5.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
             </div>
 
             <div class="doodles-fallback">
                 <div class="card">
                     <img src="images/doodle-1.svg" alt="">
-                    <div><h3>✏️ Sketch one</h3><p>Swap <code>images/doodle-1.svg</code>. Caption: <span class="tbd">[TBD]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-1.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
                 <div class="card">
                     <img src="images/doodle-2.svg" alt="">
-                    <div><h3>🎨 Sketch two</h3><p>Swap <code>images/doodle-2.svg</code>. Caption: <span class="tbd">[TBD]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-2.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
                 <div class="card">
                     <img src="images/doodle-3.svg" alt="">
-                    <div><h3>🖌️ Sketch three</h3><p>Swap <code>images/doodle-3.svg</code>. Caption: <span class="tbd">[TBD]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-3.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
                 <div class="card">
                     <img src="images/doodle-4.svg" alt="">
-                    <div><h3>🖍️ Sketch four</h3><p>Swap <code>images/doodle-4.svg</code>. Caption: <span class="tbd">[TBD]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-4.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
                 <div class="card">
                     <img src="images/doodle-5.svg" alt="">
-                    <div><h3>✦ Sketch five</h3><p>Swap <code>images/doodle-5.svg</code>. Caption: <span class="tbd">[TBD]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-5.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
             </div>
         </section>
@@ -363,6 +358,17 @@
         </section>
 
         <section id="playground" class="page-hero" style="min-height:auto; padding-bottom:0;">
+            <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                    <linearGradient id="playgroundRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#4ade80" />
+                        <stop offset="50%" stop-color="#ffd93d" />
+                        <stop offset="100%" stop-color="#ff9f1c" />
+                    </linearGradient>
+                </defs>
+                <path d="M-20,250 C100,150 180,340 300,260 C420,180 500,340 620,260 C740,180 820,340 940,260 C980,240 1000,250 1020,250"
+                    stroke="url(#playgroundRibbon)" stroke-width="90" stroke-linecap="round" opacity=".18" />
+            </svg>
             <h2>Playground</h2>
             <svg class="squiggle-underline" viewBox="0 0 220 20" aria-hidden="true">
                 <path d="M2,10 C20,2 35,18 55,10 C75,2 90,18 110,10 C130,2 145,18 165,10 C185,2 200,18 218,10"
@@ -421,6 +427,17 @@
         </section>
 
         <section id="contact" class="page-hero" style="min-height:auto; padding-bottom:0;">
+            <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                    <linearGradient id="contactRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#a78bfa" />
+                        <stop offset="50%" stop-color="#ff3fd8" />
+                        <stop offset="100%" stop-color="#4d5bff" />
+                    </linearGradient>
+                </defs>
+                <path d="M-20,300 C200,220 300,380 500,300 C700,220 800,380 1020,300"
+                    stroke="url(#contactRibbon)" stroke-width="90" stroke-linecap="round" opacity=".18" />
+            </svg>
             <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#ff3fd8" /></svg>
             <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#4d5bff" /></svg>
             <svg class="mini-spark spark-c" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#ffd93d" /></svg>
@@ -431,7 +448,7 @@
         <section>
             <div class="contact-grid">
                 <div class="contact-direct">
-                    <a href="mailto:jasminebontha@example.com">✉ jasminebontha@example.com</a>
+                    <a href="mailto:jflower2k6@gmail.com">✉ jflower2k6@gmail.com</a>
                     <a href="#" class="tbd">🔗 LinkedIn — [TBD]</a>
                     <a href="#" class="tbd">🎨 Behance / Dribbble — [TBD]</a>
                 </div>
@@ -462,9 +479,23 @@
     </main>
 
     <footer>
-        <h2 class="hand footer-title">Let's build something <span class="gradient-soft">amazing</span></h2>
+        <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+                <linearGradient id="footerRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#ff4b3e" />
+                    <stop offset="20%" stop-color="#ff9f1c" />
+                    <stop offset="40%" stop-color="#ffd93d" />
+                    <stop offset="60%" stop-color="#4ade80" />
+                    <stop offset="80%" stop-color="#4d5bff" />
+                    <stop offset="100%" stop-color="#a78bfa" />
+                </linearGradient>
+            </defs>
+            <path d="M-20,250 C200,100 300,400 500,250 C700,100 800,400 1020,250"
+                stroke="url(#footerRibbon)" stroke-width="90" stroke-linecap="round" opacity=".16" />
+        </svg>
+        <h2 class="hand footer-title">Let's build something <span class="gradient">amazing</span></h2>
         <p class="eyebrow" style="margin-top:20px;">GET IN TOUCH</p>
-        <a class="footer-email" href="mailto:jasminebontha@example.com">jasminebontha@example.com</a>
+        <a class="footer-email" href="mailto:jflower2k6@gmail.com">jflower2k6@gmail.com</a>
         <div class="socials">
             <a href="#about">About</a>
             <a href="#projects">Projects</a>

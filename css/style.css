@@ -54,6 +54,10 @@
   --c-blue: #4d5bff;
   --c-purple: #a78bfa;
   --c-pink: #ff3fd8;
+  /* Added from Jasmine's cosmic-creature moodboard reference — a mint/teal
+     that the original 6-hue rainbow didn't have. Accent-only, like pink:
+     no --d-teal counterpart, since it isn't used as nav/text-on-white. */
+  --c-teal: #2dd4bf;
 
   /* deep rainbow — AA-safe for text on light (nav) surfaces */
   --d-red: #c62828;
@@ -88,9 +92,39 @@ body::before {
   background:
     radial-gradient(circle at 20% 20%, rgba(255, 63, 216, .14), transparent 30%),
     radial-gradient(circle at 80% 30%, rgba(77, 91, 255, .14), transparent 35%),
-    radial-gradient(circle at 50% 90%, rgba(74, 222, 128, .10), transparent 30%);
+    radial-gradient(circle at 50% 90%, rgba(74, 222, 128, .10), transparent 30%),
+    /* Mint/teal nebula glow — from Jasmine's cosmic-creature moodboard
+       reference, rounding the ambient glow set out to four hues. */
+    radial-gradient(circle at 30% 65%, rgba(45, 212, 191, .12), transparent 32%);
   z-index: -2;
   pointer-events: none;
+}
+
+/* Aurora borealis — tall, soft-edged color curtains draping down from
+   above the viewport (not round nebula blobs like body::before), heavily
+   blurred and gently drifting. screen blend mode so the colors glow and
+   layer over each other and the starfield instead of sitting as flat
+   tinted panels. Same rainbow palette as the rest of the site. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: -15% -20%;
+  background:
+    radial-gradient(ellipse 32% 130% at 12% -25%, rgba(74, 222, 128, .22), transparent 62%),
+    radial-gradient(ellipse 28% 120% at 40% -20%, rgba(45, 212, 191, .2), transparent 60%),
+    radial-gradient(ellipse 30% 130% at 68% -25%, rgba(167, 139, 250, .2), transparent 62%),
+    radial-gradient(ellipse 26% 110% at 92% -18%, rgba(255, 63, 216, .16), transparent 58%);
+  filter: blur(50px);
+  mix-blend-mode: screen;
+  z-index: -2;
+  pointer-events: none;
+  animation: aurora-drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift {
+  0%   { transform: translateX(-2%) scaleY(1); }
+  50%  { transform: translateX(1.5%) scaleY(1.06); }
+  100% { transform: translateX(-1%) scaleY(0.97); }
 }
 
 .stars {
@@ -135,21 +169,12 @@ h1, h2, h3, .hand {
   color: transparent;
 }
 
-/* A calmer two-color alternative to the full rainbow — same clip-text
-   technique, reused for spots (like the repeated footer heading) where
-   the full six-stop gradient would be one rainbow accent too many. */
-.gradient-soft {
-  background: var(--gradient-cta);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 /* Single-hue accents for small emphasis words — an alternative to reaching
    for the full rainbow gradient every time a word needs a highlight. */
 .accent-pink { color: var(--c-pink); }
 .accent-yellow { color: var(--c-yellow); }
 .accent-green { color: var(--c-green); }
+.accent-teal { color: var(--c-teal); }
 
 a { color: inherit; }
 
@@ -159,6 +184,125 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+/* =========================================================
+   Custom cursor — a spark/star by default, growing into a spinning
+   "CLICK ME!" badge over anything clickable. Built and positioned in
+   initCustomCursor() in js/main.js; this just styles/hides it. Scoped to
+   real mouse pointers
+   (hover:hover + pointer:fine) so touch devices keep their native tap
+   behavior untouched — a fake cursor has no meaning without a mouse to
+   drive it. `* { cursor: none }` needs !important here because several
+   elements already set an explicit `cursor: pointer` (buttons, .btn,
+   .planet, etc.) that would otherwise win over a plain inherited value.
+   ========================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+  * { cursor: none !important; }
+
+  .cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 28px; height: 28px;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    pointer-events: none;
+    transition: opacity .15s ease, width .2s ease, height .2s ease;
+    /* Blue glow outline around the default star — dropped entirely over
+       the "click me" badge below, so the glow doesn't compete with the
+       badge's own outline/text at that larger size. */
+    filter:
+      drop-shadow(0 0 4px rgba(77, 91, 255, .9))
+      drop-shadow(0 0 10px rgba(77, 91, 255, .6));
+  }
+
+  /* Grows into the "click me" badge's size over anything clickable — the
+     star is small and precise, but "CLICK ME!" running around a circle
+     needs real room to be legible. */
+  .cursor.is-pointer {
+    width: 108px;
+    height: 108px;
+    filter: none;
+  }
+
+  /* Wraps the two icon svgs — holds the click-flash scale animation on
+     its own transform, separate from .cursor's (mousemove-driven
+     position) and .cursor-icon--badge's (continuous spin), so the three
+     never fight over the same property. */
+  .cursor-flash {
+    position: relative;
+    width: 100%; height: 100%;
+  }
+
+  .cursor-flash.is-flashing { animation: cursor-flash .4s ease-out; }
+
+  @keyframes cursor-flash {
+    0% { transform: scale(1); filter: brightness(1); }
+    25% { transform: scale(1.8); filter: brightness(2.2); }
+    100% { transform: scale(1); filter: brightness(1); }
+  }
+
+  .cursor-icon {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    color: var(--text);
+    transition: opacity .15s ease;
+  }
+
+  .cursor-icon--star { opacity: 1; }
+
+  .cursor-icon--badge {
+    opacity: 0;
+    /* Yellow, not blue — needs to read clearly over the pink/blue CTA
+       button gradient it's most often hovering, and yellow contrasts
+       cleanly against both ends of that gradient. */
+    color: var(--c-yellow);
+    animation: cursor-spin 6s linear infinite;
+    animation-play-state: paused;
+  }
+
+  .cursor-icon--badge circle { fill: none; stroke: currentColor; stroke-width: 1.5; opacity: .5; }
+  /* The center point — solid fill, full opacity, overriding the ring's
+     stroke-only/half-opacity rule above (same selector specificity, so
+     this needs to come after it to win). */
+  .cursor-icon--badge .cursor-badge-dot { fill: currentColor; stroke: none; opacity: 1; }
+  .cursor-icon--badge text {
+    font-family: 'Darumadrop One', cursive;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    fill: currentColor;
+  }
+
+  .cursor.is-pointer .cursor-icon--star { opacity: 0; }
+  .cursor.is-pointer .cursor-icon--badge {
+    opacity: 1;
+    animation-play-state: running;
+  }
+
+  @keyframes cursor-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Burst particles — small sparks flung outward from the click point,
+     one JS-created element per spark, self-removing on animationend. */
+  .cursor-burst {
+    position: fixed;
+    top: 0; left: 0;
+    width: 10px; height: 10px;
+    margin: -5px 0 0 -5px;
+    pointer-events: none;
+    z-index: 998;
+    animation: cursor-burst-fly .5s ease-out forwards;
+  }
+
+  .cursor-burst svg { width: 100%; height: 100%; display: block; }
+
+  @keyframes cursor-burst-fly {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(.25); opacity: 0; }
+  }
 }
 
 /* =========================================================
@@ -257,12 +401,17 @@ a { color: inherit; }
 }
 
 /* =========================================================
-   Comet trail (home page only) — the nav-underline's rainbow strip
-   continues down the page as one continuous ribbon, sweeping in a
-   smooth, spring-like left-right S-curve edge to edge (behind
-   content); a twinkling star, sized to span across the ribbon, rides
-   it at the current scroll position, in front of content. Fully
-   smooth curve — no rough/jagged edges — same shape on every load.
+   Comet trail (home page only) — a continuous ribbon running down the
+   middle-right of the page in the site's full rainbow gradient, behind
+   content, with a short gentle sway (like a loosely held wire) rather
+   than a taut straight line, further deviating from that sway only to
+   dodge whatever content is in the way. The stroke widens only at actual
+   turns/dodges — otherwise it holds one reference width — so it reads as
+   fluid curvature rather than a round brush's flat constant width. A
+   twinkling star rides it at the current scroll position (scaling up
+   when the stroke under it is wider), in front of content. Fully smooth
+   curve — no rough/jagged edges — same shape on every load. See
+   initCometTrail() in js/main.js.
    ========================================================= */
 
 .comet-trail {
@@ -376,19 +525,17 @@ a { color: inherit; }
 .tbd { color: var(--text-mute); font-style: italic; }
 
 /* Rainbow accent-dot — a small colored "planet" badge reused on every
-   card grid site-wide (home's featured projects, the projects fallback
-   list, about's doodle fallback), cycling through the palette so each
-   card reads as its own little world instead of a plain identical tile.
-   Quiet at rest, glows on hover — echoes the Projects page's galaxy of
-   planets without repeating its full interaction. */
-.home-projects .card,
+   card grid site-wide (the projects fallback list, about's doodle
+   fallback), cycling through the palette so each card reads as its own
+   little world instead of a plain identical tile. Quiet at rest, glows
+   on hover — echoes the Projects page's galaxy of planets without
+   repeating its full interaction. */
 .projects-list-fallback .card,
 .doodles-fallback .card {
   position: relative;
   overflow: hidden;
 }
 
-.home-projects .card::before,
 .projects-list-fallback .card::before,
 .doodles-fallback .card::before {
   content: '';
@@ -400,16 +547,15 @@ a { color: inherit; }
   transition: transform .3s ease, box-shadow .3s ease;
 }
 
-.home-projects .card:hover::before,
 .projects-list-fallback .card:hover::before,
 .doodles-fallback .card:hover::before {
   transform: scale(1.6);
   box-shadow: 0 0 14px var(--dot, var(--c-blue));
 }
 
-.home-projects .card:nth-child(1), .projects-list-fallback .card:nth-child(1), .doodles-fallback .card:nth-child(1) { --dot: var(--c-orange); }
-.home-projects .card:nth-child(2), .projects-list-fallback .card:nth-child(2), .doodles-fallback .card:nth-child(2) { --dot: var(--c-yellow); }
-.home-projects .card:nth-child(3), .projects-list-fallback .card:nth-child(3), .doodles-fallback .card:nth-child(3) { --dot: var(--c-green); }
+.projects-list-fallback .card:nth-child(1), .doodles-fallback .card:nth-child(1) { --dot: var(--c-orange); }
+.projects-list-fallback .card:nth-child(2), .doodles-fallback .card:nth-child(2) { --dot: var(--c-yellow); }
+.projects-list-fallback .card:nth-child(3), .doodles-fallback .card:nth-child(3) { --dot: var(--c-green); }
 .projects-list-fallback .card:nth-child(4), .doodles-fallback .card:nth-child(4) { --dot: var(--c-purple); }
 .doodles-fallback .card:nth-child(5) { --dot: var(--c-pink); }
 
@@ -448,6 +594,7 @@ footer {
   padding: 90px 8%;
   text-align: center;
   border-top: 1px solid var(--panel-border);
+  overflow: hidden;
 }
 
 footer .footer-title { font-size: clamp(2rem, 4vw, 3rem); }
@@ -502,11 +649,25 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 
 .hero-ribbon {
   position: absolute;
-  top: 6%;
-  left: 0;
-  width: min(70vw, 900px);
+  top: 50%;
+  /* .hero-text starts at .hero's own 8% padding (absolutely positioned
+     children are placed relative to that same padding-box edge, so this
+     percentage is directly comparable) — kept narrow and inset from that
+     so the comet lives entirely in the margin gutter to its left and
+     never crosses the heading/tagline/button, at any hero height. */
+  left: 1.5%;
+  width: min(6vw, 68px);
+  height: auto;
+  transform: translateY(-50%);
   pointer-events: none;
   z-index: 0;
+  /* Soft glow, not a hard-edged vector line — cool tones matching the
+     tail end of the gradient, since the glow reads most naturally as
+     ambient light around the comet rather than tied to one hue. Scaled
+     down to match the now much slimmer ribbon. */
+  filter:
+    drop-shadow(0 0 8px rgba(167, 139, 250, .4))
+    drop-shadow(0 0 16px rgba(77, 91, 255, .25));
 }
 
 .hero-text { max-width: 620px; position: relative; z-index: 1; }
@@ -520,7 +681,18 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   width: min(38vw, 380px);
 }
 
-.mascot { width: 100%; height: auto; animation: float 5s ease-in-out infinite; }
+.mascot {
+  width: 100%;
+  height: auto;
+  animation: float 5s ease-in-out infinite;
+  /* A soft chromatic-aberration fringe — pink/teal offset glows tracing the
+     mascot's silhouette — as a restrained nod to the glitch/RGB-split line
+     art in Jasmine's cosmic-creature moodboard reference, without going as
+     far as literally re-rendering the illustration in that style. */
+  filter:
+    drop-shadow(-2px 0 1px rgba(255, 63, 216, .35))
+    drop-shadow(2px 0 1px rgba(45, 212, 191, .35));
+}
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
@@ -539,6 +711,19 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   width: 100%;
   height: 100%;
   z-index: 0;
+}
+
+/* Same big-squiggle background treatment as .tagline-strip's ribbon, reused
+   as a shared class so About/Playground/Contact/footer can each get their
+   own — behind the section's content (which paints on top simply by
+   coming later in the markup, same as here), never intercepting clicks. */
+.bg-squiggle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .tagline-strip .lines {
@@ -560,15 +745,13 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 .tagline-strip .lines span:nth-child(2) { margin-left: 14%; }
 .tagline-strip .lines span:nth-child(3) { margin-left: 8%; }
 
-.home-projects .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 32px;
-}
-
 @media (max-width: 900px) {
   .hero { padding-top: 20px; }
-  .hero-ribbon { width: 100vw; opacity: .8; }
+  /* Decorative-only (aria-hidden) — the redesigned comet is tall/narrow and
+     tuned to sit beside the hero text on wide screens; on a stacked mobile
+     layout there's no equivalent spot for it without crowding the text or
+     mascot, so it's dropped here rather than distorted to fit. */
+  .hero-ribbon { display: none; }
   .mascot-wrap { width: 55vw; margin: 0 auto; }
   .tagline-strip .lines span:nth-child(2),
   .tagline-strip .lines span:nth-child(3) { margin-left: 4%; }
@@ -618,22 +801,41 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   font-family: 'Darumadrop One', cursive;
 }
 
-.rabbit-icon { width: 46px; opacity: .85; }
+.rabbit-icon {
+  position: absolute;
+  bottom: 4%; left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  opacity: .85;
+}
 
 @media (max-width: 900px) {
   .about-grid { grid-template-columns: 1fr; text-align: left; }
 }
 
+/* Floats the doodles around the About section's own content instead of
+   giving them a separate empty block below it — an absolute layer spanning
+   #about (a .page-hero, already position:relative), sitting above the
+   bio/avatar so the doodles stay reachable, but pointer-events:none at the
+   container level so the empty space between them doesn't block clicks on
+   the real content (e.g. the "Say hello" button) underneath. */
 .about-doodles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.about-doodles-label {
   position: relative;
-  width: 100%;
-  max-width: 900px;
-  min-height: 320px;
-  margin: 0 auto;
+  z-index: 2;
+  text-align: center;
+  margin-top: 28px;
 }
 
 .doodle {
   position: absolute;
+  pointer-events: auto;
   background: none;
   border: none;
   padding: 0;
@@ -754,7 +956,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 .planet-card .view-case { color: var(--d-blue); }
-.home-projects .view-case,
 .projects-list-fallback .view-case { color: var(--c-blue); font-size: .95rem; }
 
 .view-case .arrow { transition: transform .2s ease; }
@@ -965,6 +1166,26 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 
 @media (max-width: 700px) {
   .mini-spark { display: none; }
+}
+
+/* A couple of extra twinkle-stars scattered around the mascot — more of
+   the loose star scatter from Jasmine's cosmic-creature moodboard
+   reference, with the same soft chromatic-fringe glow as the mascot. */
+.hero-spark {
+  position: absolute;
+  opacity: .8;
+  animation: mini-pulse 2.6s ease-in-out infinite;
+  pointer-events: none;
+  filter:
+    drop-shadow(-1.5px 0 1px rgba(255, 63, 216, .4))
+    drop-shadow(1.5px 0 1px rgba(45, 212, 191, .4));
+}
+
+.hero-spark-a { top: -6%; right: 4%; width: 22px; height: 22px; }
+.hero-spark-b { bottom: 10%; left: -8%; width: 14px; height: 14px; animation-delay: .9s; }
+
+@media (max-width: 900px) {
+  .hero-spark { display: none; }
 }
 
 @media (max-width: 800px) {
