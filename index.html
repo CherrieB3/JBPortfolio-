@@ -16,16 +16,31 @@
                 <!-- Full six-stop rainbow. reflect (not repeat) mirrors the run at each
                      tile boundary (red...purple...red) so there's no hard seam. -->
                 <linearGradient id="trailGradient" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
-                    <stop offset="0%" stop-color="#ff4b3e" />
-                    <stop offset="20%" stop-color="#ff9f1c" />
-                    <stop offset="40%" stop-color="#ffd93d" />
-                    <stop offset="60%" stop-color="#4ade80" />
-                    <stop offset="80%" stop-color="#4d5bff" />
-                    <stop offset="100%" stop-color="#a78bfa" />
+                    <stop offset="0%" stop-color="#f3c4cf" />
+                    <stop offset="20%" stop-color="#f7d4ab" />
+                    <stop offset="40%" stop-color="#eddb9c" />
+                    <stop offset="60%" stop-color="#bfe8d4" />
+                    <stop offset="80%" stop-color="#b3dcf0" />
+                    <stop offset="100%" stop-color="#d6c6f0" />
                 </linearGradient>
                 <clipPath id="trailReveal" clipPathUnits="userSpaceOnUse">
                     <rect id="trailRevealRect" x="0" y="0" width="0" height="0" />
                 </clipPath>
+                <!-- Fades the ribbon to transparent over its last stretch before
+                     the reveal boundary, instead of ending in a hard flat cut —
+                     reads as the trail thinning out into nothing, like a comet's
+                     tail, right where the star's own glow picks up. y1/y2 are
+                     updated every frame in tick() to track the current reveal
+                     position; spreadMethod="pad" (the default) is what makes
+                     everything above y1 stay fully opaque and everything below
+                     y2 fully transparent, with no separate clip needed for those. -->
+                <linearGradient id="trailFadeGradient" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="0">
+                    <stop offset="0%" stop-color="white" stop-opacity="1" />
+                    <stop offset="100%" stop-color="white" stop-opacity="0" />
+                </linearGradient>
+                <mask id="trailFadeMask" maskUnits="userSpaceOnUse">
+                    <rect id="trailFadeRect" x="0" y="0" width="0" height="0" fill="url(#trailFadeGradient)" />
+                </mask>
             </defs>
         </svg>
     </div>
@@ -34,12 +49,32 @@
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
                     d="M12,1 L14.25,8.1 L21.53,6.5 L16.5,12 L21.53,17.5 L14.25,15.9 L12,23 L9.75,15.9 L2.47,17.5 L7.5,12 L2.47,6.5 L9.75,8.1 Z"
-                    fill="white" />
+                    fill="#e0bd5a" />
             </svg>
         </span>
     </button>
 
     <div class="stars"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- Fixed background planets/moons — stay put in the viewport while the
+         page scrolls, the same way .stars does, so the cosmic backdrop reads
+         as one consistent scene behind the whole site rather than one hero
+         image that ends after the first section. -->
+    <div class="bg-planets" aria-hidden="true">
+        <span class="bg-planet bg-planet-ringed" style="width:130px; height:130px; top:9%; left:5%; background: radial-gradient(circle at 35% 30%, #6b5aa8, #2a2050); animation-delay:-2s;">
+            <span class="bg-planet-ring"></span>
+        </span>
+        <span class="bg-planet" style="width:56px; height:56px; top:16%; left:88%; background: radial-gradient(circle at 35% 30%, #fff6e0, #d9c9a3); animation-delay:-5s;"></span>
+        <span class="bg-planet" style="width:30px; height:30px; top:42%; left:94%; background: radial-gradient(circle at 35% 30%, #eddb9c, #b2860b); animation-delay:-3.5s;"></span>
+        <span class="bg-planet" style="width:24px; height:24px; top:60%; left:3%; background: radial-gradient(circle at 35% 30%, #f0a8c9, #a8455f); animation-delay:-1s;"></span>
+        <span class="bg-planet" style="width:16px; height:16px; top:30%; left:14%; background: radial-gradient(circle at 35% 30%, #f7d4ab, #9c5620); animation-delay:-4.2s;"></span>
+
+        <!-- Occasional shooting stars — long idle cycle, brief streak, so it
+             happens every so often rather than as a constant repeating effect. -->
+        <span class="shooting-star shooting-star-a"></span>
+        <span class="shooting-star shooting-star-b"></span>
+    </div>
 
     <header class="site-nav">
         <nav class="nav-inner" aria-label="Primary">
@@ -65,6 +100,14 @@
 
     <main>
         <section class="hero">
+            <!-- Soft drifting clouds — slow, low-contrast, layered behind
+                 everything else in the hero. Plain rounded shapes rather than a
+                 literal cloud illustration, kept deliberately simple/hand-cut. -->
+            <div class="hero-clouds" aria-hidden="true">
+                <span class="hero-cloud hero-cloud-a"></span>
+                <span class="hero-cloud hero-cloud-b"></span>
+                <span class="hero-cloud hero-cloud-c"></span>
+            </div>
             <!-- Decorative only (aria-hidden) — a slim hand-drawn comet living in the
                  hero's left margin gutter, entirely left of .hero-text's own padding, so
                  it never crosses the heading/tagline/button regardless of how much they
@@ -77,13 +120,13 @@
                     <!-- Full rainbow again, purple tail to red head, still fading out
                          at both true tips via stop-opacity. -->
                     <linearGradient id="heroRibbon" x1="30" y1="440" x2="55" y2="50" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#a78bfa" stop-opacity="0" />
-                        <stop offset="12%" stop-color="#a78bfa" stop-opacity="1" />
-                        <stop offset="32%" stop-color="#4d5bff" />
-                        <stop offset="50%" stop-color="#4ade80" />
-                        <stop offset="68%" stop-color="#ffd93d" />
-                        <stop offset="85%" stop-color="#ff9f1c" stop-opacity="1" />
-                        <stop offset="100%" stop-color="#ff4b3e" stop-opacity="0" />
+                        <stop offset="0%" stop-color="#d6c6f0" stop-opacity="0" />
+                        <stop offset="12%" stop-color="#d6c6f0" stop-opacity="1" />
+                        <stop offset="32%" stop-color="#b3dcf0" />
+                        <stop offset="50%" stop-color="#bfe8d4" />
+                        <stop offset="68%" stop-color="#eddb9c" />
+                        <stop offset="85%" stop-color="#f7d4ab" stop-opacity="1" />
+                        <stop offset="100%" stop-color="#f3c4cf" stop-opacity="0" />
                     </linearGradient>
                 </defs>
                 <!-- Thin full-length wisp — the faded tips read as a comet trailing off
@@ -98,12 +141,19 @@
                     stroke="url(#heroRibbon)" stroke-width="13" stroke-linecap="round"
                     pathLength="100" stroke-dasharray="58 100" stroke-dashoffset="-21" />
                 <path d="M12 30 L14.5 39.5 L24 42 L14.5 44.5 L12 54 L9.5 44.5 L0 42 L9.5 39.5 Z"
-                    transform="translate(46,40) scale(.6)" fill="white" />
+                    transform="translate(46,40) scale(.6)" fill="#e0bd5a" />
+
+                <!-- Particle sparkle riding the comet's curve — small twinkling
+                     stars, staggered so they don't all pulse in unison. -->
+                <circle class="ribbon-spark" cx="38" cy="380" r="2.6" fill="#a8e0cf" style="animation-delay:0s;" />
+                <circle class="ribbon-spark" cx="52" cy="230" r="2" fill="#eddb9c" style="animation-delay:.8s;" />
+                <circle class="ribbon-spark" cx="40" cy="120" r="2.4" fill="#f0a8c9" style="animation-delay:1.5s;" />
+                <circle class="ribbon-spark" cx="60" cy="75" r="1.8" fill="#d6c6f0" style="animation-delay:.4s;" />
             </svg>
 
             <div class="hero-text">
                 <p class="eyebrow">UX DESIGNER • GRAPHIC ARTIST • RABBIT ENTHUSIAST</p>
-                <h1>Hi! I'm <span class="gradient">Jasmine</span> ✦</h1>
+                <h1>Hi! I'm <span class="name-solid">Jasmine</span> ✦</h1>
                 <h2>I design playful, user-centered digital experiences — and paint the
                     universe around them. Currently a senior UX design student, forever a
                     sketchbook artist.</h2>
@@ -118,50 +168,31 @@
                     alt="Placeholder — mascot art coming soon">
                 <svg class="hero-spark hero-spark-a" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 C13 6 14 9 24 12 C14 15 13 18 12 24 C11 18 10 15 0 12 C10 9 11 6 12 0 Z"
-                        fill="#ff3fd8" />
+                        fill="#f0a8c9" />
                 </svg>
                 <svg class="hero-spark hero-spark-b" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 C13 6 14 9 24 12 C14 15 13 18 12 24 C11 18 10 15 0 12 C10 9 11 6 12 0 Z"
-                        fill="#2dd4bf" />
+                        fill="#a8e0cf" />
                 </svg>
             </div>
         </section>
 
-        <section class="tagline-strip">
-            <svg class="strip-ribbon" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
-                <defs>
-                    <linearGradient id="tagRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#ff4b3e" />
-                        <stop offset="30%" stop-color="#ffd93d" />
-                        <stop offset="55%" stop-color="#4ade80" />
-                        <stop offset="80%" stop-color="#4d5bff" />
-                        <stop offset="100%" stop-color="#a78bfa" />
-                    </linearGradient>
-                </defs>
-                <path d="M-20,60 C150,20 220,90 380,120 C520,145 560,80 700,110 C850,145 900,240 1020,300"
-                    stroke="url(#tagRibbon)" stroke-width="90" stroke-linecap="round" opacity=".22" />
-            </svg>
-            <div class="lines">
-                <span>UX <span class="accent-pink">DESIGNER</span></span>
-                <span>Graphic <span class="accent-yellow">ARTIST</span></span>
-                <span>and rabbit <span class="accent-teal">enthusiast</span> 🐇</span>
-            </div>
-        </section>
 
         <section id="about" class="page-hero">
+            <span class="section-mark" aria-hidden="true">№ 01 — About</span>
             <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
                 <defs>
                     <linearGradient id="aboutRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#4d5bff" />
-                        <stop offset="50%" stop-color="#a78bfa" />
-                        <stop offset="100%" stop-color="#ff3fd8" />
+                        <stop offset="0%" stop-color="#b3dcf0" />
+                        <stop offset="50%" stop-color="#d6c6f0" />
+                        <stop offset="100%" stop-color="#f0a8c9" />
                     </linearGradient>
                 </defs>
                 <path d="M-20,180 C150,260 220,120 380,160 C520,190 560,80 700,120 C850,155 900,280 1020,220"
                     stroke="url(#aboutRibbon)" stroke-width="90" stroke-linecap="round" opacity=".18" />
             </svg>
             <div class="about-grid">
-                <div class="about-copy">
+                <div class="about-copy reveal">
                     <h2>About</h2>
                     <p>
                         I'm a product designer and digital artist from McKinney, Texas, currently studying at UT
@@ -184,13 +215,13 @@
                     <a class="btn" href="#contact" style="margin-top:10px; display:inline-block;">Say hello</a>
                 </div>
 
-                <div>
+                <div class="reveal-fade">
                     <div class="avatar-frame" tabindex="0" aria-label="Portrait placeholder — hover for a peek">
                         <div class="ring outer" aria-hidden="true"></div>
                         <div class="ring" aria-hidden="true"></div>
                         <svg class="avatar-face" viewBox="0 0 200 220" fill="none" aria-hidden="true">
                             <circle cx="100" cy="80" r="70" stroke="white" stroke-width="3" opacity=".8" />
-                            <circle cx="100" cy="80" r="52" stroke="white" stroke-width="2" opacity=".4" />
+                            <circle cx="100" cy="80" r="52" stroke="white" stroke-width="3" opacity=".4" />
                             <circle cx="80" cy="78" r="4" fill="white" />
                             <circle cx="120" cy="78" r="4" fill="white" />
                             <path d="M85,100 Q100,112 115,100" stroke="white" stroke-width="3" stroke-linecap="round" fill="none" />
@@ -201,20 +232,10 @@
                 </div>
             </div>
 
-            <p class="eyebrow about-doodles-label">HOVER OR TAB THROUGH THE SKETCHBOOK ✦</p>
-
             <!-- Sketchbook doodles — floating around the About content rather
                  than their own separate section below it. Each .doodle has an
                  individual aria-label, so no group label needed here. -->
             <div class="about-doodles">
-                <svg class="rabbit-icon" viewBox="0 0 100 70" fill="none" aria-hidden="true">
-                    <path d="M20,25 C15,10 8,0 15,2 C24,5 26,18 24,28" stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round" />
-                    <path d="M32,25 C30,8 26,-2 34,2 C41,6 40,18 36,28" stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round" />
-                    <ellipse cx="30" cy="45" rx="24" ry="18" stroke="#a78bfa" stroke-width="3" fill="none" />
-                    <circle cx="22" cy="42" r="2.5" fill="#a78bfa" />
-                    <circle cx="34" cy="42" r="2.5" fill="#a78bfa" />
-                </svg>
-
                 <button class="doodle doodle-1" aria-label="Object drawing placeholder one — hover for a fun fact">
                     <img src="images/doodle-1.svg" alt="">
                 </button>
@@ -226,7 +247,7 @@
                 <button class="doodle doodle-2" aria-label="Object drawing placeholder two — hover for a fun fact">
                     <img src="images/doodle-2.svg" alt="">
                 </button>
-                <div class="planet-card" style="top:64%; left:17%;">
+                <div class="planet-card" style="top:64%; left:8%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
                     <p>Drawing swaps in at <code>images/doodle-2.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
@@ -256,7 +277,7 @@
                 </div>
             </div>
 
-            <div class="doodles-fallback">
+            <div class="doodles-fallback reveal-fade">
                 <div class="card">
                     <img src="images/doodle-1.svg" alt="">
                     <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-1.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
@@ -281,103 +302,142 @@
         </section>
 
         <section id="projects" class="page-hero" style="min-height:auto; padding-bottom:0;">
+            <span class="section-mark" aria-hidden="true">№ 02 — Projects</span>
             <svg class="hero-orbit" viewBox="0 0 240 240" aria-hidden="true">
-                <circle class="orbit-ring" cx="120" cy="120" r="95" stroke="#4d5bff" />
-                <circle class="orbit-ring" cx="120" cy="120" r="62" stroke="#a78bfa" />
-                <g class="orbit-spin"><circle cx="215" cy="120" r="6" fill="#ff9f1c" /></g>
-                <g class="orbit-spin orbit-spin--rev"><circle cx="120" cy="58" r="4" fill="#4ade80" /></g>
+                <circle class="orbit-ring" cx="120" cy="120" r="95" stroke="#b3dcf0" />
+                <circle class="orbit-ring" cx="120" cy="120" r="62" stroke="#d6c6f0" />
+                <g class="orbit-spin"><circle cx="215" cy="120" r="6" fill="#f7d4ab" /></g>
+                <g class="orbit-spin orbit-spin--rev"><circle cx="120" cy="58" r="4" fill="#bfe8d4" /></g>
             </svg>
-            <h2>Projects</h2>
-            <p class="eyebrow" style="margin-top:14px;">HOVER OR TAB THROUGH THE PLANETS ✦</p>
+            <h2 class="reveal">Projects</h2>
+            <p class="eyebrow" style="margin-top:14px;">PINNED TO THE STAR MAP ✦</p>
         </section>
 
-        <section aria-label="Project galaxy">
-            <div class="galaxy">
-                <div class="ring" style="width:92%; height:38%; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-18deg); border-color: var(--c-blue);"></div>
-                <div class="ring" style="width:68%; height:56%; top:50%; left:50%; transform:translate(-50%,-50%) rotate(14deg); border-color: var(--c-green);"></div>
-                <div class="ring" style="width:100%; height:30%; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-6deg); border-color: var(--c-yellow);"></div>
-                <div class="ring" style="width:58%; height:70%; top:50%; left:50%; transform:translate(-50%,-50%) rotate(32deg); border-color: var(--c-orange);"></div>
+        <section aria-label="Projects" class="constellation reveal-fade">
+            <!-- Constellation lines + scattered stars/moon — purely decorative,
+                 painted first so the cards sit on top. Lines and stars brighten
+                 together when any card is hovered/focused (.is-active on the
+                 section, toggled by initConstellation() in js/main.js), rather
+                 than trying to track exact per-card positions through every
+                 breakpoint's reflow. Hidden on narrow screens, where the cards
+                 stack in a single column and the constellation reads as noise
+                 rather than a map. -->
+            <svg class="constellation-lines" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M120,90 C260,180 300,60 470,150 C600,220 640,110 830,260 C900,320 780,380 640,430"
+                    fill="none" stroke="#d6c6f0" stroke-width="1.5" stroke-dasharray="2 10" stroke-linecap="round" />
+            </svg>
+            <svg class="constellation-moon" viewBox="0 0 80 80" aria-hidden="true">
+                <path d="M46,8 A32,32 0 1 0 46,72 A24,24 0 0 1 46,8 Z" fill="#eddb9c" opacity=".9" />
+            </svg>
+            <span class="constellation-star" style="top:8%; left:44%; width:5px; height:5px; animation-delay:.3s;" aria-hidden="true"></span>
+            <span class="constellation-star" style="top:34%; left:58%; width:4px; height:4px; animation-delay:1.4s;" aria-hidden="true"></span>
+            <span class="constellation-star" style="top:64%; left:70%; width:6px; height:6px; animation-delay:.8s;" aria-hidden="true"></span>
+            <span class="constellation-star" style="top:20%; left:88%; width:4px; height:4px; animation-delay:2s;" aria-hidden="true"></span>
+            <div class="constellation-cloud" aria-hidden="true"></div>
 
-                <svg class="core" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="white" />
-                </svg>
+            <p class="eyebrow constellation-note">Every card below is clickable — click or tab in to open the full case study.</p>
 
-                <button class="planet" aria-label="Comet Commute project" style="width:78px; height:78px; top:16%; left:12%; background: radial-gradient(circle at 35% 30%, #ffb86b, #d9720f);"></button>
-                <div class="planet-card" style="top:2%; left:8%;">
-                    <h4>🚗 Comet Commute</h4>
-                    <p>Real-time parking and predictive commute suggestions, built into UT Dallas's campus app.</p>
-                    <a class="view-case" href="case-studies/comet-commute.html">View case study <span class="arrow">→</span></a>
-                </div>
+            <div class="constellation-grid">
+                <a class="constellation-card" href="case-studies/comet-commute.html"
+                    style="--rotate:-3deg; --hover-rotate:-1deg; --accent:#f7d4ab; --accent-deep:#9c5620;">
+                    <span class="constellation-tape" aria-hidden="true"></span>
+                    <span class="constellation-card-star" aria-hidden="true"></span>
+                    <div class="constellation-thumb">
+                        <svg viewBox="0 0 100 70" aria-hidden="true">
+                            <circle cx="30" cy="35" r="20" fill="#f7d4ab" />
+                            <circle cx="30" cy="35" r="20" fill="none" stroke="#9c5620" stroke-width="2" opacity=".35" />
+                            <path d="M62,20 L90,20 M58,35 L92,35 M64,50 L88,50" stroke="#9c5620" stroke-width="2.5" stroke-linecap="round" opacity=".4" />
+                        </svg>
+                    </div>
+                    <div class="constellation-card-body">
+                        <h3>Comet Commute</h3>
+                        <p>Real-time parking and predictive commute suggestions, built into UT Dallas's campus app.</p>
+                        <span class="view-case">View case study <span class="arrow">→</span></span>
+                    </div>
+                </a>
 
-                <button class="planet" aria-label="Elevator Accessibility project" style="width:56px; height:56px; top:22%; left:74%; background: radial-gradient(circle at 35% 30%, #93a5ff, #3244d1);"></button>
-                <div class="planet-card" style="top:8%; left:70%;">
-                    <h4>♿ Elevator Accessibility</h4>
-                    <p>Audio, haptic, and RFID concepts for independent elevator navigation.</p>
-                    <a class="view-case" href="case-studies/elevator-accessibility.html">View case study <span class="arrow">→</span></a>
-                </div>
+                <a class="constellation-card" href="case-studies/elevator-accessibility.html"
+                    style="--rotate:2deg; --hover-rotate:0deg; --accent:#b3dcf0; --accent-deep:#2f6488; margin-top:52px;">
+                    <span class="constellation-tape" aria-hidden="true"></span>
+                    <span class="constellation-card-star" aria-hidden="true"></span>
+                    <div class="constellation-thumb">
+                        <svg viewBox="0 0 100 70" aria-hidden="true">
+                            <rect x="40" y="10" width="20" height="50" rx="4" fill="#b3dcf0" />
+                            <rect x="40" y="10" width="20" height="50" rx="4" fill="none" stroke="#2f6488" stroke-width="2" opacity=".35" />
+                            <circle cx="50" cy="22" r="3" fill="#2f6488" opacity=".5" />
+                            <path d="M20,60 Q50,40 80,60" stroke="#2f6488" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".4" />
+                        </svg>
+                    </div>
+                    <div class="constellation-card-body">
+                        <h3>Elevator Accessibility</h3>
+                        <p>Audio, haptic, and RFID concepts for independent elevator navigation.</p>
+                        <span class="view-case">View case study <span class="arrow">→</span></span>
+                    </div>
+                </a>
 
-                <button class="planet" aria-label="DreamScape project" style="width:62px; height:62px; top:52%; left:86%; background: radial-gradient(circle at 35% 30%, #d9c9ff, #8b5cf6);"></button>
-                <div class="planet-card" style="top:56%; left:58%;">
-                    <h4>🌙 DreamScape</h4>
-                    <p>A speculative dream-visualization app designed in a 24-hour UX Club designathon.</p>
-                    <a class="view-case" href="case-studies/dreamscape.html">View case study <span class="arrow">→</span></a>
-                </div>
+                <a class="constellation-card" href="case-studies/dreamscape.html"
+                    style="--rotate:-2deg; --hover-rotate:0deg; --accent:#d6c6f0; --accent-deep:#6f5498; margin-top:14px;">
+                    <span class="constellation-tape" aria-hidden="true"></span>
+                    <span class="constellation-card-star" aria-hidden="true"></span>
+                    <div class="constellation-thumb">
+                        <svg viewBox="0 0 100 70" aria-hidden="true">
+                            <path d="M62,15 A20,20 0 1 0 62,55 A15,15 0 0 1 62,15 Z" fill="#d6c6f0" />
+                            <path d="M62,15 A20,20 0 1 0 62,55 A15,15 0 0 1 62,15 Z" fill="none" stroke="#6f5498" stroke-width="2" opacity=".35" />
+                            <circle cx="24" cy="20" r="2" fill="#6f5498" opacity=".5" />
+                            <circle cx="18" cy="32" r="1.5" fill="#6f5498" opacity=".5" />
+                            <circle cx="28" cy="42" r="2.5" fill="#6f5498" opacity=".5" />
+                        </svg>
+                    </div>
+                    <div class="constellation-card-body">
+                        <h3>DreamScape</h3>
+                        <p>A speculative dream-visualization app designed in a 24-hour UX Club designathon.</p>
+                        <span class="view-case">View case study <span class="arrow">→</span></span>
+                    </div>
+                </a>
 
-                <button class="planet" aria-label="Lucky's First Day project" style="width:50px; height:50px; top:80%; left:26%; background: radial-gradient(circle at 35% 30%, #ff9fe8, #d926ad);"></button>
-                <div class="planet-card" style="top:82%; left:8%;">
-                    <h4>🎨 Lucky's First Day</h4>
-                    <p>A non-linear visual narrative confronting autism stereotypes and the discomfort of new
-                        situations.</p>
-                    <a class="view-case" href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener">View project <span class="arrow">↗</span></a>
-                </div>
-            </div>
-
-            <div class="projects-list-fallback">
-                <div class="card">
-                    <h3>🚗 Comet Commute</h3>
-                    <p>Real-time parking and predictive commute suggestions, built into UT Dallas's campus app.</p>
-                    <a class="view-case" href="case-studies/comet-commute.html">View case study <span class="arrow">→</span></a>
-                </div>
-                <div class="card">
-                    <h3>♿ Elevator Accessibility</h3>
-                    <p>Audio, haptic, and RFID concepts for independent elevator navigation.</p>
-                    <a class="view-case" href="case-studies/elevator-accessibility.html">View case study <span class="arrow">→</span></a>
-                </div>
-                <div class="card">
-                    <h3>🌙 DreamScape</h3>
-                    <p>A speculative dream-visualization app designed in a 24-hour UX Club designathon.</p>
-                    <a class="view-case" href="case-studies/dreamscape.html">View case study <span class="arrow">→</span></a>
-                </div>
-                <div class="card">
-                    <h3>🎨 Lucky's First Day</h3>
-                    <p>A non-linear visual narrative confronting autism stereotypes and the discomfort of new
-                        situations.</p>
-                    <a class="view-case" href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener">View project <span class="arrow">↗</span></a>
-                </div>
+                <a class="constellation-card" href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener"
+                    style="--rotate:3deg; --hover-rotate:1deg; --accent:#f0a8c9; --accent-deep:#a8455f; margin-top:68px;">
+                    <span class="constellation-tape" aria-hidden="true"></span>
+                    <span class="constellation-card-star" aria-hidden="true"></span>
+                    <div class="constellation-thumb">
+                        <svg viewBox="0 0 100 70" aria-hidden="true">
+                            <path d="M20,20 L30,45 L50,25 L70,50 L80,20" fill="none" stroke="#a8455f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".5" />
+                            <circle cx="20" cy="20" r="4" fill="#f0a8c9" />
+                            <circle cx="50" cy="25" r="4" fill="#f0a8c9" />
+                            <circle cx="80" cy="20" r="4" fill="#f0a8c9" />
+                        </svg>
+                    </div>
+                    <div class="constellation-card-body">
+                        <h3>Lucky's First Day</h3>
+                        <p>A non-linear visual narrative confronting autism stereotypes and the discomfort of new situations.</p>
+                        <span class="view-case">View project <span class="arrow">↗</span></span>
+                    </div>
+                </a>
             </div>
         </section>
 
         <section id="playground" class="page-hero" style="min-height:auto; padding-bottom:0;">
+            <span class="section-mark" aria-hidden="true">№ 03 — Playground</span>
             <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
                 <defs>
                     <linearGradient id="playgroundRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#4ade80" />
-                        <stop offset="50%" stop-color="#ffd93d" />
-                        <stop offset="100%" stop-color="#ff9f1c" />
+                        <stop offset="0%" stop-color="#bfe8d4" />
+                        <stop offset="50%" stop-color="#eddb9c" />
+                        <stop offset="100%" stop-color="#f7d4ab" />
                     </linearGradient>
                 </defs>
                 <path d="M-20,250 C100,150 180,340 300,260 C420,180 500,340 620,260 C740,180 820,340 940,260 C980,240 1000,250 1020,250"
                     stroke="url(#playgroundRibbon)" stroke-width="90" stroke-linecap="round" opacity=".18" />
             </svg>
-            <h2>Playground</h2>
+            <h2 class="reveal">Playground</h2>
             <svg class="squiggle-underline" viewBox="0 0 220 20" aria-hidden="true">
                 <path d="M2,10 C20,2 35,18 55,10 C75,2 90,18 110,10 C130,2 145,18 165,10 C185,2 200,18 218,10"
                     fill="none" stroke="url(#squiggleGrad)" stroke-width="4" stroke-linecap="round" />
                 <defs>
                     <linearGradient id="squiggleGrad" x1="0" y1="0" x2="220" y2="0" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#ff4b3e" />
-                        <stop offset="50%" stop-color="#ffd93d" />
-                        <stop offset="100%" stop-color="#a78bfa" />
+                        <stop offset="0%" stop-color="#f3c4cf" />
+                        <stop offset="50%" stop-color="#eddb9c" />
+                        <stop offset="100%" stop-color="#d6c6f0" />
                     </linearGradient>
                 </defs>
             </svg>
@@ -391,66 +451,142 @@
             </p>
         </section>
 
-        <section aria-label="Experiments">
-            <div class="playground-grid">
-                <div class="sticker-card">
-                    <span class="emoji" aria-hidden="true">✏️</span>
-                    <h3>Sketch dump</h3>
-                    <p class="tbd">[TBD]</p>
+        <section aria-label="Playground content">
+            <div class="playground-tabs" role="tablist" aria-label="Playground views">
+                <button type="button" class="playground-tab is-active" role="tab" id="tab-experiments"
+                    aria-selected="true" aria-controls="panel-experiments">Experiments</button>
+                <button type="button" class="playground-tab" role="tab" id="tab-doodlemail" aria-selected="false"
+                    aria-controls="panel-doodlemail" tabindex="-1">Doodle Mail</button>
+            </div>
+
+            <div id="panel-experiments" class="playground-panel" role="tabpanel" aria-labelledby="tab-experiments">
+                <p class="eyebrow" style="margin-bottom:16px;">SCROLL FOR MORE ✦</p>
+                <div class="playground-deck reveal-fade" tabindex="0" aria-label="Experiment tiles, scroll horizontally">
+                    <div class="sticker-card sticker-card--wide">
+                        <h3>Rabbit doodles</h3>
+                        <p class="tbd">[TBD]</p>
+                    </div>
+                    <div class="sticker-card">
+                        <h3>Sketch dump</h3>
+                        <p class="tbd">[TBD]</p>
+                    </div>
+                    <div class="sticker-card">
+                        <h3>Color studies</h3>
+                        <p class="tbd">[TBD]</p>
+                    </div>
                 </div>
-                <div class="sticker-card">
-                    <span class="emoji" aria-hidden="true">🎨</span>
-                    <h3>Color studies</h3>
-                    <p class="tbd">[TBD]</p>
+            </div>
+
+            <div id="panel-doodlemail" class="playground-panel doodlemail" role="tabpanel"
+                aria-labelledby="tab-doodlemail" hidden>
+
+                <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#eddb9c" />
+                </svg>
+                <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#a8e0cf" />
+                </svg>
+                <svg class="hero-orbit doodlemail-orbit" viewBox="0 0 240 240" aria-hidden="true">
+                    <circle class="orbit-ring" cx="120" cy="120" r="95" stroke="#f0a8c9" />
+                    <g class="orbit-spin"><circle cx="215" cy="120" r="6" fill="#d6c6f0" /></g>
+                </svg>
+
+                <!-- A little envelope, floating and gently spinning — "a magical
+                     mailbox floating in space" is the whole idea of this feature,
+                     so it gets its own small illustration rather than just an icon. -->
+                <svg class="mail-envelope" viewBox="0 0 64 48" fill="none" aria-hidden="true">
+                    <rect x="2" y="2" width="60" height="44" rx="8" fill="#fffbf4" stroke="#d6c6f0" stroke-width="3" />
+                    <path d="M4,8 L32,30 L60,8" stroke="#f0a8c9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#eddb9c" transform="translate(44,-10) scale(.5)" />
+                </svg>
+
+                <p class="eyebrow">LEAVE ME A DOODLE IN MY COSMIC GUESTBOOK ✦</p>
+                <p style="color:var(--text-dim); max-width:56ch;">
+                    Grab a color, draw whatever's on your mind, and beam it straight to my
+                    inbox — a little note for the guestbook, sketched instead of typed.
+                </p>
+
+                <div class="doodle-paper">
+                    <span class="tape tape-a" aria-hidden="true"></span>
+                    <span class="tape tape-b" aria-hidden="true"></span>
+                    <canvas id="doodleCanvas" class="doodle-canvas"
+                        aria-label="Doodle drawing canvas — draw with your mouse, trackpad, or finger"
+                        role="img">Your browser doesn't support the drawing canvas — try a more
+                        recent browser to use Doodle Mail.</canvas>
                 </div>
-                <div class="sticker-card">
-                    <span class="emoji" aria-hidden="true">🐇</span>
-                    <h3>Rabbit doodles</h3>
-                    <p class="tbd">[TBD]</p>
+
+                <div class="doodle-toolbar" role="group" aria-label="Drawing tools">
+                    <label class="doodle-tool">
+                        <span class="doodle-tool-label">Color</span>
+                        <input type="color" id="doodleColor" value="#f0a8c9" aria-label="Brush color">
+                    </label>
+                    <label class="doodle-tool">
+                        <span class="doodle-tool-label">Brush</span>
+                        <input type="range" id="doodleSize" min="2" max="40" value="8" aria-label="Brush size">
+                    </label>
+                    <button type="button" id="doodleEraser" class="doodle-tool-btn" aria-pressed="false">Eraser</button>
+                    <button type="button" id="doodleUndo" class="doodle-tool-btn" disabled>↩ Undo</button>
+                    <button type="button" id="doodleClear" class="doodle-tool-btn">Clear</button>
                 </div>
-                <div class="sticker-card">
-                    <span class="emoji" aria-hidden="true">🌀</span>
-                    <h3>Motion tests</h3>
-                    <p class="tbd">[TBD]</p>
-                </div>
-                <div class="sticker-card">
-                    <span class="emoji" aria-hidden="true">🔤</span>
-                    <h3>Type experiments</h3>
-                    <p class="tbd">[TBD]</p>
-                </div>
-                <div class="sticker-card">
-                    <span class="emoji" aria-hidden="true">✦</span>
-                    <h3>Whatever's next</h3>
-                    <p class="tbd">[TBD]</p>
-                </div>
+
+                <form class="contact-form doodlemail-form" id="doodlemailForm">
+                    <p class="eyebrow" style="margin-top:0;">OPTIONAL — SO I KNOW WHO SAID HI</p>
+                    <div class="doodlemail-row">
+                        <div>
+                            <label for="doodleName">Name <span class="tbd">(optional)</span></label>
+                            <input type="text" id="doodleName" name="name" autocomplete="name">
+                        </div>
+                        <div>
+                            <label for="doodleEmail">Email <span class="tbd">(optional)</span></label>
+                            <input type="email" id="doodleEmail" name="email" autocomplete="email">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="doodleMessage">Message <span class="tbd">(optional)</span></label>
+                        <textarea id="doodleMessage" name="message" rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn doodle-send-btn" id="doodleSendBtn">
+                        <span class="doodle-send-label">Send Me Your Doodle</span>
+                    </button>
+
+                    <p class="doodlemail-status" id="doodlemailStatus" role="status" aria-live="polite"></p>
+
+                    <p class="tbd doodlemail-note">
+                        [Doodle sending uses EmailJS and needs Jasmine's own account keys —
+                        see EMAILJS_CONFIG in js/main.js — before this can actually deliver
+                        doodles to an inbox.]
+                    </p>
+                </form>
             </div>
         </section>
 
         <section id="contact" class="page-hero" style="min-height:auto; padding-bottom:0;">
+            <span class="section-mark" aria-hidden="true">№ 04 — Contact</span>
             <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
                 <defs>
                     <linearGradient id="contactRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#a78bfa" />
-                        <stop offset="50%" stop-color="#ff3fd8" />
-                        <stop offset="100%" stop-color="#4d5bff" />
+                        <stop offset="0%" stop-color="#d6c6f0" />
+                        <stop offset="50%" stop-color="#f0a8c9" />
+                        <stop offset="100%" stop-color="#b3dcf0" />
                     </linearGradient>
                 </defs>
                 <path d="M-20,300 C200,220 300,380 500,300 C700,220 800,380 1020,300"
                     stroke="url(#contactRibbon)" stroke-width="90" stroke-linecap="round" opacity=".18" />
             </svg>
-            <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#ff3fd8" /></svg>
-            <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#4d5bff" /></svg>
-            <svg class="mini-spark spark-c" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#ffd93d" /></svg>
-            <h2>Let's talk</h2>
+            <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#f0a8c9" /></svg>
+            <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#b3dcf0" /></svg>
+            <svg class="mini-spark spark-c" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#eddb9c" /></svg>
+            <h2 class="reveal">Let's talk</h2>
             <p class="eyebrow" style="margin-top:14px;">PROJECTS, COLLABORATIONS, OR JUST TO SAY HI</p>
         </section>
 
-        <section>
-            <div class="contact-grid">
+        <section class="contact-body">
+            <div class="contact-grid reveal-fade">
                 <div class="contact-direct">
                     <a href="mailto:jflower2k6@gmail.com">✉ jflower2k6@gmail.com</a>
-                    <a href="#" class="tbd">🔗 LinkedIn — [TBD]</a>
-                    <a href="#" class="tbd">🎨 Behance / Dribbble — [TBD]</a>
+                    <a href="#" class="tbd">LinkedIn — [TBD]</a>
+                    <a href="#" class="tbd">Behance / Dribbble — [TBD]</a>
                 </div>
 
                 <div>
@@ -482,18 +618,65 @@
         <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
             <defs>
                 <linearGradient id="footerRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#ff4b3e" />
-                    <stop offset="20%" stop-color="#ff9f1c" />
-                    <stop offset="40%" stop-color="#ffd93d" />
-                    <stop offset="60%" stop-color="#4ade80" />
-                    <stop offset="80%" stop-color="#4d5bff" />
-                    <stop offset="100%" stop-color="#a78bfa" />
+                    <stop offset="0%" stop-color="#f3c4cf" />
+                    <stop offset="20%" stop-color="#f7d4ab" />
+                    <stop offset="40%" stop-color="#eddb9c" />
+                    <stop offset="60%" stop-color="#bfe8d4" />
+                    <stop offset="80%" stop-color="#b3dcf0" />
+                    <stop offset="100%" stop-color="#d6c6f0" />
                 </linearGradient>
             </defs>
             <path d="M-20,250 C200,100 300,400 500,250 C700,100 800,400 1020,250"
                 stroke="url(#footerRibbon)" stroke-width="90" stroke-linecap="round" opacity=".16" />
         </svg>
-        <h2 class="hand footer-title">Let's build something <span class="gradient">amazing</span></h2>
+
+        <!-- The journey's end: after a whole page of deep space, the very
+             bottom of the site is a warm horizon glow and a city skyline —
+             landing back home on Earth. Simple hand-drawn building blocks,
+             not a literal/detailed illustration, matching the rest of the
+             site's line-art convention. -->
+        <div class="horizon-glow" aria-hidden="true"></div>
+        <svg class="city-skyline" viewBox="0 0 600 140" preserveAspectRatio="none" aria-hidden="true">
+            <g fill="#251f30">
+                <rect x="0" y="85" width="36" height="55" />
+                <rect x="30" y="55" width="26" height="85" />
+                <rect x="60" y="95" width="40" height="45" />
+                <rect x="95" y="40" width="30" height="100" />
+                <rect x="130" y="75" width="45" height="65" />
+                <rect x="170" y="25" width="28" height="115" />
+                <rect x="205" y="90" width="38" height="50" />
+                <rect x="245" y="50" width="32" height="90" />
+                <rect x="282" y="80" width="48" height="60" />
+                <rect x="335" y="35" width="30" height="105" />
+                <rect x="370" y="95" width="40" height="45" />
+                <rect x="415" y="60" width="28" height="80" />
+                <rect x="448" y="85" width="45" height="55" />
+                <rect x="498" y="45" width="32" height="95" />
+                <rect x="535" y="95" width="38" height="45" />
+                <rect x="578" y="70" width="22" height="70" />
+            </g>
+            <!-- A little antenna on the tallest tower, and a scatter of lit
+                 windows — small, warm, hand-placed touches rather than a
+                 repeating pattern. -->
+            <line x1="184" y1="25" x2="184" y2="8" stroke="#251f30" stroke-width="3" stroke-linecap="round" />
+            <circle cx="184" cy="6" r="2.5" fill="#eddb9c" />
+            <g fill="#eddb9c" opacity=".85">
+                <rect x="38" y="68" width="4" height="4" />
+                <rect x="46" y="80" width="4" height="4" />
+                <rect x="105" y="55" width="4" height="4" />
+                <rect x="113" y="70" width="4" height="4" />
+                <rect x="140" y="90" width="4" height="4" />
+                <rect x="255" y="65" width="4" height="4" />
+                <rect x="263" y="78" width="4" height="4" />
+                <rect x="345" y="50" width="4" height="4" />
+                <rect x="353" y="65" width="4" height="4" />
+                <rect x="425" y="75" width="4" height="4" />
+                <rect x="508" y="60" width="4" height="4" />
+                <rect x="516" y="75" width="4" height="4" />
+            </g>
+        </svg>
+
+        <h2 class="hand footer-title reveal">Let's build something <span class="gradient">amazing</span></h2>
         <p class="eyebrow" style="margin-top:20px;">GET IN TOUCH</p>
         <a class="footer-email" href="mailto:jflower2k6@gmail.com">jflower2k6@gmail.com</a>
         <div class="socials">

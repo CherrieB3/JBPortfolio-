@@ -3,6 +3,65 @@
    Cosmic motif. See CLAUDE.md for the rationale.
    ========================================================= */
 
+/* Typed as <angle> so browsers that support @property (most current ones)
+   can smoothly interpolate --tilt-x/--tilt-y when they change — used by
+   the magnetic card-tilt effect (initTiltCards() in js/main.js). Falls
+   back gracefully to an instant (untyped) change in older browsers;
+   nothing breaks, the tilt just isn't eased on those. */
+@property --tilt-x {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --tilt-y {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Native cross-document View Transitions — a quiet wormhole feel between
+   full page loads (index.html <-> case-studies/*.html, and case study <->
+   case study via the prev/next links) instead of the browser's default
+   hard cut: the old page eases down and brightens slightly as if it's
+   receding into a point of light, then the new page eases in from that
+   same soft glow and settles. A restrained version of "shrink into
+   light / emerge from light" rather than a showy zoom — a small signature
+   beat, not a spectacle. Pure CSS, no router/framework/JS (rule 3: no
+   dependency creep) — browsers without support (Firefox, at the time of
+   writing) just navigate normally with no transition, so this is
+   enhancement-only and never blocks navigation. Scoped sitewide via this
+   shared stylesheet rather than only on the links into case studies, so
+   every full-page navigation on the site feels consistent rather than
+   some jumping and others transitioning. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: wormhole-suck-in .32s ease-in forwards;
+}
+
+::view-transition-new(root) {
+  animation: wormhole-burst-out .4s cubic-bezier(.2, .7, .3, 1) forwards;
+}
+
+@keyframes wormhole-suck-in {
+  0%   { opacity: 1; scale: 1;    rotate: 0deg;    filter: blur(0px) brightness(1); }
+  100% { opacity: 0; scale: .94;  rotate: -1.5deg; filter: blur(3px) brightness(1.12); }
+}
+
+@keyframes wormhole-burst-out {
+  0%   { opacity: 0; scale: .95; rotate: 1deg; filter: blur(3px) brightness(1.12); }
+  100% { opacity: 1; scale: 1;   rotate: 0deg; filter: blur(0px) brightness(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 /* Self-hosted rather than linked from fonts.googleapis.com: privacy-focused
    browsers and extensions (Brave's shields, Safari's cross-site tracking
    prevention, many ad blockers) block Google Fonts requests by default,
@@ -15,11 +74,11 @@
    non-Latin copy) — same files Google itself would have served.
    Regenerate from https://fonts.google.com if new weights are needed. */
 @font-face {
-  font-family: 'Darumadrop One';
+  font-family: 'Baloo 2';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 400 800;
   font-display: swap;
-  src: url('../fonts/darumadrop-one-v14-latin-400.woff2') format('woff2');
+  src: url('../fonts/baloo2-v23-latin-var.woff2') format('woff2-variations'), url('../fonts/baloo2-v23-latin-var.woff2') format('woff2');
 }
 
 @font-face {
@@ -32,48 +91,94 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* =========================================================
+   Art direction: Bee and PuppyCat mood
+   The rainbow palette was repainted from vivid neon toward soft, dusty
+   pastel hues — dusty rose, peach, muted gold, pale mint, sky blue,
+   lavender — for a cozier, more whimsical feel, "a magical mailbox
+   floating in space" rather than a technical/corporate one. This was
+   first tried as a FULL light-mode flip (cream background, dark text)
+   and Jasmine didn't like that — the background is back to the
+   original dark cosmic void (#050314). What stuck from the pastel pass:
+   the accent palette itself, Baloo 2 as the display font, and softened/
+   recolored versions of the decorative extras added alongside it
+   (drifting clouds, occasional shooting stars, the floating mail
+   envelope, warm plum-tinted shadows instead of flat black). Every
+   rainbow token below KEPT ITS ORIGINAL NAME (--c-red, --d-blue, etc.)
+   even though its hue changed — every rule elsewhere in this file that
+   already reads var(--c-red) etc. picked up the new palette automatically
+   with zero changes to that rule. Keep extending the palette this same
+   way (new value, same slot) rather than introducing parallel new tokens.
+   The two-tier structure is back to its original meaning now that the
+   background is dark again: --c-* (soft pastel) is the vivid-on-dark
+   decorative tier (glows, thin borders, dots, planet fills); --d-* (deep)
+   is for AA-safe text on the light nav/paper surfaces, and for white text
+   sitting on top of a button/badge fill — --c-* is too light for that.
+   ========================================================= */
 :root {
-  /* space + surfaces */
-  --bg: #050314;
-  --bg-soft: #0b0821;
+  /* space + surfaces — dark cosmic base (Jasmine's call after seeing the
+     full light-cream version: keep the pastel accent palette, but back on
+     a dark night-sky background). Tinted deep indigo-violet rather than
+     near-black, per a moodboard reference Jasmine shared (a glowing
+     cyan/teal night scene) — a lighter, more saturated "moonlit" dark
+     rather than a flat void. */
+  --bg: #1c1840;
+  --bg-soft: #241f4d;
   --panel: rgba(255, 255, 255, .05);
   --panel-border: rgba(255, 255, 255, .1);
-  --paper: #fdfdfb;
-  --ink: #100c26;
+  --paper: #fffbf4;
+  --ink: #3d3350;
+  /* The nav's own surface — a smidge darker than --bg, not the light
+     "paper" surface used for planet-card tooltips and Doodle Mail's
+     paper texture (those stay light/cream on purpose; only the nav
+     itself moved to dark). */
+  --nav-bg: #161233;
 
   /* text on dark */
   --text: #ffffff;
   --text-dim: #d3d4e6;
   --text-mute: #9d9fc0;
 
-  /* vivid rainbow — decorative use on dark surfaces / non-text */
-  --c-red: #ff4b3e;
-  --c-orange: #ff9f1c;
-  --c-yellow: #ffd93d;
-  --c-green: #4ade80;
-  --c-blue: #4d5bff;
-  --c-purple: #a78bfa;
-  --c-pink: #ff3fd8;
+  /* soft pastel tier — decorative use (glows, thin borders, dots),
+     never as a fill under white text (see note above). Red and teal
+     nudged toward coral-salmon and a more vivid glowing cyan respectively
+     — closer to a moodboard reference Jasmine shared (coral-pink stars,
+     glowing teal clouds, deep indigo night). */
+  --c-red: #f0a89a;
+  --c-orange: #f7d4ab;
+  --c-yellow: #eddb9c;
+  --c-green: #bfe8d4;
+  --c-blue: #b3dcf0;
+  --c-purple: #d6c6f0;
+  --c-pink: #f0a8c9;
   /* Added from Jasmine's cosmic-creature moodboard reference — a mint/teal
      that the original 6-hue rainbow didn't have. Accent-only, like pink:
      no --d-teal counterpart, since it isn't used as nav/text-on-white. */
-  --c-teal: #2dd4bf;
+  --c-teal: #7fd9e6;
 
-  /* deep rainbow — AA-safe for text on light (nav) surfaces */
-  --d-red: #c62828;
-  --d-orange: #b24b00;
-  --d-gold: #8a6d00;
-  --d-green: #1e7a46;
-  --d-blue: #2a3fcc;
-  --d-purple: #6b3fa0;
+  /* deep tier — saturated enough for AA-safe text-on-cream AND for white
+     text sitting on top of it as a button/badge fill */
+  --d-red: #a8455f;
+  --d-orange: #9c5620;
+  --d-gold: #7a611e;
+  --d-green: #357a5a;
+  --d-blue: #2f6488;
+  --d-purple: #6f5498;
 
   --gradient-rainbow: linear-gradient(90deg, var(--c-red), var(--c-orange), var(--c-yellow), var(--c-green), var(--c-blue), var(--c-purple));
-  --gradient-cta: linear-gradient(90deg, var(--c-pink), var(--c-blue));
 
   --radius-lg: 30px;
   --radius-md: 20px;
   --radius-sm: 12px;
   --nav-h: 76px;
+
+  /* A third, deliberately plainer type voice — system monospace, no extra
+     font file — reserved for "meta" marks (eyebrows, running heads,
+     section numbers, dates). Pairing a technical/editorial mono against
+     the handwritten-feeling display face and the humanist body face is
+     what gives the type system a magazine-like, considered contrast
+     instead of reading as one generic sans-everywhere template. */
+  --font-mono: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Courier New', monospace;
 }
 
 html { scroll-behavior: smooth; }
@@ -85,36 +190,42 @@ body {
   overflow-x: hidden;
 }
 
+/* Reference mood: a dark starry sky above, warm magenta/gold/purple
+   nebula clouds glowing up from below — recreated with the site's own
+   CSS-only techniques (gradients + blur), not an embedded image, per the
+   "no raster assets" rule; this is a from-scratch match to that mood, not
+   a copy of the reference artwork itself. */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 20%, rgba(255, 63, 216, .14), transparent 30%),
-    radial-gradient(circle at 80% 30%, rgba(77, 91, 255, .14), transparent 35%),
-    radial-gradient(circle at 50% 90%, rgba(74, 222, 128, .10), transparent 30%),
-    /* Mint/teal nebula glow — from Jasmine's cosmic-creature moodboard
-       reference, rounding the ambient glow set out to four hues. */
-    radial-gradient(circle at 30% 65%, rgba(45, 212, 191, .12), transparent 32%);
+    radial-gradient(circle at 22% 14%, rgba(127, 217, 230, .12), transparent 30%),
+    radial-gradient(circle at 78% 18%, rgba(214, 198, 240, .1), transparent 32%),
+    radial-gradient(circle at 18% 98%, rgba(240, 168, 154, .18), transparent 42%),
+    radial-gradient(circle at 50% 102%, rgba(127, 217, 230, .2), transparent 46%),
+    radial-gradient(circle at 82% 98%, rgba(214, 198, 240, .18), transparent 42%);
   z-index: -2;
   pointer-events: none;
 }
 
-/* Aurora borealis — tall, soft-edged color curtains draping down from
-   above the viewport (not round nebula blobs like body::before), heavily
-   blurred and gently drifting. screen blend mode so the colors glow and
-   layer over each other and the starfield instead of sitting as flat
-   tinted panels. Same rainbow palette as the rest of the site. */
+/* Aurora — tall, soft-edged color curtains, heavily blurred and gently
+   drifting, glowing UP from the bottom of the viewport (not draping down
+   from the top). screen blend mode (correct again now the background is
+   dark — it was briefly switched to multiply during a light-background
+   version of this palette that didn't stick) so the pastel colors glow
+   and layer over each other and the starfield instead of sitting as flat
+   tinted panels. */
 body::after {
   content: '';
   position: fixed;
   inset: -15% -20%;
   background:
-    radial-gradient(ellipse 32% 130% at 12% -25%, rgba(74, 222, 128, .22), transparent 62%),
-    radial-gradient(ellipse 28% 120% at 40% -20%, rgba(45, 212, 191, .2), transparent 60%),
-    radial-gradient(ellipse 30% 130% at 68% -25%, rgba(167, 139, 250, .2), transparent 62%),
-    radial-gradient(ellipse 26% 110% at 92% -18%, rgba(255, 63, 216, .16), transparent 58%);
-  filter: blur(50px);
+    radial-gradient(ellipse 34% 125% at 12% 118%, rgba(127, 217, 230, .34), transparent 60%),
+    radial-gradient(ellipse 30% 115% at 38% 124%, rgba(240, 168, 154, .26), transparent 58%),
+    radial-gradient(ellipse 32% 125% at 65% 118%, rgba(214, 198, 240, .28), transparent 60%),
+    radial-gradient(ellipse 28% 110% at 90% 124%, rgba(127, 217, 230, .24), transparent 56%);
+  filter: blur(55px);
   mix-blend-mode: screen;
   z-index: -2;
   pointer-events: none;
@@ -135,9 +246,33 @@ body::after {
   overflow: hidden;
 }
 
+/* A faint, always-on film-grain texture over the whole page — procedural
+   (SVG feTurbulence, not a raster asset), so nothing here is a flat,
+   untextured gradient the way a template background usually is. Sits
+   above everything (z-index above content) but visually reads as
+   underneath, since it's this subtle and additive-blended — the point is
+   a hand-printed/paper tactility, not a visible effect on its own. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  pointer-events: none;
+  opacity: .05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+@media (prefers-reduced-motion: reduce), (max-width: 500px) {
+  .grain { display: none; }
+}
+
 .stars .star {
   position: absolute;
-  background: white;
+  /* Warm gold by default — set per-star in JS (initStarfield()) to one of
+     a few soft pastel hues for variety, rather than plain white, to match
+     the site's pastel Bee-and-PuppyCat palette. */
+  background: var(--star-color, #e0bd5a);
   border-radius: 50%;
   animation: star-twinkle var(--dur, 3.4s) ease-in-out infinite;
   animation-delay: var(--delay, 0s);
@@ -148,16 +283,94 @@ body::after {
   50% { opacity: var(--max-op, .5); transform: scale(1.1); }
 }
 
-h1, h2, h3, .hand {
-  font-family: 'Darumadrop One', cursive;
-  font-weight: 400;
-  line-height: 1.05;
+/* Fixed background planets/moons, behind everything — same idea as
+   .far-planet (soft, blurred, low-contrast so they read as distant), but
+   pinned to the viewport like .stars rather than scoped to the Projects
+   galaxy, so this cosmic backdrop is consistent behind the whole page. */
+.bg-planets {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
 }
+
+.bg-planet {
+  position: absolute;
+  border-radius: 50%;
+  opacity: .55;
+  filter: blur(.5px);
+  box-shadow: 0 0 40px 4px rgba(61, 51, 79, .3);
+  animation: far-planet-drift 16s ease-in-out infinite;
+}
+
+@keyframes far-planet-drift {
+  0%, 100% { translate: 0 0; opacity: .55; }
+  50% { translate: 0 -6px; opacity: .7; }
+}
+
+/* A thin ringed silhouette around one planet — the reference's most
+   distinctive single detail — reusing the .galaxy .ring idea (a bordered
+   ellipse) rather than inventing new iconography. */
+.bg-planet-ring {
+  position: absolute;
+  inset: -34% -10%;
+  border: 1.5px solid rgba(210, 200, 255, .55);
+  border-radius: 50%;
+  transform: rotate(-16deg);
+}
+
+/* A short bright streak with a fading tail, at rest at 0 width off in a
+   corner — the keyframes hold it invisible for the vast majority of each
+   long cycle, then flash it across the sky once. Two instances with very
+   different durations/delays so they don't fall into a visible rhythm. */
+.shooting-star {
+  position: absolute;
+  top: 8%;
+  left: 60%;
+  width: 90px;
+  height: 2px;
+  border-radius: 2px;
+  /* Bright head at the left end, fading tail at the right (pivot) end —
+     with transform-origin:right and the flight path heading down-left,
+     the left end is the leading edge. Bright-at-left/fade-at-right is
+     what makes the head lead the direction of travel instead of trailing
+     behind it. */
+  background: linear-gradient(90deg, #fffbf4, #e0bd5a 40%, transparent);
+  opacity: 0;
+  transform-origin: right center;
+  rotate: -22deg;
+  animation: shooting-star-fly 17s ease-in infinite;
+}
+
+.shooting-star-a { top: 10%; left: 55%; animation-duration: 19s; }
+.shooting-star-b { top: 30%; left: 20%; width: 70px; animation-duration: 26s; animation-delay: -9s; }
+
+@keyframes shooting-star-fly {
+  0%, 88% { opacity: 0; translate: 0 0; }
+  90% { opacity: 1; translate: -6vw 4vh; }
+  96% { opacity: 1; translate: -22vw 14vh; }
+  97%, 100% { opacity: 0; translate: -22vw 14vh; }
+}
+
+@media (max-width: 760px) {
+  .bg-planets { display: none; }
+}
+
+/* A real weight scale instead of one flat 700 everywhere — h1 heaviest,
+   stepping down through h2/h3, so hierarchy reads from weight as well as
+   size. .hand (footer's closing line) matches h2's weight, since it's
+   used at that level of emphasis. */
+h1, .hand { font-family: 'Baloo 2', cursive; font-weight: 800; line-height: 1.05; }
+h2 { font-family: 'Baloo 2', cursive; font-weight: 700; line-height: 1.05; }
+h3 { font-family: 'Baloo 2', cursive; font-weight: 600; line-height: 1.15; }
 
 .eyebrow {
   color: var(--text-mute);
-  letter-spacing: 3px;
-  font-size: .8rem;
+  letter-spacing: 2px;
+  font-size: .78rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
   text-transform: uppercase;
   margin-bottom: 18px;
 }
@@ -169,6 +382,10 @@ h1, h2, h3, .hand {
   color: transparent;
 }
 
+/* Jasmine's own name in the hero — solid periwinkle, not the rainbow
+   gradient treatment .gradient uses elsewhere (footer's "amazing"). */
+.name-solid { color: #a3aef2; }
+
 /* Single-hue accents for small emphasis words — an alternative to reaching
    for the full rainbow gradient every time a word needs a highlight. */
 .accent-pink { color: var(--c-pink); }
@@ -179,6 +396,26 @@ h1, h2, h3, .hand {
 a { color: inherit; }
 
 .container { max-width: 1280px; margin: 0 auto; padding: 0 8%; }
+
+/* =========================================================
+   Scroll reveal — a quiet fade/rise as section content enters the
+   viewport, so the page reads as a guided sequence rather than
+   everything just sitting there at once. initScrollReveal() in
+   js/main.js applies .is-hidden (never CSS-default) right before
+   observing, so a visitor without JS simply sees every element in its
+   normal, fully visible resting state — this is enhancement only, never
+   the only path to content being visible.
+   ========================================================= */
+.reveal { transition: opacity .8s cubic-bezier(.16,.8,.3,1), transform .8s cubic-bezier(.16,.8,.3,1); }
+.reveal.is-hidden { opacity: 0; transform: translateY(30px); }
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* Fade-only variant for grids of cards/planets already carrying their own
+   hover transform — avoids two different-duration transitions competing
+   for the same `transform` property. */
+.reveal-fade { transition: opacity .9s ease; }
+.reveal-fade.is-hidden { opacity: 0; }
+.reveal-fade.is-visible { opacity: 1; }
 
 /* reduced motion: calm every decorative animation down */
 @media (prefers-reduced-motion: reduce) {
@@ -213,8 +450,8 @@ a { color: inherit; }
        the "click me" badge below, so the glow doesn't compete with the
        badge's own outline/text at that larger size. */
     filter:
-      drop-shadow(0 0 4px rgba(77, 91, 255, .9))
-      drop-shadow(0 0 10px rgba(77, 91, 255, .6));
+      drop-shadow(0 0 4px rgba(179, 220, 240, .9))
+      drop-shadow(0 0 10px rgba(179, 220, 240, .6));
   }
 
   /* Grows into the "click me" badge's size over anything clickable — the
@@ -269,7 +506,7 @@ a { color: inherit; }
      this needs to come after it to win). */
   .cursor-icon--badge .cursor-badge-dot { fill: currentColor; stroke: none; opacity: 1; }
   .cursor-icon--badge text {
-    font-family: 'Darumadrop One', cursive;
+    font-family: 'Baloo 2', cursive;
     font-size: 16px;
     letter-spacing: 1.5px;
     fill: currentColor;
@@ -313,8 +550,28 @@ a { color: inherit; }
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 200;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--nav-bg);
+  color: var(--text);
+  box-shadow: 0 8px 30px -12px rgba(0, 0, 0, .35);
+}
+
+/* A puffy, scalloped fringe hanging below the nav — same color as the
+   nav itself, so the two read as one shape — instead of a hard flat
+   edge, per "make it look like clouds." Sits below the rainbow
+   .nav-underline strip. Built from a repeating row of circles (not an
+   SVG/raster asset) so it's cheap and infinitely tileable at any width. */
+.site-nav::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -13px;
+  height: 26px;
+  background-image: radial-gradient(circle at 13px 0, var(--nav-bg) 13px, transparent 13.5px);
+  background-size: 26px 26px;
+  background-repeat: repeat-x;
+  background-position: 0 0;
+  pointer-events: none;
 }
 
 .nav-inner {
@@ -333,14 +590,14 @@ a { color: inherit; }
   align-items: center;
   justify-content: space-between;
   list-style: none;
-  font-family: 'Darumadrop One', cursive;
-  font-weight: 400;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
   font-size: 1.05rem;
 }
 
 .logo {
   font-size: 1.9rem;
-  color: var(--d-blue);
+  color: var(--c-blue);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -361,15 +618,32 @@ a { color: inherit; }
 
 .nav-links a.is-active { border-color: currentColor; }
 
-.nav-links li:nth-child(1) a { color: var(--d-red); }
-.nav-links li:nth-child(2) a { color: var(--d-orange); }
-.nav-links li:nth-child(4) a { color: var(--d-green); }
-.nav-links li:nth-child(5) a { color: var(--d-blue); }
+.nav-links li:nth-child(1) a { color: var(--c-red); }
+.nav-links li:nth-child(2) a { color: var(--c-orange); }
+.nav-links li:nth-child(4) a { color: var(--c-green); }
+.nav-links li:nth-child(5) a { color: var(--c-blue); }
 
 .nav-underline {
+  position: relative;
   height: 4px;
   width: 100%;
   background: var(--gradient-rainbow);
+}
+
+/* A slim gold hairline trimming the nav just above its signature rainbow
+   strip — a small "royal" accent, requested but then deliberately kept to
+   just this and the matching footer trim below after a broader version
+   (on every card and section heading too) read as too much. */
+.nav-underline::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--c-yellow) 15%, var(--d-gold) 50%, var(--c-yellow) 85%, transparent);
+  opacity: .8;
+  pointer-events: none;
 }
 
 .nav-toggle {
@@ -377,7 +651,7 @@ a { color: inherit; }
   background: none;
   border: none;
   font-size: 1.6rem;
-  color: var(--ink);
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -387,7 +661,7 @@ a { color: inherit; }
     position: fixed;
     top: calc(var(--nav-h) + 4px);
     left: 0; right: 0;
-    background: var(--paper);
+    background: var(--nav-bg);
     flex-direction: column;
     align-items: stretch;
     gap: 0;
@@ -396,22 +670,19 @@ a { color: inherit; }
     transition: transform .3s ease;
   }
   .nav-links.is-open { transform: translateY(0); }
-  .nav-links li { padding: 10px 0; border-top: 1px solid rgba(0,0,0,.06); }
+  .nav-links li { padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, .1); }
   .nav-links li.logo-slot { order: -1; border-top: none; padding-top: 2px; }
 }
 
 /* =========================================================
-   Comet trail (home page only) — a continuous ribbon running down the
-   middle-right of the page in the site's full rainbow gradient, behind
-   content, with a short gentle sway (like a loosely held wire) rather
-   than a taut straight line, further deviating from that sway only to
-   dodge whatever content is in the way. The stroke widens only at actual
-   turns/dodges — otherwise it holds one reference width — so it reads as
-   fluid curvature rather than a round brush's flat constant width. A
-   twinkling star rides it at the current scroll position (scaling up
-   when the stroke under it is wider), in front of content. Fully smooth
-   curve — no rough/jagged edges — same shape on every load. See
-   initCometTrail() in js/main.js.
+   Comet trail (home page only) — a single straight vertical ribbon
+   running down the right edge of the page in the site's full rainbow
+   gradient, behind content, at one constant width for its whole length.
+   No sway, no obstacle-dodging — it runs straight through/behind
+   whatever's in front of it, relying on z-index (behind main content) to
+   stay out of the way of readability. A star rides it at the current
+   scroll position, in front of content, pulsing its own glow rather than
+   growing/shrinking with the ribbon. See initCometTrail() in js/main.js.
    ========================================================= */
 
 .comet-trail {
@@ -438,7 +709,7 @@ a { color: inherit; }
 .comet-star {
   position: fixed;
   top: 0; left: 0;
-  width: 52px; height: 52px;
+  width: 64px; height: 64px;
   z-index: 150;
   pointer-events: auto;
   cursor: pointer;
@@ -449,29 +720,32 @@ a { color: inherit; }
 .comet-star .star-glyph {
   display: block;
   width: 100%; height: 100%;
-  filter:
-    drop-shadow(0 0 7px rgba(93, 130, 255, .85))
-    drop-shadow(0 0 16px rgba(77, 91, 255, .55));
-  animation: spin 9s linear infinite;
+  /* Glow pulses continuously, at rest, not just while scrolling
+     (star-glow-pulse below) — the star shape itself never scales, on a
+     scroll burst or otherwise, only its drop-shadow glow does. */
+  animation: star-glow-pulse 2.6s ease-in-out infinite alternate;
 }
 
-/* A glow burst each time scrolling starts (triggered in main.js) — only
-   touches filter, never transform, so it can run alongside the constant
-   spin animation on the same element without the two fighting over the
-   same property. */
+/* A stronger glow burst each time scrolling starts (triggered in
+   main.js) — still filter-only, just brighter/wider than the resting
+   pulse above while it plays. */
 .comet-star.is-pulsing .star-glyph {
-  animation: spin 9s linear infinite, scroll-pulse .5s ease-out;
+  animation: scroll-pulse .5s ease-out;
+}
+
+@keyframes star-glow-pulse {
+  from { filter: drop-shadow(0 0 10px rgba(224, 189, 90, .85)) drop-shadow(0 0 22px rgba(240, 168, 201, .5)); }
+  to   { filter: drop-shadow(0 0 18px rgba(224, 189, 90, 1)) drop-shadow(0 0 34px rgba(240, 168, 201, .7)); }
 }
 
 @keyframes scroll-pulse {
-  0% { filter: drop-shadow(0 0 7px rgba(93, 130, 255, .85)) drop-shadow(0 0 16px rgba(77, 91, 255, .55)); }
-  35% { filter: drop-shadow(0 0 18px rgba(147, 170, 255, 1)) drop-shadow(0 0 38px rgba(120, 140, 255, .95)); }
-  100% { filter: drop-shadow(0 0 7px rgba(93, 130, 255, .85)) drop-shadow(0 0 16px rgba(77, 91, 255, .55)); }
+  0% { filter: drop-shadow(0 0 10px rgba(224, 189, 90, .85)) drop-shadow(0 0 22px rgba(240, 168, 201, .5)); }
+  35% { filter: drop-shadow(0 0 20px rgba(224, 189, 90, 1)) drop-shadow(0 0 40px rgba(240, 168, 201, .85)); }
+  100% { filter: drop-shadow(0 0 10px rgba(224, 189, 90, .85)) drop-shadow(0 0 22px rgba(240, 168, 201, .5)); }
 }
 
 .comet-star svg {
   width: 100%; height: 100%;
-  animation: twinkle 1.6s ease-in-out infinite alternate;
 }
 
 @keyframes spin {
@@ -479,13 +753,8 @@ a { color: inherit; }
   to   { transform: rotate(360deg); }
 }
 
-@keyframes twinkle {
-  from { transform: scale(.9); }
-  to   { transform: scale(1.08); }
-}
-
 @media (max-width: 760px) {
-  .comet-star { width: 34px; height: 34px; }
+  .comet-star { width: 42px; height: 42px; }
 }
 
 /* =========================================================
@@ -497,46 +766,57 @@ a { color: inherit; }
   padding: 16px 32px;
   border: none;
   border-radius: 50px;
-  background: var(--gradient-cta);
+  background: var(--d-blue);
   color: white;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: transform .25s, box-shadow .25s;
+  box-shadow: 0 6px 20px rgba(179, 220, 240, .18);
+  transition: transform .3s cubic-bezier(.2,.8,.3,1.3), box-shadow .3s ease;
 }
 
-.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(77, 91, 255, .35); }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(179, 220, 240, .28); }
+.btn:active { transform: translateY(-1px) scale(1.01); }
 .btn:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid var(--c-yellow); outline-offset: 3px; }
 
 .spark { display: inline-block; }
 
 .card {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
+  /* A more solid, clearly-bordered panel — less "invisible glass," more
+     defined edge — rather than relying on a soft glow to read as a card. */
+  position: relative;
+  background: rgba(255, 255, 255, .07);
+  border: 1.5px solid rgba(255, 255, 255, .18);
   border-radius: var(--radius-lg);
   padding: 40px;
-  transition: transform .4s, box-shadow .4s;
+  box-shadow: 0 14px 28px -20px rgba(61,51,79,.6);
+  transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease, border-color .3s ease;
+  /* Magnetic tilt toward the cursor (initTiltCards() in js/main.js sets
+     these two custom properties on mousemove) — 0deg at rest, so a card
+     that's never hovered renders identically to before this existed. */
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
 }
 
-.card:hover { transform: translateY(-10px); box-shadow: 0 0 40px rgba(77, 91, 255, .25); }
-.card h3 { font-family: 'Darumadrop One', cursive; margin-bottom: 12px; font-size: 1.4rem; }
+.card:hover {
+  transform: perspective(800px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) translateY(-6px);
+  border-color: var(--c-blue);
+  box-shadow: 0 18px 32px -18px rgba(61,51,79,.6);
+}
+.card h3 { font-family: 'Baloo 2', cursive; margin-bottom: 12px; font-size: 1.4rem; }
 .card p { color: var(--text-dim); }
 .tbd { color: var(--text-mute); font-style: italic; }
 
-/* Rainbow accent-dot — a small colored "planet" badge reused on every
-   card grid site-wide (the projects fallback list, about's doodle
-   fallback), cycling through the palette so each card reads as its own
-   little world instead of a plain identical tile. Quiet at rest, glows
-   on hover — echoes the Projects page's galaxy of planets without
-   repeating its full interaction. */
-.projects-list-fallback .card,
+/* Rainbow accent-dot — a small colored "planet" badge reused on About's
+   doodle fallback grid, cycling through the palette so each card reads
+   as its own little world instead of a plain identical tile. Quiet at
+   rest, glows on hover. */
 .doodles-fallback .card {
   position: relative;
   overflow: hidden;
 }
 
-.projects-list-fallback .card::before,
 .doodles-fallback .card::before {
   content: '';
   position: absolute;
@@ -547,16 +827,15 @@ a { color: inherit; }
   transition: transform .3s ease, box-shadow .3s ease;
 }
 
-.projects-list-fallback .card:hover::before,
 .doodles-fallback .card:hover::before {
   transform: scale(1.6);
   box-shadow: 0 0 14px var(--dot, var(--c-blue));
 }
 
-.projects-list-fallback .card:nth-child(1), .doodles-fallback .card:nth-child(1) { --dot: var(--c-orange); }
-.projects-list-fallback .card:nth-child(2), .doodles-fallback .card:nth-child(2) { --dot: var(--c-yellow); }
-.projects-list-fallback .card:nth-child(3), .doodles-fallback .card:nth-child(3) { --dot: var(--c-green); }
-.projects-list-fallback .card:nth-child(4), .doodles-fallback .card:nth-child(4) { --dot: var(--c-purple); }
+.doodles-fallback .card:nth-child(1) { --dot: var(--c-orange); }
+.doodles-fallback .card:nth-child(2) { --dot: var(--c-yellow); }
+.doodles-fallback .card:nth-child(3) { --dot: var(--c-green); }
+.doodles-fallback .card:nth-child(4) { --dot: var(--c-purple); }
 .doodles-fallback .card:nth-child(5) { --dot: var(--c-pink); }
 
 /* =========================================================
@@ -579,9 +858,40 @@ main { padding-top: var(--nav-h); position: relative; z-index: 1; }
    Projects, Playground, and Contact are anchor sections on one page, only
    the hero's "Hi! I'm Jasmine" is the document's h1 and these are demoted
    to h2 — same display size either way. */
-.page-hero h1, .page-hero h2 { font-size: clamp(2.8rem, 6vw, 4.5rem); }
+.page-hero h1, .page-hero h2 { font-size: clamp(3rem, 6.4vw, 5rem); letter-spacing: -.01em; }
 
 section { padding: 60px 8% 100px; position: relative; }
+
+/* Deliberately uneven rhythm from section to section — a flat repeated
+   padding value on every block is exactly the "template stacked cards"
+   feeling to avoid; an editorial page never gives every block the same
+   air around it. */
+section[aria-label="Project galaxy"] { padding: 10px 8% 170px; }
+section[aria-label="Playground content"] { padding: 4px 8% 70px; }
+.contact-body { padding: 34px 8% 150px; }
+
+/* Running-head margin label — an editorial-magazine device (the sideways
+   folio/section number printed in a page's gutter) rather than a plain
+   heading. Sits in the left margin, opposite the comet trail's right-edge
+   rail, so the page reads like it has two intentional margins instead of
+   one centered column. */
+.section-mark {
+  position: absolute;
+  left: 2.5%;
+  top: 10%;
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: 3px;
+  color: var(--text-mute);
+  opacity: .55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (max-width: 900px) {
+  .section-mark { display: none; }
+}
 
 /* One-page navigation: clicking a nav link jumps to #about/#projects/
    #playground/#contact. Offset the landing spot by the fixed nav's height
@@ -591,17 +901,67 @@ section { padding: 60px 8% 100px; position: relative; }
 footer {
   position: relative;
   z-index: 1;
-  padding: 90px 8%;
+  padding: 90px 8% 170px;
   text-align: center;
   border-top: 1px solid var(--panel-border);
   overflow: hidden;
 }
 
-footer .footer-title { font-size: clamp(2rem, 4vw, 3rem); }
+/* Same slim gold trim as the nav, at the top edge of the footer — bookends
+   the page with the same "royal" accent it opened with. */
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  z-index: 2;
+  background: linear-gradient(90deg, transparent, var(--c-yellow) 15%, var(--d-gold) 50%, var(--c-yellow) 85%, transparent);
+  opacity: .8;
+  pointer-events: none;
+}
+
+/* The journey's end — after a whole page of deep space, a warm horizon
+   glow rising behind a city skyline at the very bottom of the site.
+   Anchored to the bottom of the footer (which now has extra bottom
+   padding to make room for it) rather than the viewport, so it only ever
+   appears once, right where the page actually ends. */
+.horizon-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 55%,
+    rgba(247, 212, 171, .18) 70%,
+    rgba(240, 168, 201, .28) 85%,
+    rgba(237, 219, 156, .3) 100%
+  );
+}
+
+.city-skyline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 130px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .92;
+}
+
+@media (max-width: 700px) {
+  footer { padding-bottom: 120px; }
+  .city-skyline { height: 90px; }
+}
+
+footer .footer-title { font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
 footer .footer-email {
   display: inline-block;
   margin-top: 22px;
-  font-family: 'Darumadrop One', cursive;
+  font-family: 'Baloo 2', cursive;
   font-size: 1.2rem;
   text-decoration: none;
   color: var(--text);
@@ -647,6 +1007,44 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   position: relative;
 }
 
+.hero-clouds {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Puffy, hand-cut-feeling shapes built from a few overlapping soft
+   radial-gradients rather than one flat oval — closer to a doodled cloud
+   than a geometric blob. Soft lavender-white (not flat white) and kept to
+   low opacity so they read as pale moonlit clouds drifting through the
+   dark sky — atmosphere, not a focal element. */
+.hero-cloud {
+  position: absolute;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 60%, rgba(230, 224, 245, .4), transparent 55%),
+    radial-gradient(circle at 60% 35%, rgba(230, 224, 245, .32), transparent 60%),
+    radial-gradient(circle at 75% 65%, rgba(230, 224, 245, .36), transparent 55%);
+  filter: blur(3px);
+  opacity: .6;
+  animation: cloud-drift 55s linear infinite;
+}
+
+.hero-cloud-a { width: 260px; height: 90px; top: 12%; left: -20%; animation-duration: 60s; }
+.hero-cloud-b { width: 180px; height: 70px; top: 55%; left: -30%; animation-duration: 75s; animation-delay: -20s; opacity: .45; }
+.hero-cloud-c { width: 130px; height: 55px; top: 78%; left: -15%; animation-duration: 48s; animation-delay: -10s; opacity: .4; }
+
+@keyframes cloud-drift {
+  from { translate: 0 0; }
+  to { translate: 140vw 0; }
+}
+
+@media (max-width: 700px) {
+  .hero-clouds { display: none; }
+}
+
 .hero-ribbon {
   position: absolute;
   top: 50%;
@@ -664,34 +1062,95 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   /* Soft glow, not a hard-edged vector line — cool tones matching the
      tail end of the gradient, since the glow reads most naturally as
      ambient light around the comet rather than tied to one hue. Scaled
-     down to match the now much slimmer ribbon. */
+     down to match the now much slimmer ribbon. Two animations layered
+     on independent properties (transform / filter) so a gentle organic
+     drift and a slow magical glow-breathe can run at their own pace
+     without fighting each other. */
   filter:
-    drop-shadow(0 0 8px rgba(167, 139, 250, .4))
-    drop-shadow(0 0 16px rgba(77, 91, 255, .25));
+    drop-shadow(0 0 8px rgba(214, 198, 240, .4))
+    drop-shadow(0 0 16px rgba(179, 220, 240, .25));
+  animation: ribbon-drift 8s ease-in-out infinite, ribbon-glow-pulse 4.5s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+
+/* Small stars riding the hero comet's curve — the "particle sparkle" the
+   ribbon alone can't convey. transform-box:fill-box so each twinkles
+   around its own center instead of the whole SVG's origin corner. */
+.ribbon-spark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mini-pulse 3.4s ease-in-out infinite;
+}
+
+@keyframes ribbon-drift {
+  0%, 100% { transform: translateY(-50%) translate(0, 0) rotate(0deg); }
+  50% { transform: translateY(-50%) translate(2px, -14px) rotate(1.4deg); }
+}
+
+@keyframes ribbon-glow-pulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 8px rgba(214, 198, 240, .4))
+      drop-shadow(0 0 16px rgba(179, 220, 240, .25));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 15px rgba(214, 198, 240, .7))
+      drop-shadow(0 0 28px rgba(179, 220, 240, .45));
+  }
 }
 
 .hero-text { max-width: 620px; position: relative; z-index: 1; }
-.hero-text h1 { font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 20px; }
-.hero-text h2 { font-family: 'Inter', sans-serif; font-weight: 400; color: var(--text-dim); margin-bottom: 32px; font-size: 1.15rem; max-width: 520px; }
+.hero-text h1 { font-size: clamp(3.2rem, 7.5vw, 6rem); margin-bottom: 22px; letter-spacing: -.01em; }
+.hero-text h2 { font-family: 'Inter', sans-serif; font-weight: 400; color: var(--text-dim); margin-bottom: 36px; font-size: 1.2rem; line-height: 1.65; max-width: 520px; }
+
+/* Hero content is above the fold and visible on first paint, so it gets a
+   one-time entrance on load rather than the IntersectionObserver-driven
+   .reveal system used further down the page — a short staggered
+   rise-and-fade (eyebrow, then heading, then subhead, then CTA) instead of
+   everything appearing at once. */
+.hero-text .eyebrow,
+.hero-text h1,
+.hero-text h2,
+.hero-text .btn {
+  opacity: 0;
+  animation: hero-enter .8s cubic-bezier(.16,.8,.3,1) forwards;
+}
+.hero-text .eyebrow { animation-delay: .05s; }
+.hero-text h1 { animation-delay: .16s; }
+.hero-text h2 { animation-delay: .32s; }
+.hero-text .btn { animation-delay: .48s; }
+
+@keyframes hero-enter {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .mascot-wrap {
   position: relative;
   z-index: 1;
   flex: 0 0 auto;
   width: min(38vw, 380px);
+  opacity: 0;
+  animation: hero-enter-scale 1s .22s cubic-bezier(.16,.8,.3,1) forwards;
+}
+
+@keyframes hero-enter-scale {
+  from { opacity: 0; transform: scale(.92) translateY(14px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .mascot {
   width: 100%;
   height: auto;
-  animation: float 5s ease-in-out infinite;
+  animation: float 7s ease-in-out infinite;
   /* A soft chromatic-aberration fringe — pink/teal offset glows tracing the
      mascot's silhouette — as a restrained nod to the glitch/RGB-split line
      art in Jasmine's cosmic-creature moodboard reference, without going as
      far as literally re-rendering the illustration in that style. */
   filter:
-    drop-shadow(-2px 0 1px rgba(255, 63, 216, .35))
-    drop-shadow(2px 0 1px rgba(45, 212, 191, .35));
+    drop-shadow(-2px 0 1px rgba(240, 168, 201, .35))
+    drop-shadow(2px 0 1px rgba(168, 224, 207, .35));
 }
 
 @keyframes float {
@@ -699,24 +1158,10 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   50% { transform: translateY(-22px); }
 }
 
-.tagline-strip {
-  position: relative;
-  padding: 140px 8% 160px;
-  overflow: hidden;
-}
-
-.tagline-strip .strip-ribbon {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-/* Same big-squiggle background treatment as .tagline-strip's ribbon, reused
-   as a shared class so About/Playground/Contact/footer can each get their
-   own — behind the section's content (which paints on top simply by
-   coming later in the markup, same as here), never intercepting clicks. */
+/* Same big-squiggle background treatment reused as a shared class so
+   About/Playground/Contact/footer can each get their own — behind the
+   section's content (which paints on top simply by coming later in the
+   markup), never intercepting clicks. */
 .bg-squiggle {
   position: absolute;
   inset: 0;
@@ -726,25 +1171,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   pointer-events: none;
 }
 
-.tagline-strip .lines {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  max-width: 640px;
-}
-
-.tagline-strip .lines span {
-  font-family: 'Darumadrop One', cursive;
-  font-weight: 400;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-}
-
-.tagline-strip .lines span:nth-child(1) { margin-left: 4%; }
-.tagline-strip .lines span:nth-child(2) { margin-left: 14%; }
-.tagline-strip .lines span:nth-child(3) { margin-left: 8%; }
-
 @media (max-width: 900px) {
   .hero { padding-top: 20px; }
   /* Decorative-only (aria-hidden) — the redesigned comet is tall/narrow and
@@ -753,8 +1179,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
      mascot, so it's dropped here rather than distorted to fit. */
   .hero-ribbon { display: none; }
   .mascot-wrap { width: 55vw; margin: 0 auto; }
-  .tagline-strip .lines span:nth-child(2),
-  .tagline-strip .lines span:nth-child(3) { margin-left: 4%; }
 }
 
 /* =========================================================
@@ -774,11 +1198,24 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   position: relative;
   width: min(70vw, 340px);
   aspect-ratio: 1 / 1;
-  margin: 0 auto;
+  /* Off-center in its column, slightly tilted — a perfectly centered,
+     perfectly upright circle is exactly the "generated template" look
+     this page is trying not to have. Straightens up on hover, like it's
+     paying attention. */
+  margin: 0 auto 0 8%;
+  rotate: -2.5deg;
   border-radius: 50%;
   display: grid;
   place-items: center;
+  /* A real pastel gradient fill, not just a faint glow — reads as a
+     small glowing moon/planet face floating in the dark, and gives the
+     placeholder's white line-art face something to actually sit on. */
+  background: radial-gradient(circle at 35% 25%, #d6c6f0, #b3dcf0 60%, #a8e0cf);
+  box-shadow: 0 20px 60px -20px rgba(111, 84, 152, .45);
+  transition: box-shadow .5s ease, rotate .5s cubic-bezier(.2,.7,.3,1.2);
 }
+
+.avatar-frame:hover { box-shadow: 0 26px 70px -16px rgba(111, 84, 152, .6); rotate: 0deg; }
 
 .avatar-frame .ring {
   position: absolute;
@@ -798,15 +1235,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   margin-top: 16px;
   text-align: center;
   color: var(--text-mute);
-  font-family: 'Darumadrop One', cursive;
-}
-
-.rabbit-icon {
-  position: absolute;
-  bottom: 4%; left: 50%;
-  transform: translateX(-50%);
-  width: 46px;
-  opacity: .85;
+  font-family: 'Baloo 2', cursive;
 }
 
 @media (max-width: 900px) {
@@ -826,13 +1255,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   pointer-events: none;
 }
 
-.about-doodles-label {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  margin-top: 28px;
-}
-
 .doodle {
   position: absolute;
   pointer-events: auto;
@@ -840,8 +1262,8 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   border: none;
   padding: 0;
   cursor: pointer;
-  animation: float 6s ease-in-out infinite;
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, .4));
+  animation: float 7.5s ease-in-out infinite;
+  filter: drop-shadow(0 6px 16px rgba(61, 51, 79, .4));
   transition: transform .3s;
 }
 
@@ -853,7 +1275,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 .doodle-1 { width: 62px; top: 4%;  left: 6%;  animation-duration: 6.4s; }
-.doodle-2 { width: 50px; top: 66%; left: 10%; animation-duration: 5.4s; animation-delay: -1.6s; }
+.doodle-2 { width: 50px; top: 66%; left: 1%; animation-duration: 5.4s; animation-delay: -1.6s; }
 .doodle-3 { width: 68px; top: 2%;  left: 82%; animation-duration: 6.8s; animation-delay: -3.2s; }
 .doodle-4 { width: 46px; top: 70%; left: 84%; animation-duration: 5.1s; animation-delay: -2.1s; }
 .doodle-5 { width: 54px; top: 36%; left: 92%; animation-duration: 6.1s; animation-delay: -0.7s; }
@@ -876,43 +1298,11 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 /* =========================================================
-   Projects — galaxy of planets
+   About's sketchbook tooltips (.planet-card) — the name is a holdover
+   from when Projects also used this component for its planet tooltips;
+   Projects moved to the always-visible constellation cards below, but
+   .doodle's hover/focus tooltips in the About section still use this.
    ========================================================= */
-
-.galaxy {
-  position: relative;
-  width: 100%;
-  max-width: 760px;
-  aspect-ratio: 1 / 1;
-  margin: 40px auto 0;
-}
-
-.galaxy .ring {
-  position: absolute;
-  border: 2px solid;
-  border-radius: 50%;
-  opacity: .55;
-  pointer-events: none;
-}
-
-.galaxy .core {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 34px; height: 34px;
-  pointer-events: none;
-}
-
-.planet {
-  position: absolute;
-  border-radius: 50%;
-  cursor: pointer;
-  border: none;
-  padding: 0;
-  transition: transform .3s;
-}
-
-.planet:hover, .planet:focus-visible { transform: scale(1.12); }
 
 .planet-card {
   position: absolute;
@@ -921,15 +1311,15 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   color: var(--ink);
   border-radius: var(--radius-sm);
   padding: 20px 22px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+  box-shadow: 0 30px 70px rgba(61, 51, 79, .5), 0 6px 18px rgba(61, 51, 79, .3);
   opacity: 0;
-  transform: translateY(8px) rotate(-2deg);
+  transform: translateY(8px) rotate(-2deg) scale(.96);
   pointer-events: none;
-  transition: opacity .2s, transform .2s;
+  transition: opacity .25s ease, transform .3s cubic-bezier(.2,.7,.3,1.1);
   z-index: 5;
 }
 
-.planet-card h4 { font-family: 'Darumadrop One', cursive; margin-bottom: 6px; }
+.planet-card h4 { font-family: 'Baloo 2', cursive; margin-bottom: 6px; }
 .planet-card p { font-size: .92rem; color: #3a3660; }
 .planet-card code, .doodles-fallback code {
   font-family: monospace;
@@ -948,7 +1338,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   align-items: center;
   gap: 5px;
   margin-top: 10px;
-  font-family: 'Darumadrop One', cursive;
+  font-family: 'Baloo 2', cursive;
   font-weight: 400;
   font-size: .92rem;
   text-decoration: none;
@@ -956,37 +1346,243 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 .planet-card .view-case { color: var(--d-blue); }
-.projects-list-fallback .view-case { color: var(--c-blue); font-size: .95rem; }
 
 .view-case .arrow { transition: transform .2s ease; }
 .view-case:hover .arrow, .view-case:focus-visible .arrow { transform: translateX(4px); }
 
-.planet:hover + .planet-card,
-.planet:focus-visible + .planet-card,
 .doodle:hover + .planet-card,
 .doodle:focus-visible + .planet-card,
 .planet-card:hover,
 .planet-card:focus-within {
   opacity: 1;
-  transform: translateY(0) rotate(-1deg);
+  transform: translateY(0) rotate(-1deg) scale(1);
   pointer-events: auto;
 }
 
-.projects-list-fallback {
-  margin-top: 60px;
+/* =========================================================
+   Projects — constellation map. Cards are always visible in normal
+   document flow (never hidden behind a hover/focus reveal like the old
+   planet galaxy) so every project stays instantly findable and clickable
+   for a recruiter skimming the page; the starfield/lines/moon/cloud
+   around them are purely decorative and layered behind at z-index 0.
+   initConstellation() in js/main.js toggles .is-active on .constellation
+   when any card is hovered/focused, brightening the lines and stars —
+   that's the section's one shared "nearby stars glow" interaction rather
+   than per-card proximity math.
+   ========================================================= */
+
+.constellation {
+  position: relative;
+  isolation: isolate;
+}
+
+.constellation-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.constellation-lines path { opacity: .5; transition: opacity .4s ease, filter .4s ease; }
+
+.constellation.is-active .constellation-lines path {
+  opacity: 1;
+  filter: drop-shadow(0 0 6px rgba(127, 217, 230, .55));
+}
+
+.constellation-moon {
+  position: absolute;
+  top: -4%;
+  right: 4%;
+  width: min(9vw, 70px);
+  z-index: 0;
+  filter: drop-shadow(0 0 18px rgba(237, 219, 156, .35));
+  animation: moon-glow 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes moon-glow {
+  0%, 100% { opacity: .85; }
+  50% { opacity: 1; }
+}
+
+.constellation-star {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  background: #fffbf4;
+  box-shadow: 0 0 6px 1px rgba(255, 251, 244, .8);
+  --max-op: .9;
+  animation: star-twinkle 3.2s ease-in-out infinite;
+  pointer-events: none;
+  transition: filter .4s ease;
+}
+
+.constellation.is-active .constellation-star {
+  filter: drop-shadow(0 0 5px rgba(255, 251, 244, .9));
+}
+
+/* A soft drifting cloud built from overlapping blurred blobs (box-shadow
+   trick) rather than a raster asset, per the no-image-assets rule. */
+.constellation-cloud {
+  position: absolute;
+  top: 12%;
+  left: -2%;
+  width: 120px;
+  height: 40px;
+  z-index: 0;
+  background: rgba(255, 255, 255, .07);
+  border-radius: 50px;
+  filter: blur(2px);
+  box-shadow:
+    28px 8px 0 -6px rgba(255, 255, 255, .05),
+    56px -6px 0 -10px rgba(255, 255, 255, .06),
+    84px 6px 0 -8px rgba(255, 255, 255, .05);
+  animation: cloud-drift 24s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes cloud-drift {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 3vw 0; }
+}
+
+.constellation-note {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin: 0 auto 48px;
+}
+
+.constellation-grid {
+  position: relative;
+  z-index: 2;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 56px 64px;
+  max-width: 920px;
+  margin: 0 auto;
 }
 
-@media (max-width: 700px) {
-  .galaxy { display: none; }
+/* Each card is a polaroid/postcard pinned at a slight hand-placed angle
+   (--rotate, set per-card inline) — the whole card is the link, so the
+   click target is as large as possible and there's no separate "click
+   here" affordance needed. */
+.constellation-card {
+  position: relative;
+  display: block;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 16px 16px 20px;
+  text-decoration: none;
+  rotate: var(--rotate, -2deg);
+  box-shadow: 0 20px 40px -18px rgba(5, 3, 20, .55), 0 4px 10px rgba(5, 3, 20, .25);
+  transition: rotate .35s cubic-bezier(.2, .7, .3, 1), translate .35s cubic-bezier(.2, .7, .3, 1), box-shadow .35s ease;
 }
 
-.projects-list-fallback { display: none; }
+.constellation-card:hover,
+.constellation-card:focus-visible {
+  rotate: var(--hover-rotate, 0deg);
+  translate: 0 -8px;
+  box-shadow: 0 28px 48px -16px rgba(5, 3, 20, .6), 0 0 0 2px var(--accent, var(--c-blue));
+}
+
+/* Two small ✦ sparkles (the site's recurring spark mark, reused rather
+   than a new icon) that fade in around the card on hover/focus. */
+.constellation-card::before,
+.constellation-card::after {
+  content: '✦';
+  position: absolute;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--accent, var(--c-yellow));
+  opacity: 0;
+  scale: .4;
+  transition: opacity .3s ease, scale .3s ease, translate .3s ease;
+  pointer-events: none;
+}
+
+.constellation-card::before { top: -18px; left: -10px; }
+.constellation-card::after { bottom: -12px; right: -14px; }
+
+.constellation-card:hover::before,
+.constellation-card:focus-visible::before { opacity: 1; scale: 1; translate: -4px -4px; }
+
+.constellation-card:hover::after,
+.constellation-card:focus-visible::after { opacity: 1; scale: 1; translate: 4px 4px; }
+
+.constellation-tape {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  translate: -50% 0;
+  width: 60px;
+  height: 20px;
+  background: var(--accent, var(--c-yellow));
+  opacity: .55;
+  rotate: -3deg;
+  box-shadow: 0 2px 4px rgba(5, 3, 20, .2);
+}
+
+.constellation-card-star {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent, var(--c-yellow));
+  box-shadow: 0 0 0 4px var(--paper), 0 0 12px 2px var(--accent, var(--c-yellow));
+  transition: scale .3s ease, box-shadow .3s ease;
+}
+
+.constellation-card:hover .constellation-card-star,
+.constellation-card:focus-visible .constellation-card-star {
+  scale: 1.25;
+  box-shadow: 0 0 0 4px var(--paper), 0 0 20px 6px var(--accent, var(--c-yellow));
+}
+
+.constellation-thumb {
+  border-radius: 8px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--accent, var(--c-blue)) 18%, var(--paper));
+  aspect-ratio: 10 / 7;
+}
+
+.constellation-thumb svg { display: block; width: 100%; height: 100%; }
+
+.constellation-card-body { padding: 16px 6px 4px; }
+.constellation-card-body h3 { font-size: 1.15rem; margin-bottom: 6px; color: var(--ink); }
+
+.constellation-card-body p {
+  font-family: 'Inter', sans-serif;
+  font-size: .88rem;
+  line-height: 1.5;
+  color: #4a4160;
+}
+
+.constellation-card-body .view-case { color: var(--accent-deep, var(--d-blue)); }
 
 @media (max-width: 700px) {
-  .projects-list-fallback { display: grid; }
+  .constellation-lines,
+  .constellation-moon,
+  .constellation-star,
+  .constellation-cloud {
+    display: none;
+  }
+
+  .constellation-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+
+  .constellation-grid > .constellation-card {
+    margin-top: 0 !important;
+    rotate: -1deg;
+  }
+
+  .constellation-card:hover,
+  .constellation-card:focus-visible { rotate: 0deg; }
 }
 
 /* A small orbit accent behind the Projects page-hero heading — two
@@ -1013,38 +1609,59 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
    Playground
    ========================================================= */
 
-.playground-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+/* A horizontal "slide deck" of cards instead of a static grid — you
+   scroll/swipe sideways through the tiles like flipping through a stack.
+   Native CSS scroll-snap (no carousel library, no JS) so trackpad, mouse
+   wheel, touch, and keyboard (via tabindex + arrow-key scroll) all just
+   work — see rule 3, no dependency creep. */
+.playground-deck {
+  display: flex;
   gap: 28px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding: 10px 10px 28px;
+  margin: -10px -10px 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-pink) transparent;
 }
 
+.playground-deck:focus-visible { outline: 3px solid var(--c-yellow); outline-offset: 3px; }
+
+.playground-deck::-webkit-scrollbar { height: 8px; }
+.playground-deck::-webkit-scrollbar-track { background: transparent; }
+.playground-deck::-webkit-scrollbar-thumb { background: var(--c-pink); border-radius: 10px; }
+
+.sticker-card--wide { flex: 0 0 380px; }
+
 .sticker-card {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
+  position: relative;
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+  background: rgba(255, 255, 255, .07);
+  border: 1.5px solid rgba(255, 255, 255, .18);
   border-radius: var(--radius-md);
   padding: 30px 24px;
   text-align: center;
-  transition: transform .35s ease, box-shadow .35s ease;
+  box-shadow: 0 14px 26px -18px rgba(61, 51, 79, .6);
+  transition: transform .3s cubic-bezier(.2,.7,.3,1.1), box-shadow .3s ease, border-color .3s ease;
+  /* Magnetic tilt toward the cursor (initTiltCards() in js/main.js). */
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+}
+
+@media (max-width: 560px) {
+  .sticker-card { flex-basis: 240px; }
+  .sticker-card--wide { flex-basis: 300px; }
 }
 
 .sticker-card:nth-child(odd) { transform: rotate(-2deg); }
 .sticker-card:nth-child(even) { transform: rotate(2deg); }
 
 .sticker-card:hover {
-  transform: rotate(0deg) translateY(-8px) scale(1.03);
-  box-shadow: 0 20px 40px rgba(255, 63, 216, .18);
-}
-
-.sticker-card .emoji { font-size: 2.2rem; margin-bottom: 12px; display: block; transition: transform .3s ease; }
-
-.sticker-card:hover .emoji { animation: emoji-pop .5s ease; }
-
-@keyframes emoji-pop {
-  0%   { transform: scale(1) rotate(0deg); }
-  40%  { transform: scale(1.3) rotate(-8deg); }
-  70%  { transform: scale(.95) rotate(5deg); }
-  100% { transform: scale(1.1) rotate(0deg); }
+  transform: perspective(700px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) translateY(-7px) scale(1.02);
+  border-color: var(--c-pink);
+  box-shadow: 0 18px 30px -16px rgba(61, 51, 79, .55);
 }
 
 /* A hand-drawn squiggle under the Playground heading, in the site's
@@ -1069,12 +1686,272 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 /* =========================================================
+   Playground tabs + Doodle Mail — a small local tab pattern scoped to
+   #playground (see initPlaygroundTabs() in js/main.js), and a
+   draw-and-send guestbook built on HTML5 Canvas (see initDoodleMail()).
+   ========================================================= */
+
+.playground-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 8px 0 36px;
+}
+
+.playground-tab {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--text-dim);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: transform .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease;
+}
+
+.playground-tab:hover { color: var(--text); transform: translateY(-2px); }
+
+.playground-tab.is-active {
+  color: white;
+  background: var(--d-blue);
+  box-shadow: 0 10px 26px -10px rgba(47, 100, 136, .35);
+}
+
+.doodlemail { position: relative; max-width: 720px; }
+
+.doodlemail-orbit { top: -6%; right: 2%; }
+
+.mail-envelope {
+  position: absolute;
+  top: -2%;
+  right: 14%;
+  width: 84px;
+  filter: drop-shadow(0 8px 16px rgba(61, 51, 79, .18));
+  animation: envelope-float 6.5s ease-in-out infinite;
+}
+
+@keyframes envelope-float {
+  0%, 100% { translate: 0 0; rotate: -4deg; }
+  50% { translate: 0 -14px; rotate: 3deg; }
+}
+
+@media (max-width: 760px) {
+  .mail-envelope { display: none; }
+}
+
+/* A page taped into a space journal — dot-grid paper, a slight rotate, a
+   couple of "tape" strips at the corners, and a rainbow strip underneath
+   nodding to the site's signature gradient without inventing new motifs. */
+.doodle-paper {
+  position: relative;
+  background: var(--paper);
+  border-radius: 6px;
+  padding: 14px;
+  transform: rotate(-1.2deg);
+  box-shadow: 0 30px 60px -20px rgba(61, 51, 79, .55), 0 2px 0 rgba(61, 51, 79, .1);
+  margin: 22px 0 30px;
+  background-image:
+    linear-gradient(rgba(16, 12, 38, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 12, 38, .06) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+.doodle-paper::after {
+  content: '';
+  position: absolute;
+  left: 14px; right: 14px; bottom: -6px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--gradient-rainbow);
+  opacity: .8;
+}
+
+.doodle-paper .tape {
+  position: absolute;
+  top: -14px;
+  width: 74px; height: 26px;
+  background: rgba(255, 255, 255, .55);
+  border: 1px solid rgba(255, 255, 255, .7);
+  box-shadow: 0 4px 10px rgba(61, 51, 79, .25);
+}
+
+.doodle-paper .tape-a { left: 6%; transform: rotate(-8deg); }
+.doodle-paper .tape-b { right: 6%; transform: rotate(6deg); }
+
+.doodle-canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  /* Drawing surfaces don't offer a native pointer to hide behind, so the
+     custom cursor is deliberately let through here (rather than staying
+     invisible) — a visible crosshair over blank paper. */
+  cursor: crosshair;
+  touch-action: none; /* keep touch drawing from also scrolling the page */
+}
+
+.doodle-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.doodle-tool {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+}
+
+.doodle-tool-label {
+  font-size: .78rem;
+  color: var(--text-mute);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.doodle-tool input[type="color"] {
+  width: 26px; height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Tidy the native color-swatch chrome so it reads as a plain round swatch
+   matching the rest of the pill, not a browser widget. */
+.doodle-tool input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.doodle-tool input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+.doodle-tool input[type="color"]::-moz-color-swatch { border: none; border-radius: 50%; }
+
+.doodle-tool input[type="range"] { accent-color: var(--c-pink); cursor: pointer; }
+
+.doodle-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  padding: 9px 16px;
+  color: var(--text-dim);
+  font-family: 'Inter', sans-serif;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.doodle-tool-btn:hover { color: var(--text); transform: translateY(-2px); border-color: rgba(255, 255, 255, .25); }
+.doodle-tool-btn.is-active { background: var(--d-red); color: white; border-color: var(--d-red); }
+.doodle-tool-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+.doodlemail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 18px;
+}
+
+.doodle-send-btn { position: relative; margin-top: 6px; }
+
+.doodle-send-btn.is-loading { opacity: .85; cursor: progress; }
+.doodle-send-btn.is-loading .doodle-send-label::after {
+  content: '';
+  display: inline-block;
+  width: 14px; height: 14px;
+  margin-left: 10px;
+  border: 2px solid rgba(255, 255, 255, .4);
+  border-top-color: white;
+  border-radius: 50%;
+  vertical-align: -2px;
+  animation: doodle-spin .7s linear infinite;
+}
+
+@keyframes doodle-spin { to { transform: rotate(360deg); } }
+
+.doodle-send-btn.is-success {
+  background: var(--d-green);
+  box-shadow: 0 14px 34px rgba(53, 122, 90, .35);
+}
+
+.doodlemail-status { min-height: 1.4em; margin-top: 14px; font-size: .92rem; color: var(--text-dim); }
+.doodlemail-status.is-success { color: var(--c-green); }
+.doodlemail-status.is-error { color: var(--c-red); }
+.doodlemail-note { margin-top: 14px; font-size: .85rem; }
+
+/* Success sparkle burst from the Send button — deliberately separate from
+   the custom cursor's own burst (that one only exists under
+   hover:hover/pointer:fine), so this still fires on the touch devices
+   most doodles will actually come from. */
+.doodle-burst {
+  position: fixed;
+  top: 0; left: 0;
+  width: 12px; height: 12px;
+  margin: -6px 0 0 -6px;
+  pointer-events: none;
+  z-index: 300;
+  animation: doodle-burst-fly .7s ease-out forwards;
+}
+.doodle-burst svg { width: 100%; height: 100%; display: block; }
+
+@keyframes doodle-burst-fly {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; }
+}
+
+/* The hidden "type rabbit" easter egg — see initRabbitEgg()/hopRabbit()
+   in js/main.js. A silhouette bounds across the screen left to right in a
+   few arcs, like a real hop, then fades out and removes itself. */
+.rabbit-hop {
+  position: fixed;
+  top: 50%; left: -10%;
+  width: 70px; height: 70px;
+  z-index: 400;
+  pointer-events: none;
+  animation: rabbit-hop-across 1.8s cubic-bezier(.3,.7,.4,1) forwards;
+}
+.rabbit-hop-glyph {
+  display: block;
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 0 10px rgba(214, 198, 240, .6));
+}
+
+@keyframes rabbit-hop-across {
+  0%   { translate: 0vw 0; scale: .7; opacity: 0; }
+  8%   { opacity: 1; }
+  25%  { translate: 27vw -60px; scale: 1; }
+  50%  { translate: 54vw 0; scale: .95; }
+  75%  { translate: 81vw -60px; scale: 1; }
+  92%  { opacity: 1; }
+  100% { translate: 110vw 0; scale: .7; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rabbit-hop { display: none; }
+}
+
+@media (max-width: 700px) {
+  .doodlemail-row { grid-template-columns: 1fr; }
+  .doodle-paper .tape { width: 54px; height: 20px; }
+  .doodlemail-orbit { display: none; }
+}
+
+/* =========================================================
    Contact
    ========================================================= */
 
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* Asymmetric, not an even 1fr/1fr split — the form has more content and
+     earns the wider column. */
+  grid-template-columns: .82fr 1.18fr;
   gap: 60px;
   align-items: start;
 }
@@ -1082,7 +1959,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 .contact-direct a {
   position: relative;
   display: block;
-  font-family: 'Darumadrop One', cursive;
+  font-family: 'Baloo 2', cursive;
   font-size: 1.4rem;
   color: var(--text);
   text-decoration: none;
@@ -1150,7 +2027,7 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   position: absolute;
   width: 20px; height: 20px;
   opacity: .85;
-  animation: mini-pulse 2.4s ease-in-out infinite;
+  animation: mini-pulse 3.4s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
 }
@@ -1177,8 +2054,8 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   animation: mini-pulse 2.6s ease-in-out infinite;
   pointer-events: none;
   filter:
-    drop-shadow(-1.5px 0 1px rgba(255, 63, 216, .4))
-    drop-shadow(1.5px 0 1px rgba(45, 212, 191, .4));
+    drop-shadow(-1.5px 0 1px rgba(240, 168, 201, .4))
+    drop-shadow(1.5px 0 1px rgba(168, 224, 207, .4));
 }
 
 .hero-spark-a { top: -6%; right: 4%; width: 22px; height: 22px; }
@@ -1288,11 +2165,11 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 }
 
 .case-grid-2 .card p { margin-bottom: 0; }
-.case-grid-2 .card h4 { font-family: 'Darumadrop One', cursive; font-size: 1.15rem; margin-bottom: 8px; }
+.case-grid-2 .card h4 { font-family: 'Baloo 2', cursive; font-size: 1.15rem; margin-bottom: 8px; }
 
 .case-links { display: flex; flex-wrap: wrap; gap: 14px 26px; margin-top: 10px; align-items: center; }
 .case-links a:not(.btn) {
-  font-family: 'Darumadrop One', cursive;
+  font-family: 'Baloo 2', cursive;
   font-size: 1rem;
   text-decoration: none;
   color: var(--case-accent, var(--c-blue));
@@ -1314,7 +2191,7 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   content: '\201C';
   position: absolute;
   top: 4px; left: 8%;
-  font-family: 'Darumadrop One', cursive;
+  font-family: 'Baloo 2', cursive;
   font-size: 4.5rem;
   line-height: 1;
   color: var(--case-accent, var(--c-blue));
@@ -1322,7 +2199,7 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 }
 
 .case-reflection {
-  font-family: 'Darumadrop One', cursive;
+  font-family: 'Baloo 2', cursive;
   font-weight: 400;
   font-size: 1.35rem;
   line-height: 1.7;
@@ -1345,6 +2222,7 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-md);
+  box-shadow: 0 20px 44px -28px rgba(61, 51, 79, .6);
 }
 
 .case-meta-grid dt {
@@ -1379,7 +2257,7 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   border: 2px solid var(--case-accent, var(--c-blue));
   background: transparent;
   color: var(--text);
-  font-family: 'Darumadrop One', cursive;
+  font-family: 'Baloo 2', cursive;
   font-size: .78rem;
   line-height: 1;
   box-sizing: border-box;
@@ -1453,7 +2331,7 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 }
 
 .case-prevnext .dir-title {
-  font-family: 'Darumadrop One', cursive;
+  font-family: 'Baloo 2', cursive;
   font-size: 1.05rem;
 }
 

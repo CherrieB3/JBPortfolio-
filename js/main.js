@@ -8,16 +8,164 @@ document.addEventListener('DOMContentLoaded', () => {
   initCometTrail();
   initStarfield();
   initCustomCursor();
+  initScrollReveal();
+  initPlaygroundTabs();
+  initTiltCards();
+  initRabbitEgg();
+  initConstellation();
 });
+
+// A magnetic tilt toward the cursor on .card/.sticker-card — the card
+// leans as if it were a rigid plate pivoting under your pointer, on top
+// of (not instead of) each one's existing lift/scale hover. Only on real
+// mouse pointers — touch has no continuous hover position to tilt
+// against. Sets --tilt-x/--tilt-y (consumed inside the .card:hover /
+// .sticker-card:hover transform in CSS) rather than transform directly,
+// so this never fights the CSS transition already driving the lift.
+function initTiltCards() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const MAX_TILT = 8; // degrees at the card's edge; halved near its center
+
+  document.querySelectorAll('.card, .sticker-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width - 0.5;
+      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.setProperty('--tilt-x', `${(px * MAX_TILT * 2).toFixed(2)}deg`);
+      card.style.setProperty('--tilt-y', `${(-py * MAX_TILT * 2).toFixed(2)}deg`);
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+    });
+  });
+}
+
+// Projects' constellation map: hovering/focusing any project card
+// brightens the decorative constellation lines and stars behind the whole
+// section (one shared .is-active toggle, not per-card proximity math) —
+// the "nearby stars glow, lines illuminate" part of the hover brief. A
+// no-op if the constellation markup isn't on the page.
+function initConstellation() {
+  const section = document.querySelector('.constellation');
+  if (!section) return;
+  const cards = section.querySelectorAll('.constellation-card');
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => section.classList.add('is-active'));
+    card.addEventListener('mouseleave', () => section.classList.remove('is-active'));
+    card.addEventListener('focus', () => section.classList.add('is-active'));
+    card.addEventListener('blur', () => section.classList.remove('is-active'));
+  });
+}
+
+// A small hidden easter egg grounded in something real about Jasmine (the
+// "rabbit enthusiast" line in the hero) rather than an arbitrary gimmick:
+// type "rabbit" anywhere on the page and a little hop of sparks bounds
+// across the screen. Keydown-sequence detection, the same idea as a
+// Konami code, reset on any wrong key.
+function initRabbitEgg() {
+  const WORD = 'rabbit';
+  let progress = 0;
+
+  window.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return; // don't hijack real shortcuts
+    // Don't fire while someone's actually typing into a field — e.g.
+    // writing "rabbit" into the Doodle Mail message box shouldn't launch
+    // a hop mid-sentence.
+    const tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) { progress = 0; return; }
+    const key = e.key.toLowerCase();
+    progress = (key === WORD[progress]) ? progress + 1 : (key === WORD[0] ? 1 : 0);
+    if (progress === WORD.length) {
+      progress = 0;
+      hopRabbit();
+    }
+  });
+}
+
+function hopRabbit() {
+  const colors = ['#f0a8c9', '#b3dcf0', '#eddb9c', '#bfe8d4', '#d6c6f0', '#f7d4ab', '#a8e0cf'];
+  const hop = document.createElement('div');
+  hop.className = 'rabbit-hop';
+  hop.setAttribute('aria-hidden', 'true');
+  // Same line-art rabbit silhouette used elsewhere on the site — no emoji.
+  hop.innerHTML = `
+    <svg class="rabbit-hop-glyph" viewBox="0 0 60 60" fill="none">
+      <path d="M20,25 C15,10 8,0 15,2 C24,5 26,18 24,28" stroke="#d6c6f0" stroke-width="3" fill="none" stroke-linecap="round" />
+      <path d="M32,25 C30,8 26,-2 34,2 C41,6 40,18 36,28" stroke="#d6c6f0" stroke-width="3" fill="none" stroke-linecap="round" />
+      <ellipse cx="30" cy="45" rx="24" ry="18" stroke="#d6c6f0" stroke-width="3" fill="none" />
+      <circle cx="22" cy="42" r="2.5" fill="#d6c6f0" />
+      <circle cx="34" cy="42" r="2.5" fill="#d6c6f0" />
+    </svg>`;
+  document.body.appendChild(hop);
+
+  // A few sparks trailing the hop, spawned partway through its bound
+  // across the screen rather than all at once, so they read as a trail.
+  const trailColors = colors;
+  [300, 500, 700, 900].forEach((delay, i) => {
+    setTimeout(() => {
+      const spark = document.createElement('div');
+      spark.className = 'doodle-burst';
+      const x = window.innerWidth * (0.15 + i * 0.22);
+      const y = window.innerHeight * 0.5;
+      spark.style.left = `${x}px`;
+      spark.style.top = `${y}px`;
+      spark.style.color = trailColors[i % trailColors.length];
+      spark.style.setProperty('--dx', `${(Math.random() * 60 - 30).toFixed(1)}px`);
+      spark.style.setProperty('--dy', `${(-40 - Math.random() * 40).toFixed(1)}px`);
+      spark.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="currentColor"/></svg>';
+      spark.addEventListener('animationend', () => spark.remove());
+      document.body.appendChild(spark);
+    }, delay);
+  });
+
+  hop.addEventListener('animationend', () => hop.remove());
+}
+
+// Fades/rises .reveal and .reveal-fade elements in as they enter the
+// viewport. The "hidden" state is applied here, in JS, rather than as a
+// CSS default — so a visitor whose JS fails to load (or who has it
+// disabled) sees every element in its normal, fully visible resting
+// state instead of content that never appears. Fires once per element,
+// then stops observing it.
+function initScrollReveal() {
+  const els = document.querySelectorAll('.reveal, .reveal-fade');
+  if (!els.length) return;
+
+  if (!('IntersectionObserver' in window)) return; // leave everything visible
+
+  els.forEach(el => el.classList.add('is-hidden'));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('is-hidden');
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+  els.forEach(el => io.observe(el));
+}
 
 function initStarfield() {
   const field = document.querySelector('.stars');
   if (!field) return;
 
   // Denser and a bit sparklier than before — leaning into the busy star
-  // scatter from Jasmine's cosmic-creature moodboard reference.
+  // scatter from Jasmine's cosmic-creature moodboard reference. .stars is
+  // fixed to the viewport (the same background stays put throughout the
+  // whole site, rather than scrolling through a much taller canvas), so
+  // density is based on viewport area, not document height.
   const area = window.innerWidth * window.innerHeight;
   const count = Math.min(300, Math.max(120, Math.round(area / 7000)));
+
+  // A few soft pastel hues instead of plain white — leans coral/teal/
+  // lavender, weighted toward coral, matching a moodboard reference
+  // Jasmine shared (coral-pink stars, glowing teal clouds, deep indigo
+  // night) more than the earlier gold-heavy mix.
+  const STAR_COLORS = ['#f0a89a', '#f0a89a', '#7fd9e6', '#d6c6f0', '#f0a8c9', '#e0bd5a'];
 
   const frag = document.createDocumentFragment();
   for (let i = 0; i < count; i++) {
@@ -35,6 +183,7 @@ function initStarfield() {
     star.style.setProperty('--max-op', maxOpacity.toFixed(2));
     star.style.setProperty('--dur', `${(2.5 + Math.random() * 3).toFixed(2)}s`);
     star.style.setProperty('--delay', `${(Math.random() * 4).toFixed(2)}s`);
+    star.style.setProperty('--star-color', STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)]);
 
     frag.appendChild(star);
   }
@@ -95,7 +244,7 @@ function initCustomCursor() {
   });
   document.addEventListener('mouseover', () => { cursor.style.opacity = '1'; });
 
-  const BURST_COLORS = ['#ff3fd8', '#4d5bff', '#ffd93d', '#4ade80', '#a78bfa', '#ff9f1c', '#2dd4bf'];
+  const BURST_COLORS = ['#f0a8c9', '#b3dcf0', '#eddb9c', '#bfe8d4', '#d6c6f0', '#f7d4ab', '#a8e0cf'];
   const BURST_COUNT = 7;
 
   function spawnBurst(x, y) {
@@ -182,369 +331,66 @@ function initCometTrail() {
   const svg = trail.querySelector('svg');
   const gradient = trail.querySelector('#trailGradient');
   const revealRect = trail.querySelector('#trailRevealRect');
+  const fadeGradient = trail.querySelector('#trailFadeGradient');
+  const fadeRect = trail.querySelector('#trailFadeRect');
+  const FADE_PX = 100; // how long a stretch, just before the reveal boundary, the ribbon takes to fade to nothing
 
   const STEP = 12; // vertical scan resolution, px — finer steps make the relaxed curve smoother
 
-  const OBSTACLE_SELECTOR = [
-    'main h1', 'main h2', 'main h3', 'main p', 'main a', 'main .card',
-    'main .mascot-wrap', 'main .avatar-frame', 'main .galaxy', 'main .sticker-card',
-    'main form', 'main .rabbit-icon', 'main .lines',
-    'footer h2', 'footer .footer-email', 'footer .socials',
-  ].join(', ');
-
   let samples = []; // sampled centerline, in document coordinates
   let totalLength = 0;
-  let baseWidth = 20; // the reference (unscaled) stroke width, set by buildRibbon each run — tick() scales the star against this
 
-  // Content blocks the trail should route around, in document coordinates.
-  function collectObstacles(pad, lookahead) {
-    const rects = [];
-    document.querySelectorAll(OBSTACLE_SELECTOR).forEach(el => {
-      const r = el.getBoundingClientRect();
-      if (r.width < 2 || r.height < 2) return;
-      rects.push({
-        // Extra clearance above AND below the obstacle: the ribbon can only
-        // move sideways at a capped rate per row, so if the constraint
-        // only started exactly at the obstacle's edge, a curve already
-        // swinging back toward center right at that boundary has no room
-        // to react and grazes the text before the cap can pull it clear.
-        // Starting the constraint a bit earlier gives it that room on entry
-        // — and the same cushion is needed on exit too: without it, the
-        // instant the obstacle's row ends, the raw (unconstrained) desired
-        // position — which kept evolving the whole time it was being
-        // suppressed — reasserts itself in a single row, producing a sharp
-        // spike-and-rebound "knot" in the ribbon right at that boundary
-        // instead of a gradual ease back toward center.
-        top: r.top + window.scrollY - pad - (lookahead || 0),
-        bottom: r.bottom + window.scrollY + pad + (lookahead || 0),
-        left: r.left - pad,
-        right: r.right + pad,
-      });
-    });
-    return rects;
-  }
-
-  // Free horizontal spans at a given y, after subtracting every obstacle
-  // whose vertical range covers it.
-  function freeIntervals(y, obstacles, w) {
-    let intervals = [[0, w]];
-    for (const o of obstacles) {
-      if (y < o.top || y > o.bottom) continue;
-      const next = [];
-      for (const [s, e] of intervals) {
-        if (o.right <= s || o.left >= e) { next.push([s, e]); continue; }
-        if (o.left > s) next.push([s, o.left]);
-        if (o.right < e) next.push([o.right, e]);
-      }
-      intervals = next;
-    }
-    return intervals.filter(([s, e]) => e - s > 1);
-  }
-
-  function clampToFree(x, intervals, fallback) {
-    if (!intervals.length) return fallback;
-    for (const [s, e] of intervals) {
-      if (x >= s && x <= e) return x;
-    }
-    // Score each gutter by width, but heavily penalize how far it is from
-    // the ribbon's actual current position (fallback) — distance dominates
-    // width by a wide margin. The ribbon now rests in a narrow straight
-    // lane near one edge, so a blocked obstacle typically leaves one huge
-    // gutter open on the far side of the page; a mild
-    // distance penalty (as used for the old edge-to-edge sweep, where a
-    // wide graceful detour was the goal) lets that raw width win and drags
-    // the ribbon away from the edge it's supposed to be hugging. Weighting
-    // distance this heavily means a narrow gutter right next to the ribbon
-    // beats a huge one far away, and — just as importantly — keeps every
-    // pass's decision anchored to continuity, so a later smoothing pass
-    // can't independently re-pick a distant gutter and reintroduce a jump
-    // an earlier pass already resolved.
-    let best = intervals[0], bestScore = -Infinity;
-    for (const iv of intervals) {
-      const w = iv[1] - iv[0];
-      const dist = fallback < iv[0] ? iv[0] - fallback : fallback > iv[1] ? fallback - iv[1] : 0;
-      const score = w - dist * 5;
-      if (score > bestScore) { bestScore = score; best = iv; }
-    }
-    if (fallback >= best[0] && fallback <= best[1]) return fallback;
-    // Land as close as possible to the original desired x within the
-    // chosen gutter, not its midpoint. The ribbon now rests in a narrow
-    // straight lane near one edge, so a blocked obstacle typically leaves
-    // one huge open gutter on the other side — taking
-    // its midpoint would drag the ribbon halfway across the page just to
-    // clear a small obstruction. Clamping the smoothly-varying desired x
-    // into the interval keeps the detour as small as it can be, and stays
-    // stable since desired doesn't jump between rows.
-    const inset = Math.min(24, (best[1] - best[0]) / 2);
-    return Math.max(best[0] + inset, Math.min(best[1] - inset, x));
-  }
-
-  // Scan down the page in bands, steering around any content block that's
-  // in the way. The resting lane is one consistent middle-right position
-  // held for the whole scroll, with a short, gentle sway along its length
-  // — like a wire loosely held vertically, not a taut straight line and
-  // not the old wide edge-to-edge sweep either — only otherwise deviating
-  // from that to dodge content.
+  // A single straight vertical line down the page, hugging the right edge
+  // — no obstacle dodging, no sway, constant width throughout. Still
+  // builds `samples` at the same STEP resolution and with the same shape
+  // (x, y, width, normal, dist) the rest of this file (pointAtY, the star
+  // tracking, the rainbow flow) reads, so nothing downstream needs to know
+  // the path is straight now.
   function buildRibbon(w, h) {
     const isNarrow = w < 700;
-    const pad = isNarrow ? 20 : 44; // clearance kept from every obstacle
-    const width = isNarrow ? 11 : 20; // reference thickness on straight/low-curvature stretches
-    baseWidth = width; // shared with tick(), so the star can scale against the same reference
-    const restFraction = 0.35; // how far in from the right edge the resting lane sits — middle-right, not edge-hugging
+    const width = isNarrow ? 11 : 20; // constant stroke width — nothing to widen at, since there are no turns
+    const restFraction = 0.025; // how far in from the right edge the line sits — right up against the edge
     const centerX = w * (1 - restFraction) - width / 2;
-    const WAVE_AMPLITUDE = isNarrow ? 3 : 5; // px either side of centerX — short and subtle, not a wide swing
-    const WAVE_LENGTH = isNarrow ? 190 : 250; // px of travel per full sway cycle
-    // Cap how far the centerline can move sideways in one scan row. Without
-    // this, a sudden obstacle-dodge jump to a different gutter can swing
-    // the path further sideways than down — and once the turn is tighter
-    // than the ribbon's own half-width, the
-    // left/right offset edges cross and the ribbon self-intersects into a
-    // little knot instead of curving. Capping the per-row delta forces
-    // every direction change to unfurl gradually, which is what actually
-    // reads as a clean swirl instead of a scribble. Kept low (rather than
-    // just relying on the relax passes below) so obstacle dodges themselves
-    // start out as a gentle lean instead of a sharp jag that smoothing then
-    // has to round the corners off of.
-    const maxDeltaPerStep = STEP * 1.1;
 
-    // Obstacles get extra warning room above their top edge, sized to how
-    // far the capped ribbon can travel in a handful of rows — enough to
-    // reach clear of a typical obstacle's gutter before actually reaching
-    // it, instead of arriving at the boundary mid-swing and grazing it.
-    const obstacles = collectObstacles(pad, maxDeltaPerStep * 4);
-
-    const raw = [];
-    let lastX = centerX;
+    samples = [];
     for (let y = 0; y <= h; y += STEP) {
-      // Straight down at this stage — the sway is layered on at the very
-      // end (see below), after smoothing, since the relax passes further
-      // down would otherwise average a wave this short right back out.
-      const desired = centerX;
-      const intervals = freeIntervals(y, obstacles, w);
-      const x = clampToFree(desired, intervals, lastX);
-      lastX = Math.max(lastX - maxDeltaPerStep, Math.min(lastX + maxDeltaPerStep, x));
-      raw.push({ x: lastX, y });
+      samples.push({ x: centerX, y, width, nx: -1, ny: 0 });
     }
-    if (raw[raw.length - 1].y < h) raw.push({ x: raw[raw.length - 1].x, y: h });
-
-    // Relax the curve toward smoothness in several rounds, re-clamping to the
-    // free gutters after each pass — this rounds off every step left by
-    // obstacle-hugging into a continuous, springy curve with no hard corners,
-    // without letting the curve drift back into content.
-    let points = raw;
-    for (let pass = 0; pass < 12; pass++) {
-      points = points.map((p, i) => {
-        const win = points.slice(Math.max(0, i - 16), Math.min(points.length, i + 17));
-        const x = win.reduce((s, q) => s + q.x, 0) / win.length;
-        return { x: clampToFree(x, freeIntervals(p.y, obstacles, w), x), y: p.y };
-      });
+    if (samples[samples.length - 1].y < h) {
+      samples.push({ x: centerX, y: h, width, nx: -1, ny: 0 });
     }
-
-    // The relax passes above re-clamp each point in isolation, so a point
-    // that averaged into an obstacle can still snap straight to that
-    // obstacle's far gutter edge in one step — the same sharp-turn problem
-    // the raw pass's delta cap was meant to prevent, reintroduced by
-    // smoothing. Walk the relaxed curve once more, sequentially, so no
-    // consecutive pair is ever further apart than the cap allows.
-    let seqX = points[0].x;
-    points = points.map((p, i) => {
-      if (i === 0) return p;
-      const bounded = Math.max(seqX - maxDeltaPerStep, Math.min(seqX + maxDeltaPerStep, p.x));
-      seqX = clampToFree(bounded, freeIntervals(p.y, obstacles, w), seqX);
-      return { x: seqX, y: p.y };
-    });
-
-    // A light final polish: the cap above can still leave a single-row
-    // spike-and-rebound where it kicked in for just one row (the fastest
-    // the ribbon is allowed to react to a newly-blocked gutter). A small
-    // moving average erases that without undoing the broad shape.
-    for (let pass = 0; pass < 4; pass++) {
-      points = points.map((p, i) => {
-        const win = points.slice(Math.max(0, i - 4), Math.min(points.length, i + 5));
-        const x = win.reduce((s, q) => s + q.x, 0) / win.length;
-        return { x: clampToFree(x, freeIntervals(p.y, obstacles, w), x), y: p.y };
-      });
-    }
-
-    // The polish pass above clamps each point in isolation again too, so
-    // right at a boundary where an obstacle starts or ends — the exact
-    // spot the averaging window straddles — it can re-pick a completely
-    // different gutter and reintroduce the same jump the sequential pass
-    // upstream already fixed. Walk it sequentially one more time.
-    seqX = points[0].x;
-    points = points.map((p, i) => {
-      if (i === 0) return p;
-      const bounded = Math.max(seqX - maxDeltaPerStep, Math.min(seqX + maxDeltaPerStep, p.x));
-      seqX = clampToFree(bounded, freeIntervals(p.y, obstacles, w), seqX);
-      return { x: seqX, y: p.y };
-    });
-
-    // Right at an obstacle's boundary, clampToFree can return the same
-    // "wrong" x on every pass above — averaging never erodes it because
-    // each pass reclamps back to that same point, so it isn't actually an
-    // average converging on the truth, it's a stable fixed point that
-    // happens to be a one-row spike. A single isolated row whose neighbors
-    // are close to each other but far from it is unambiguously that spike
-    // (a real turn moves its neighbors too, not just one row in the
-    // middle) — snap it to its neighbors' midpoint instead of relying on
-    // more rounds of the same averaging to fix it. Run it three times:
-    // fixing the worst spike can leave a smaller one-row echo right next to
-    // where it was, below the previous pass's own threshold — verified
-    // against dense, closely-packed obstacle layouts (stacked paragraph
-    // lines, card grids) down to a low-single-digit-px residual.
-    for (let pass = 0; pass < 3; pass++) {
-      points = points.map((p, i) => {
-        if (i === 0 || i === points.length - 1) return p;
-        const a = points[i - 1], b = points[i + 1];
-        const neighborMid = (a.x + b.x) / 2;
-        const neighborGap = Math.abs(a.x - b.x);
-        const deviation = Math.abs(p.x - neighborMid);
-        if (deviation > maxDeltaPerStep * 0.2 && neighborGap < maxDeltaPerStep * 0.8) {
-          return { x: clampToFree(neighborMid, freeIntervals(p.y, obstacles, w), neighborMid), y: p.y };
-        }
-        return p;
-      });
-    }
-
-    // The despike above can, in principle, still leave a step slightly
-    // over the per-row cap (its replacement value isn't cap-checked against
-    // its neighbors). One more sequential walk guarantees the final output
-    // never violates it.
-    seqX = points[0].x;
-    points = points.map((p, i) => {
-      if (i === 0) return p;
-      const bounded = Math.max(seqX - maxDeltaPerStep, Math.min(seqX + maxDeltaPerStep, p.x));
-      seqX = clampToFree(bounded, freeIntervals(p.y, obstacles, w), seqX);
-      return { x: seqX, y: p.y };
-    });
-
-    // The short sway is layered on last, after the curve is fully settled
-    // — not baked into the original scan (the wide relax passes above span
-    // most of one wave cycle and would average it back out almost
-    // entirely). The wave's own per-row swing is tiny, but reclamping each
-    // point in isolation against a tightly-packed obstacle can still pick
-    // a completely different gutter (the same failure mode the despike
-    // pass earlier exists to fix) — so this needs the same delta-capped
-    // sequential walk, not just a reclamp.
-    points = points.map((p) => {
-      const waveX = p.x + WAVE_AMPLITUDE * Math.sin((p.y / WAVE_LENGTH) * Math.PI * 2);
-      return { x: clampToFree(waveX, freeIntervals(p.y, obstacles, w), waveX), y: p.y };
-    });
-
-    seqX = points[0].x;
-    points = points.map((p, i) => {
-      if (i === 0) return p;
-      const bounded = Math.max(seqX - maxDeltaPerStep, Math.min(seqX + maxDeltaPerStep, p.x));
-      seqX = clampToFree(bounded, freeIntervals(p.y, obstacles, w), seqX);
-      return { x: seqX, y: p.y };
-    });
-
-    points = points.map((p, i) => {
-      if (i === 0 || i === points.length - 1) return p;
-      const a = points[i - 1], b = points[i + 1];
-      const neighborMid = (a.x + b.x) / 2;
-      const neighborGap = Math.abs(a.x - b.x);
-      const deviation = Math.abs(p.x - neighborMid);
-      if (deviation > maxDeltaPerStep * 0.2 && neighborGap < maxDeltaPerStep * 0.8) {
-        return { x: clampToFree(neighborMid, freeIntervals(p.y, obstacles, w), neighborMid), y: p.y };
-      }
-      return p;
-    });
-
-    seqX = points[0].x;
-    points = points.map((p, i) => {
-      if (i === 0) return p;
-      const bounded = Math.max(seqX - maxDeltaPerStep, Math.min(seqX + maxDeltaPerStep, p.x));
-      seqX = clampToFree(bounded, freeIntervals(p.y, obstacles, w), seqX);
-      return { x: seqX, y: p.y };
-    });
-
-    samples = points;
 
     samples[0].dist = 0;
     for (let i = 1; i < samples.length; i++) {
-      const dx = samples[i].x - samples[i - 1].x;
-      const dy = samples[i].y - samples[i - 1].y;
-      samples[i].dist = samples[i - 1].dist + Math.hypot(dx, dy);
+      samples[i].dist = samples[i - 1].dist + (samples[i].y - samples[i - 1].y);
     }
     totalLength = samples[samples.length - 1].dist || 1;
 
-    // How many samples on each side to look when measuring a bend — wider
-    // than the immediate neighbor (used for the normal below) so the width
-    // responds to the actual shape of a turn/dodge rather than single-row
-    // noise, and doesn't fire on the short sway's own gentle drift.
-    const CURVE_SPAN = 5;
-    const MAX_TURN = 0.5; // radians of direction change (over that span) that maxes out the width
-    const EXTRA_WIDTH = width * 0.75; // how much wider than the reference at a full turn
-
-    samples.forEach((p, i) => {
-      const prev = samples[Math.max(0, i - 1)];
-      const next = samples[Math.min(samples.length - 1, i + 1)];
-      const tx = next.x - prev.x, ty = next.y - prev.y;
-      const len = Math.hypot(tx, ty) || 1;
-      p.nx = -ty / len;
-      p.ny = tx / len;
-
-      // Thicker only where the path is actually turning — not tied to
-      // absolute direction (a calligraphy nib) and not fluctuating on its
-      // own along straight stretches (a pulse) — everywhere else it just
-      // holds the reference width.
-      const back = samples[Math.max(0, i - CURVE_SPAN)];
-      const fwd = samples[Math.min(samples.length - 1, i + CURVE_SPAN)];
-      // Right at the very top/bottom of the page, the lookback/lookahead
-      // clamps to the point itself — a zero-length span has no real
-      // direction to measure, and atan2(0, 0) would otherwise read as a
-      // spurious full turn. Just hold the reference width there.
-      if (back === p || fwd === p) {
-        p.width = width;
-      } else {
-        const dirIn = Math.atan2(p.y - back.y, p.x - back.x);
-        const dirOut = Math.atan2(fwd.y - p.y, fwd.x - p.x);
-        let turn = dirOut - dirIn;
-        while (turn > Math.PI) turn -= Math.PI * 2;
-        while (turn < -Math.PI) turn += Math.PI * 2;
-        const curvature = Math.min(1, Math.abs(turn) / MAX_TURN);
-        p.width = width + EXTRA_WIDTH * curvature;
-      }
-    });
-
-    const leftPts = samples.map(p => ({ x: p.x + p.nx * p.width / 2, y: p.y + p.ny * p.width / 2 }));
-    const rightPts = samples.slice().reverse().map(p => ({ x: p.x - p.nx * p.width / 2, y: p.y - p.ny * p.width / 2 }));
+    window.__trailDebug = { samples: samples.map(p => ({ x: p.x, y: p.y, width: p.width })) };
 
     const fmt = n => n.toFixed(1);
-    // Catmull-Rom -> cubic bezier, so the outline is a true curve rather
-    // than a polyline through the sample points.
-    function curveThrough(pts) {
-      const cmds = [];
-      for (let i = 0; i < pts.length - 1; i++) {
-        const p0 = pts[i === 0 ? 0 : i - 1];
-        const p1 = pts[i];
-        const p2 = pts[i + 1];
-        const p3 = pts[i + 2 < pts.length ? i + 2 : i + 1];
-        const c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
-        const c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
-        cmds.push(`C ${fmt(c1x)} ${fmt(c1y)}, ${fmt(c2x)} ${fmt(c2y)}, ${fmt(p2.x)} ${fmt(p2.y)}`);
-      }
-      return cmds.join(' ');
-    }
-
-    window.__trailDebug = { samples: samples.map(p => ({ x: p.x, y: p.y, width: p.width })), obstacles };
-
-    return `M ${fmt(leftPts[0].x)} ${fmt(leftPts[0].y)} ${curveThrough(leftPts)} `
-      + `L ${fmt(rightPts[0].x)} ${fmt(rightPts[0].y)} ${curveThrough(rightPts)} Z`;
+    const left = centerX - width / 2;
+    const right = centerX + width / 2;
+    return `M ${fmt(left)} 0 L ${fmt(left)} ${fmt(h)} L ${fmt(right)} ${fmt(h)} L ${fmt(right)} 0 Z`;
   }
 
   const RAINBOW_REPEAT = 600; // px of one full color cycle, tiled via spreadMethod="reflect" — 25% longer than before, so the hue shifts 25% less per px of travel
   const RAINBOW_SPEED = 1.6; // how much faster the rainbow flows than you scroll
   const IDLE_FLOW_SPEED = 0.02; // px/ms the rainbow keeps drifting even at rest — a full cycle every ~24s
-  const EASE = 0.4; // how quickly the star catches up to its scroll target — still enough glide to
+  const EASE = 0.5; // how quickly the star catches up to its scroll target — still enough glide to
   // feel alive rather than snapping instantly, but tight enough that it doesn't visibly lag behind
   const WOBBLE_X = 5, WOBBLE_Y = 3.5; // px — a small orbiting drift, so the star never sits perfectly still
 
-  // Eased/wobbled star position, in document coordinates. null until the
-  // first tick, so that tick can hard-set it (no glide-in from empty state).
-  let displayX = null, displayY = null;
-  let displayWidth = null; // eased ribbon width at the star's position — drives its scale
+  // Eased/wobbled star position. displayX is in document coordinates (X
+  // doesn't depend on scroll, so no viewport-space equivalent is needed).
+  // displayViewportY is different: it's the star's eased VIEWPORT-relative
+  // Y, tracked separately rather than derived from pointAtY()'s result,
+  // because that result is clamped to the document's real bounds
+  // (0..docHeight) — necessary for X, but it would otherwise pin the star
+  // at the very top/bottom edge of the frame instead of letting it
+  // actually pass beyond it. Both null until the first tick, so that tick
+  // can hard-set them (no glide-in from empty state).
+  let displayX = null, displayViewportY = null;
   let idleFlowOffset = 0;
   let lastTick = null;
 
@@ -562,6 +408,8 @@ function initCometTrail() {
     gradient.setAttribute('x1', '0'); gradient.setAttribute('y1', '0');
     gradient.setAttribute('x2', '0'); gradient.setAttribute('y2', RAINBOW_REPEAT);
     revealRect.setAttribute('width', w);
+    fadeRect.setAttribute('width', w);
+    fadeRect.setAttribute('height', docHeight);
 
     const d = buildRibbon(w, docHeight);
 
@@ -569,13 +417,14 @@ function initCometTrail() {
     const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     el.setAttribute('d', d);
     el.setAttribute('class', 'trail-seg');
+    el.setAttribute('mask', 'url(#trailFadeMask)');
     svg.appendChild(el);
 
     // The path geometry just changed (resize/font-load), so the eased
     // position from the old path is meaningless — reset it and let tick()
     // hard-snap to the new target on its next frame instead of gliding
     // across an unrelated shape.
-    displayX = displayY = displayWidth = null;
+    displayX = displayViewportY = null;
     tick(performance.now());
   }
 
@@ -610,23 +459,42 @@ function initCometTrail() {
   // even at rest, instead of freezing solid the instant scrolling stops.
   // Also called directly (not via the loop) from layout(), so a resize
   // repaints immediately instead of waiting on the next scheduled frame.
-  const TOP_MARGIN = 0.12; // how close to the viewport's top edge the star can get, at the very start of the page
+  // Small and positive on purpose: at the very top of the page (pct 0)
+  // the star already sits just inside the frame, near the top edge —
+  // there's something to see right from scrollY 0, rather than the star
+  // starting fully off-screen and only becoming visible after scrolling.
+  const TOP_MARGIN = 0.03;
   // Capped well short of the bottom edge (not a symmetric top/bottom
-  // margin) so the star stays ahead of your scroll position — leading
-  // into the content below rather than drifting down to trail behind
-  // wherever you've already read.
-  const AHEAD_CAP = 0.5;
+  // margin, and deliberately asymmetric with TOP_MARGIN) so the star
+  // stays ahead of your scroll position — leading into the content below
+  // rather than drifting down to trail behind wherever you've already
+  // read. Past 1 (the viewport's bottom edge) on purpose — at the very
+  // bottom of the page the star exits off-screen below, rather than
+  // parking in view forever once there's nothing left to lead into.
+  const AHEAD_CAP = 1.08;
+  // Pulls the reveal back from the star's exact center (not past it) so the
+  // ribbon's end always sits tucked under the star's own glow/body instead
+  // of poking out past it. Comfortably within the star's radius (52px
+  // wide desktop, 34px mobile — fixed, doesn't vary), so it stays covered.
+  const REVEAL_PULLBACK_PX = 12;
+  // A small dead zone at the very top: the star (already visible, near the
+  // top edge, per TOP_MARGIN) holds that resting position through the
+  // first few pixels of scroll, rather than starting to creep the instant
+  // the page moves at all — movement proper only kicks in past this point.
+  const SCROLL_START_PX = 5;
 
   function tick(now) {
     if (samples.length) {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-      // Anchored to "where in the viewport should the star sit" (near the
-      // top edge at the very start of the page, capped at AHEAD_CAP by
-      // the very end, sliding between as you scroll) rather than "what %
-      // of the document have you scrolled" — guarantees the star is
-      // always on screen and ahead of center, regardless of how much the
-      // ribbon's actual arc length is stretched by dodging.
+      const scrolled = Math.max(0, window.scrollY - SCROLL_START_PX);
+      const pct = max > SCROLL_START_PX ? Math.min(1, scrolled / (max - SCROLL_START_PX)) : 0;
+      // Anchored to "where in the viewport should the star sit" (off
+      // frame above at the very start of the page, off frame below by the
+      // very end, sliding through the visible band ahead of center in
+      // between) rather than "what % of the document have you scrolled"
+      // — guarantees the star tracks ahead of your reading position
+      // regardless of how much the ribbon's actual arc length is
+      // stretched by dodging.
       const topY = window.innerHeight * TOP_MARGIN;
       const bottomY = window.innerHeight * AHEAD_CAP;
       const viewportY = topY + (bottomY - topY) * pct;
@@ -634,15 +502,18 @@ function initCometTrail() {
 
       if (displayX === null) {
         displayX = target.x;
-        displayY = target.y;
-        displayWidth = target.width;
+        displayViewportY = viewportY;
       } else {
         // Ease toward the scroll target rather than snapping straight to
         // it, so the star glides/trails behind fast scrolling like
         // something with a little inertia, instead of teleporting.
         displayX += (target.x - displayX) * EASE;
-        displayY += (target.y - displayY) * EASE;
-        displayWidth += (target.width - displayWidth) * EASE;
+        // Eased toward the raw (unclamped) viewportY, not toward
+        // target.y - scrollY — target.y is clamped to the document's real
+        // bounds by pointAtY(), which would otherwise pin the star at the
+        // very top/bottom edge of the frame instead of letting it actually
+        // pass beyond it.
+        displayViewportY += (viewportY - displayViewportY) * EASE;
       }
 
       // A slow, gentle orbit layered on top of the eased position — keeps
@@ -653,14 +524,16 @@ function initCometTrail() {
       const wobbleY = Math.cos(t * 0.6) * WOBBLE_Y;
 
       const x = displayX + wobbleX;
-      const y = displayY + wobbleY;
-      // The star grows and shrinks with the ribbon's own stroke width at
-      // that point — wherever the calligraphy stroke swells, the star
-      // riding it swells too, instead of staying a fixed size regardless
-      // of how thick the trail is there. Clamped so it never nears zero
-      // or balloons absurdly at the extremes of the width range.
-      const widthScale = Math.max(0.6, Math.min(1.6, displayWidth / baseWidth));
-      star.style.transform = `translate(${x.toFixed(1)}px, ${(y - window.scrollY).toFixed(1)}px) translate(-50%, -50%) scale(${widthScale.toFixed(3)})`;
+      // -20px so the star sits higher than its raw tracked position —
+      // applied here (not just in the transform below) so the reveal
+      // calculation further down, which reads screenY too, shifts up
+      // right along with it and the trail's end stays covered by the star
+      // instead of drifting out from under it.
+      const screenY = displayViewportY + wobbleY - 20;
+      // Fixed size — the star itself never scales (only its glow pulses,
+      // in CSS). It used to grow/shrink with the ribbon's stroke width at
+      // that point; kept simple and constant instead.
+      star.style.transform = `translate(${x.toFixed(1)}px, ${screenY.toFixed(1)}px) translate(-50%, -50%)`;
 
       // Slide the repeating rainbow band with scroll position, plus a
       // constant slow drift of its own, so the colors keep flowing even
@@ -670,13 +543,24 @@ function initCometTrail() {
       const offset = (window.scrollY * RAINBOW_SPEED + idleFlowOffset) % RAINBOW_REPEAT;
       gradient.setAttribute('gradientTransform', `translate(0, ${-offset})`);
 
-      // Reveal the ribbon only up to just past the star's current (eased)
-      // position — a small lead so the trail reads as continuing under the
-      // star rather than stopping short of it. Using the eased position
-      // rather than the raw scroll target keeps this in sync with where
-      // the star is actually drawn, so the trail never appears ahead of it.
+      // Reveal the ribbon up to just under the star's actual rendered
+      // position — window.scrollY + screenY is the exact document-space
+      // equivalent of the same screenY used to draw the star above, pulled
+      // back by REVEAL_PULLBACK_PX so the ribbon's end stays covered by
+      // the star's own body rather than sticking out past it. At rest
+      // (TOP_MARGIN, near the top edge) this already comes out positive,
+      // so a bit of trail is visible right from scrollY 0, then grows in
+      // step with the star as you scroll.
       const docHeight = document.documentElement.scrollHeight;
-      revealRect.setAttribute('height', Math.min(docHeight, Math.max(0, y + 30)));
+      const revealY = window.scrollY + screenY - REVEAL_PULLBACK_PX;
+      const clampedReveal = Math.min(docHeight, Math.max(0, revealY));
+      revealRect.setAttribute('height', clampedReveal);
+
+      // Tapers the ribbon to transparent over the FADE_PX stretch just
+      // before the reveal boundary — see the fade gradient's own comment
+      // in index.html for how the pad-spread endpoints do the rest.
+      fadeGradient.setAttribute('y1', clampedReveal - FADE_PX);
+      fadeGradient.setAttribute('y2', clampedReveal);
     }
     lastTick = now;
   }
@@ -694,6 +578,11 @@ function initCometTrail() {
   // and not via re-adding a class that's already present (CSS animations
   // only (re)play when the animation-name actually (re)attaches, so a
   // forced reflow between remove and re-add is what makes it restart).
+  // is-pulsing has to come back off once the one-shot burst finishes —
+  // .is-pulsing .star-glyph overrides the star's normal *continuous*
+  // glow-pulse animation for as long as the class is present, so leaving
+  // it on would silently kill the star's resting glow after the very
+  // first scroll of the session.
   let scrollActive = false;
   let scrollIdleTimer;
   function pulseStar() {
@@ -701,6 +590,9 @@ function initCometTrail() {
     void star.offsetWidth; // force reflow so the next class add restarts the animation
     star.classList.add('is-pulsing');
   }
+  star.querySelector('.star-glyph').addEventListener('animationend', (e) => {
+    if (e.animationName === 'scroll-pulse') star.classList.remove('is-pulsing');
+  });
 
   // The persistent loop() above already repaints every frame regardless of
   // scroll, so this listener only needs to track "is a scroll gesture
@@ -726,4 +618,375 @@ function initCometTrail() {
   star.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+}
+
+// =========================================================
+// Playground tabs — a small local tab pattern (Experiments / Doodle Mail)
+// scoped entirely inside #playground, following the WAI-ARIA APG tabs
+// pattern (roving tabindex, arrow-key navigation, automatic activation).
+// Independent of the site-wide #about/#projects/#playground/#contact
+// scroll-spy nav — this never touches the URL or scroll position.
+// =========================================================
+function initPlaygroundTabs() {
+  const tabs = Array.from(document.querySelectorAll('.playground-tab'));
+  const panels = Array.from(document.querySelectorAll('.playground-panel'));
+  if (!tabs.length) return;
+
+  let doodleMailReady = false;
+
+  function activate(tab, { focus = true } = {}) {
+    tabs.forEach(t => {
+      const selected = t === tab;
+      t.classList.toggle('is-active', selected);
+      t.setAttribute('aria-selected', String(selected));
+      t.tabIndex = selected ? 0 : -1;
+    });
+    panels.forEach(p => { p.hidden = p.id !== tab.getAttribute('aria-controls'); });
+    if (focus) tab.focus();
+
+    // The doodle canvas needs real, visible layout dimensions to size
+    // itself against — initializing it while its panel is still [hidden]
+    // (0×0) would leave it permanently the wrong size. Set up lazily, once,
+    // the first time this tab is actually shown.
+    if (tab.id === 'tab-doodlemail' && !doodleMailReady) {
+      doodleMailReady = true;
+      initDoodleMail();
+    }
+    // The comet trail only recomputes what it needs to dodge on
+    // resize/load — nudge it to re-lay-out now that this panel's content
+    // just changed the page's visible obstacles.
+    window.dispatchEvent(new Event('resize'));
+  }
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => activate(tab, { focus: false }));
+    tab.addEventListener('keydown', (e) => {
+      let next = null;
+      if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+      else if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      else if (e.key === 'Home') next = tabs[0];
+      else if (e.key === 'End') next = tabs[tabs.length - 1];
+      if (next) { e.preventDefault(); activate(next); }
+    });
+  });
+}
+
+// =========================================================
+// Doodle Mail — draw-and-send guestbook. Everything here (canvas drawing,
+// undo, eraser, clear) is fully functional client-side. Only the actual
+// emailing depends on EmailJS, a small serverless send-from-the-browser
+// service — see EMAILJS_CONFIG below. The SDK is loaded lazily, from
+// EmailJS's CDN, only at the moment someone actually presses Send, so
+// visitors who never open this tab (or who just doodle without sending)
+// never pay for that request. Until Jasmine drops her own EmailJS keys in
+// below, Send shows an honest "not set up yet" message rather than
+// silently failing or pretending to succeed — same pattern as the
+// Contact section's unwired form.
+// =========================================================
+
+// Fill these in from a free https://www.emailjs.com account: an Email
+// Service, an Email Template (with template params from_name, from_email,
+// message, doodle_image — map doodle_image to a dynamic attachment in the
+// template, and set the template's "To" address to Jasmine's own inbox
+// there, not here), and the account's Public Key.
+const EMAILJS_CONFIG = {
+  publicKey: '[TBD: EmailJS public key]',
+  serviceId: '[TBD: EmailJS service ID]',
+  templateId: '[TBD: EmailJS template ID]',
+};
+
+function isEmailJSConfigured() {
+  return Object.values(EMAILJS_CONFIG).every(v => !v.startsWith('[TBD'));
+}
+
+// --- Per-browser daily send limit ---
+// This is a courtesy speed bump, not real spam protection — it lives in
+// localStorage, so anyone can clear it, use a private window, or switch
+// browsers to get around it. It's here to stop a single well-behaved
+// visitor from accidentally (or a bored one from casually) firing off a
+// pile of doodles in one sitting, not to stop a determined spammer.
+// Actual abuse protection needs to live server-side — EmailJS's own
+// account dashboard has its own monthly send quota and can require
+// reCAPTCHA on top of it; set those up there once EMAILJS_CONFIG is
+// filled in, rather than relying on this.
+const DOODLE_DAILY_LIMIT = 3;
+const DOODLE_SEND_LOG_KEY = 'doodlemail_sends';
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+function getDoodleSendCount() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(DOODLE_SEND_LOG_KEY) || '{}');
+    return raw.day === todayKey() ? (raw.count || 0) : 0;
+  } catch (_) {
+    return 0; // localStorage unavailable (e.g. some private-browsing modes) — don't block sending over it
+  }
+}
+
+function recordDoodleSend() {
+  try {
+    localStorage.setItem(DOODLE_SEND_LOG_KEY, JSON.stringify({ day: todayKey(), count: getDoodleSendCount() + 1 }));
+  } catch (_) { /* nothing to persist to — the limit just won't carry across reloads this session */ }
+}
+
+let emailjsLoadPromise = null;
+function loadEmailJS() {
+  if (window.emailjs) return Promise.resolve();
+  if (emailjsLoadPromise) return emailjsLoadPromise;
+  emailjsLoadPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('EmailJS failed to load'));
+    document.head.appendChild(script);
+  });
+  return emailjsLoadPromise;
+}
+
+function initDoodleMail() {
+  const canvas = document.getElementById('doodleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const colorInput = document.getElementById('doodleColor');
+  const sizeInput = document.getElementById('doodleSize');
+  const eraserBtn = document.getElementById('doodleEraser');
+  const undoBtn = document.getElementById('doodleUndo');
+  const clearBtn = document.getElementById('doodleClear');
+  const form = document.getElementById('doodlemailForm');
+  const sendBtn = document.getElementById('doodleSendBtn');
+  const sendLabel = sendBtn.querySelector('.doodle-send-label');
+  const statusEl = document.getElementById('doodlemailStatus');
+
+  let drawing = false;
+  let erasing = false;
+  let hasDrawn = false;
+  let cssW = 0, cssH = 0;
+  const history = []; // snapshots (PNG data URLs) captured before each stroke, for Undo
+  const HISTORY_LIMIT = 25;
+
+  // Sizes the canvas's backing store to match how big it's actually
+  // rendered (times devicePixelRatio, capped, for crisp strokes without an
+  // unbounded texture on very high-DPI screens), and restores whatever was
+  // drawn before — so a resize/orientation-change doesn't wipe the page.
+  function fitCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width < 1 || rect.height < 1) return; // still hidden — nothing to size yet
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const prevData = (canvas.width && canvas.height && hasDrawn) ? canvas.toDataURL('image/png') : null;
+    cssW = rect.width;
+    cssH = rect.height;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    if (prevData) {
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0, cssW, cssH);
+      img.src = prevData;
+    }
+  }
+
+  function pushHistory() {
+    history.push(canvas.toDataURL('image/png'));
+    if (history.length > HISTORY_LIMIT) history.shift();
+    undoBtn.disabled = false;
+  }
+
+  function undo() {
+    if (!history.length) return;
+    const dataUrl = history.pop();
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.drawImage(img, 0, 0, cssW, cssH);
+    };
+    img.src = dataUrl;
+    if (!history.length) undoBtn.disabled = true;
+  }
+
+  function clearCanvas() {
+    if (!hasDrawn) return;
+    pushHistory();
+    ctx.clearRect(0, 0, cssW, cssH);
+    hasDrawn = false;
+  }
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  let lastX = 0, lastY = 0;
+
+  function markStart(x, y) {
+    ctx.globalCompositeOperation = erasing ? 'destination-out' : 'source-over';
+    ctx.fillStyle = colorInput.value;
+    ctx.beginPath();
+    ctx.arc(x, y, Number(sizeInput.value) / 2, 0, Math.PI * 2);
+    ctx.fill();
+    hasDrawn = true;
+  }
+
+  function strokeTo(x, y) {
+    ctx.globalCompositeOperation = erasing ? 'destination-out' : 'source-over';
+    ctx.strokeStyle = colorInput.value;
+    ctx.lineWidth = Number(sizeInput.value);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    lastX = x; lastY = y;
+    hasDrawn = true;
+  }
+
+  canvas.addEventListener('pointerdown', (e) => {
+    drawing = true;
+    canvas.setPointerCapture(e.pointerId);
+    pushHistory();
+    const { x, y } = getPos(e);
+    lastX = x; lastY = y;
+    markStart(x, y);
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!drawing) return;
+    const { x, y } = getPos(e);
+    strokeTo(x, y);
+  });
+
+  function stopDrawing(e) {
+    if (!drawing) return;
+    drawing = false;
+    try { canvas.releasePointerCapture(e.pointerId); } catch (_) { /* already released */ }
+  }
+  canvas.addEventListener('pointerup', stopDrawing);
+  canvas.addEventListener('pointercancel', stopDrawing);
+
+  eraserBtn.addEventListener('click', () => {
+    erasing = !erasing;
+    eraserBtn.classList.toggle('is-active', erasing);
+    eraserBtn.setAttribute('aria-pressed', String(erasing));
+  });
+
+  undoBtn.addEventListener('click', undo);
+  clearBtn.addEventListener('click', clearCanvas);
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(fitCanvas, 150);
+  });
+
+  fitCanvas();
+
+  // Reflects today's send count in the UI: disables Send and swaps in a
+  // "come back tomorrow" message once DOODLE_DAILY_LIMIT is reached, and
+  // otherwise leaves a quiet reminder of how many are left. Returns
+  // whether the limit has been hit, so the submit handler can gate on it.
+  function updateDoodleLimitUI() {
+    const remaining = DOODLE_DAILY_LIMIT - getDoodleSendCount();
+    if (remaining <= 0) {
+      sendBtn.disabled = true;
+      sendLabel.textContent = "That's the limit for today ✦";
+      statusEl.textContent = `You've sent ${DOODLE_DAILY_LIMIT} doodles today — thank you! Come back tomorrow for more.`;
+      statusEl.className = 'doodlemail-status';
+      return true;
+    }
+    sendBtn.disabled = false;
+    sendLabel.textContent = 'Send Me Your Doodle';
+    statusEl.textContent = remaining < DOODLE_DAILY_LIMIT
+      ? `${remaining} of ${DOODLE_DAILY_LIMIT} doodles left today.`
+      : '';
+    statusEl.className = 'doodlemail-status';
+    return false;
+  }
+
+  updateDoodleLimitUI();
+
+  // --- Send ---
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (updateDoodleLimitUI()) return; // at today's limit — message is already showing
+
+    if (!hasDrawn) {
+      statusEl.textContent = "The page is still blank — draw something first!";
+      statusEl.className = 'doodlemail-status is-error';
+      return;
+    }
+
+    if (!isEmailJSConfigured()) {
+      statusEl.textContent = "Doodle sending isn't set up on this site yet — but no worries, your drawing is staying right here.";
+      statusEl.className = 'doodlemail-status is-error';
+      return;
+    }
+
+    sendBtn.disabled = true;
+    sendBtn.classList.add('is-loading');
+    sendLabel.textContent = 'Sending your doodle…';
+    statusEl.textContent = '';
+    statusEl.className = 'doodlemail-status';
+
+    try {
+      await loadEmailJS();
+      window.emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
+      await window.emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+        from_name: document.getElementById('doodleName').value || 'Someone from the cosmos',
+        from_email: document.getElementById('doodleEmail').value || 'not provided',
+        message: document.getElementById('doodleMessage').value || '(no message)',
+        doodle_image: canvas.toDataURL('image/png'),
+      });
+
+      recordDoodleSend();
+
+      sendBtn.classList.remove('is-loading');
+      sendBtn.classList.add('is-success');
+      sendLabel.textContent = 'Doodle sent! ✦';
+      statusEl.textContent = "Your doodle just landed in Jasmine's cosmic guestbook. Thank you!";
+      statusEl.className = 'doodlemail-status is-success';
+      spawnDoodleBurst(sendBtn);
+
+      setTimeout(() => {
+        sendBtn.classList.remove('is-success');
+        updateDoodleLimitUI(); // re-enables Send and resets the label, unless this send just hit the daily cap
+      }, 4000);
+    } catch (err) {
+      sendBtn.classList.remove('is-loading');
+      sendBtn.disabled = false;
+      sendLabel.textContent = 'Send Me Your Doodle';
+      statusEl.textContent = "That didn't go through — mind trying again in a moment?";
+      statusEl.className = 'doodlemail-status is-error';
+    }
+  });
+}
+
+// A small celebratory sparkle burst from the Send button on success —
+// deliberately separate from the custom cursor's own burst effect (that
+// one only exists on hover-capable pointers), so this still fires on the
+// touch devices most doodles will actually come from.
+function spawnDoodleBurst(originEl) {
+  const rect = originEl.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  const colors = ['#f0a8c9', '#b3dcf0', '#eddb9c', '#bfe8d4', '#d6c6f0', '#f7d4ab', '#a8e0cf'];
+  const count = 10;
+  for (let i = 0; i < count; i++) {
+    const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+    const dist = 40 + Math.random() * 34;
+    const spark = document.createElement('div');
+    spark.className = 'doodle-burst';
+    spark.style.left = `${x}px`;
+    spark.style.top = `${y}px`;
+    spark.style.color = colors[i % colors.length];
+    spark.style.setProperty('--dx', `${(Math.cos(angle) * dist).toFixed(1)}px`);
+    spark.style.setProperty('--dy', `${(Math.sin(angle) * dist).toFixed(1)}px`);
+    spark.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="currentColor"/></svg>';
+    spark.addEventListener('animationend', () => spark.remove());
+    document.body.appendChild(spark);
+  }
 }

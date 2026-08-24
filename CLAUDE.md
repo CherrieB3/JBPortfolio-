@@ -24,21 +24,29 @@ just its content.
   way a one-pager still needs somewhere to put real depth. Shared
   `css/style.css` + `js/main.js`. No build step, no framework, no
   package.json — keep it that way unless a real need arises (see rule 3).
-- Google Fonts loaded via `<link>` on every page: `Shantell Sans` (weights
-  400/700) for headings, nav, and the logo's handwritten mark; `Inter`
-  (300–500) for body copy. The original `Syne` display font was replaced
-  with `Kalam` when the site was redesigned from Jasmine's storyboards (see
-  `Untitled_Artwork 2.pdf`, Aug 2026) to match their looser, hand-drawn/
-  marker aesthetic; `Kalam` was then swapped for `Shantell Sans` (still a
-  handwriting-derived, marker-inspired face, so the hand-drawn voice holds)
-  because Kalam's thick, bouncy letterforms read as too casual/comic for a
-  site now carrying real professional case studies — Shantell Sans keeps
-  the personal, sketchbook feel while reading more like a considered
-  designer's brand mark.
+- Fonts are self-hosted (`fonts/*.woff2`, declared in `css/style.css`), not
+  linked from `fonts.googleapis.com`: privacy-focused browsers and
+  extensions (Brave's shields, Safari's cross-site tracking prevention, many
+  ad blockers) block Google Fonts requests by default, which silently falls
+  back to a generic system font — self-hosting removes that third-party
+  request entirely. `Baloo 2` (variable, weights 400/700) for headings,
+  nav, and the logo's mark; `Inter` (variable, 300–500) for body copy —
+  both Latin-subset `.woff2` only, same files Google itself would have
+  served. Display-font history: `Syne` → `Kalam` (redesigned from
+  Jasmine's storyboards, `Untitled_Artwork 2.pdf`, Aug 2026, for a looser
+  hand-drawn/marker feel) → `Shantell Sans` (Kalam read too casual/comic
+  once real case studies were added) → `Handjet` (a blocky, pixel-grid
+  display face) → `Space Grotesk` (a geometric, technical/monospace-
+  influenced sans) → `Baloo 2` (current — a rounded, storybook/children's-
+  book-adjacent display face, chosen for the Bee and PuppyCat-inspired
+  pastel-dreamy redesign; see "Art direction: Bee and PuppyCat mood"
+  below). This is friendlier/warmer than Space Grotesk but still not the
+  bouncy-comic register Kalam had — closer in spirit to the original
+  hand-drawn/marker voice than any of the intervening choices were.
 - Vanilla JS only (`js/main.js`): mobile nav toggle, active-nav-link
   marking, and the home-page comet trail (see below). Prefer extending this
   file over adding a library for new interactivity.
-- No raster image assets — the mascot, spark mark, rabbit icon, and planets
+- No raster image assets — the mascot, spark mark, and planets
   are all inline SVG/CSS. This was a deliberate choice (avoids an asset
   pipeline, keeps everything crisp and themeable) as well as the fix for the
   old dangling `astronaut.png` reference. Keep new illustration work in this
@@ -57,48 +65,233 @@ Reuse these tokens rather than inventing new ones so the site stays visually
 coherent as pages are added. Defined as CSS custom properties at the top of
 `css/style.css`.
 
-**Color** — two tiers of the same rainbow: vivid for decorative use on the
-dark background, and deeper/darker equivalents for text on the light nav bar
-(chosen for AA contrast; pure vivid yellow, for example, fails on white).
+### Art direction: Bee and PuppyCat mood
 
-| Slot | Vivid (`--c-*`, dark bg) | Deep (`--d-*`, on white nav) |
+The rainbow palette was repainted from vivid neon to soft, dusty pastel
+hues, at Jasmine's direction: capture the atmosphere, palette, softness,
+whimsy, and dreamy sci-fi feel of *Bee and PuppyCat* — "a magical mailbox
+floating in space" — without copying the show's characters/assets. **This
+was first tried as a full light-mode flip (cream background, dark plum
+text) and Jasmine rejected it** ("I don't like it") — the background is
+back to the site's original dark cosmic void (`#050314`). What survived
+from that attempt, by her explicit follow-up direction: the pastel accent
+palette itself, `Baloo 2` as the display font, and reworked/recolored
+versions of the decorative extras added alongside the light-mode attempt
+(drifting clouds, occasional shooting stars, the floating mail envelope,
+warm plum-tinted shadows instead of flat black). **Do not reintroduce a
+light/cream background** — that direction was tried and explicitly turned
+down; this is a dark theme with a pastel accent palette, not a light-mode
+palette. Every rainbow color token kept its **original name** (`--c-red`,
+`--d-blue`, `--text`, etc.) even though the hue changed, so every rule
+reading `var(--c-red)` picked up the new palette with zero changes to
+that rule — keep extending the palette this same way (new value, same
+slot) rather than introducing parallel new tokens.
+
+**Color** — two tiers of the same rainbow, now pastel, back to their
+original functional meaning now that the background is dark again:
+soft/light (`--c-*`) is the vivid-on-dark decorative tier (glows, thin
+borders, small dots, planet fills); deep/muted (`--d-*`) is for AA-safe
+text on the light nav/paper surfaces, and for white text sitting on top
+of a button/badge fill — **the soft tier is too light for white text to
+sit on** (that's what broke during the brief light-mode attempt: `.btn`,
+`.playground-tab.is-active`, etc. were pointing at the soft tier and
+failed contrast; always reach for the deep tier for that). Every pair
+below was checked against both white and `#fdf3e7` (the paper/nav color)
+at build time — if you introduce a new slot, verify it the same way
+rather than eyeballing it.
+
+| Slot | Soft (`--c-*`, decorative on dark) | Deep (`--d-*`, AA text-on-nav / white-on-fill) |
 |---|---|---|
-| Red | `#ff4b3e` | `#c62828` |
-| Orange | `#ff9f1c` | `#b24b00` |
-| Yellow/gold | `#ffd93d` | `#8a6d00` |
-| Green | `#4ade80` | `#1e7a46` |
-| Blue | `#4d5bff` | `#2a3fcc` |
-| Purple | `#a78bfa` | `#6b3fa0` |
-| Pink (accent only) | `#ff3fd8` | — |
-| Teal (accent only) | `#2dd4bf` | — |
+| Coral (was red) | `#f0a89a` | `#a8455f` |
+| Peach (was orange) | `#f7d4ab` | `#9c5620` |
+| Muted gold (was yellow) | `#eddb9c` | `#7a611e` |
+| Pale mint (was green) | `#bfe8d4` | `#357a5a` |
+| Sky blue (was blue) | `#b3dcf0` | `#2f6488` |
+| Soft lavender (was purple) | `#d6c6f0` | `#6f5498` |
+| Rose pink (accent only) | `#f0a8c9` | — (reuse `--d-red` if a deep pink is needed) |
+| Glowing teal/cyan (accent only) | `#7fd9e6` | — |
 
-Background `#050314` (deep space); nav/paper surfaces `#fdfdfb`; body text
-on dark: `#ffffff` / `#d3d4e6` / `#9d9fc0` (heading / subhead / muted). Teal
-was added from Jasmine's cosmic-creature moodboard reference (a mint/teal
-the original 7-hue set didn't have); like pink, it's decorative/accent-only
-— no deep/text-on-white counterpart, since it isn't used in nav or as body
-text.
+Background `#1c1840` — a deep indigo-violet "moonlit" night, not a flat
+near-black void (nudged there from `#050314` per a moodboard reference
+Jasmine shared: a glowing cyan/teal night scene). Nav/paper surfaces
+`#fffbf4`; body text on dark: `#ffffff` / `#d3d4e6` / `#9d9fc0` (heading /
+subhead / muted). Shadows (`rgba(61, 51, 79, …)`) are tinted warm plum
+rather than neutral black. The red slot leans coral-salmon (not
+dusty-rose-pink) and teal leans a more vivid glowing cyan (not muted
+mint-teal) specifically to match that reference — both the ambient
+`body::before`/`body::after` glow layers and the starfield's color mix
+(`STAR_COLORS` in `js/main.js`, weighted toward coral) were rebalanced to
+feature them more, alongside lavender, with gold/peach as a secondary
+warm accent rather than the dominant note. Star/spark glyphs that used to
+be a flat `fill="white"` are now warm gold (`#e0bd5a`) — kept deliberately
+as that secondary warm accent; don't "fix" them back to white.
 
-`--gradient-rainbow` (red→orange→yellow→green→blue→purple) is the site's
-signature: nav underline, comet trail, hero ribbon, `.gradient` text accent.
-`--gradient-cta` (pink → blue) is a calmer two-hue alternative used for the
-CTA button. Don't introduce off-palette colors — extend by opacity/tint of
-these instead.
+`--gradient-rainbow` (rose→peach→gold→mint→sky→lavender) is the site's
+signature: nav underline, comet trail, hero ribbon, `.gradient` text
+accent. Buttons are deliberately solid color (`var(--d-blue)`), not
+gradient — a past `--gradient-cta` two-hue gradient was removed from
+`.btn` on purpose, so don't reintroduce a gradient fill there. Don't
+introduce off-palette colors — extend by opacity/tint of the rainbow set
+instead.
 
 **Type**
-- Display / headings / nav / logo: `Shantell Sans`, weight 700 (400 for
-  lighter accents). This is the "hand-marker" voice of the site — keep
-  headings feeling written, not typeset, but note it's meant to read as a
-  refined, considered hand rather than a bouncy comic one.
+- Display / headings / nav / logo: `Baloo 2`, weight 700 (400 for lighter
+  accents) — rounded, friendly, storybook-adjacent, chosen for the Bee
+  and PuppyCat-inspired pass. This reads warmer than either Space
+  Grotesk (previous) or the hand-marker voice from earlier in the site's
+  history — closer to "picture-book" than either.
 - Body: `Inter`, weights 300–500.
-- Hero H1 is intentionally oversized (`clamp(3rem, 7vw, 5.5rem)`) — this is
-  the site's visual signature, not a bug to "fix" for looking large.
+- Hero H1 is intentionally oversized (`clamp(3.2rem, 7.5vw, 6rem)`) — this
+  is the site's visual signature, not a bug to "fix" for looking large.
+- A third voice, `var(--font-mono)` (system monospace, no extra font
+  file), is reserved for "meta" marks: `.eyebrow` labels and the
+  `.section-mark` running-head labels below. Deliberate — a technical/
+  editorial mono against the display and body faces is what keeps the
+  type system reading as considered rather than one sans-everywhere
+  template. Don't reuse it for body copy or headings.
+
+**Editorial asymmetry** — a deliberate reaction against "generic AI
+portfolio" tells (perfectly centered layouts, identical padding on every
+section, symmetric everything): section padding is intentionally uneven
+(see the `section[aria-label=...]` / `.contact-body` overrides just below
+the base `section` rule in `css/style.css`, rather than one flat value
+everywhere), and `.section-mark` prints a small sideways running-head
+label (`№ 01 — About`, etc., `writing-mode: vertical-rl`) in the left
+margin of About/Projects/Playground/Contact — a magazine gutter-number
+device, opposite the comet trail's right-edge rail, so the page reads as
+having two considered margins instead of one centered column. Extend this
+pattern (uneven rhythm, a numbered mark) for any new top-level section
+rather than giving it the same padding as its neighbors. `.contact-grid`
+is a deliberately asymmetric `.82fr 1.18fr` split (not an even 1fr/1fr)
+for the same reason. Playground's Experiments tiles (`.playground-deck`)
+are a horizontal scroll-snap "slide deck" rather than a static grid —
+`display: flex; overflow-x: auto; scroll-snap-type: x proximity`, each
+`.sticker-card` a fixed-width flex item (`.sticker-card--wide` just a
+wider `flex-basis`, not a column span), so you scroll/swipe sideways
+through them like flipping through a stack. Native CSS scroll-snap, no
+carousel library (rule 3) — trackpad, wheel, touch, and keyboard (the
+deck is `tabindex="0"`) all just work without JS. Limited to 3 placeholder
+tiles by request; extend by adding more `.sticker-card`s to the deck
+rather than reverting to a fixed grid.
+
+**Type weight scale** — `h1`/`.hand` 800, `h2` 700, `h3` 600 (all
+`Baloo 2`) — a real step down in weight per level, not one flat 700
+everywhere, so hierarchy reads from weight as well as size. Follow this
+scale for any new heading level rather than defaulting new headings to
+700.
+
+**Cards: solid and bordered, not glass** — `.card`/`.sticker-card` use a
+visible `1.5px` border and a moderately opaque fill (`rgba(255,255,255,.07)`
+background over the dark bg), and their hover state is a color-changed
+border + a plain shadow lift rather than a diffuse colored glow — keep
+new panel components in this register (clearly bordered, not a soft
+blurred glow standing in for definition). The signature glow effects
+(comet trail, planet halos, aurora, star pulses) stay as deliberate
+focal-point moments elsewhere on the page; this is specifically about
+card/panel treatment, not removing glow from the site altogether.
+
+**Icon stroke weight** — the hand-drawn line-art marks (avatar-face,
+mail-envelope, city-skyline antenna, the doodle-placeholder/mascot/rabbit
+line art) all use `stroke-width="3"`. Keep any new stroke-based icon at
+3 too, rather than picking a new value per icon — this is what keeps
+them reading as one consistent set rather than a grab-bag of styles.
+(Purely decorative background strokes — the big ribbon squiggles,
+hero-ribbon, squiggle-underline — are a different, much thicker "brush
+stroke" register and aren't part of this icon-consistency rule.)
+
+**Royal gold trim** — a small "royal" flourish, at Jasmine's request. It
+was first tried broadly (a crown glyph + trailing gold rule on all four
+main section headings, plus a gold top-trim band on `.card`/
+`.sticker-card`/`.constellation-card`), then pulled back after a
+whole-site "too much going on" pass — the crown/heading treatment and the
+per-card trim were removed entirely. What's left is just a slim gold
+hairline on the nav (just above `.nav-underline`'s rainbow strip) and a
+matching one at the top of the footer (`footer::before`), bookending the
+page — reusing the existing `--c-yellow` token (rule 4 — no new color
+introduced), which is the vivid-on-dark decorative tier appropriate for
+both those dark surfaces. Don't re-add the crown glyph or per-card trim
+without checking with Jasmine first; that combination read as too busy
+stacked on top of the rest of the site's existing motion/decoration.
+
+**Texture & interaction**
+- `.grain` (procedural SVG feTurbulence, not a raster asset) sits over the
+  whole page at very low opacity with `mix-blend-mode: overlay` — a
+  constant, subtle film-grain so nothing reads as a flat, untextured
+  gradient. Disabled under `prefers-reduced-motion` and on narrow
+  viewports (perf).
+- `.card` and `.sticker-card` get a magnetic cursor-tilt on hover
+  (`initTiltCards()` in `js/main.js`, mouse-only) — they lean toward the
+  pointer via `--tilt-x`/`--tilt-y` custom properties consumed inside
+  each element's own `:hover` transform, layered on top of (not
+  replacing) its existing lift/scale. `--tilt-x`/`--tilt-y` are declared
+  via `@property` as `<angle>` so the lean animates smoothly; reuse this
+  same custom-property-inside-the-hover-transform pattern for any new
+  hover motion rather than setting `transform` directly from JS, which
+  would permanently win over the CSS `:hover` rule.
+- A hidden easter egg: typing "rabbit" anywhere on the page (not while
+  focused in a text field) triggers a small hop animation
+  (`initRabbitEgg()`/`hopRabbit()` in `js/main.js`) — grounded in the real
+  "rabbit enthusiast" detail in the hero rather than an arbitrary gimmick.
+  Reuses the site's existing line-art rabbit silhouette (no emoji, no new
+  illustration asset).
+- Full page loads (`index.html` <-> `case-studies/*.html`, and case study
+  <-> case study via the prev/next links) get a quiet wormhole feel instead
+  of the browser's default hard cut: the outgoing page eases down and
+  brightens slightly as if receding into a point of light, then the new
+  page eases in from that same soft glow and settles — a restrained
+  "shrink into light / emerge from light" beat, deliberately subtle rather
+  than a showy zoom (an earlier, much more dramatic spin/funnel/overshoot
+  version was tried and toned down). Built on the native cross-document
+  View Transitions API (`@view-transition { navigation: auto; }` +
+  `wormhole-suck-in`/`wormhole-burst-out` keyframes driving
+  `::view-transition-old/new(root)`, top of `css/style.css`). Pure CSS, no
+  router or JS — see rule 3. Browsers without support just navigate
+  normally with no transition, so this is enhancement-only and never
+  blocks a click; `prefers-reduced-motion` disables it back to an instant
+  cut. It's declared once in the shared stylesheet, so it applies to every
+  internal navigation on the site, not just the links into case studies —
+  keep it that way rather than trying to scope it to one flow, so
+  navigating never jumps for some links and warps for others. If asked to
+  make it more dramatic again, nudge the existing keyframes' scale/blur/
+  brightness values rather than reintroducing rotation/saturate/overshoot
+  wholesale — that combination was what read as too much.
 
 **Motif**
-- Cosmic theme: starfield background, soft radial-gradient glows, and a
-  chibi astronaut-with-bunny-ears mascot (nods to "rabbit enthusiast"). New
-  sections should feel like part of the same universe rather than
-  introducing a different visual language.
+- Cosmic theme, dark background with the pastel Bee-and-PuppyCat accent
+  palette (see "Art direction" above): starfield background (`.stars`,
+  pastel-colored dots, not plain white), soft radial-gradient glows,
+  background planets/moons (`.bg-planets`), slow-drifting clouds in the
+  hero (`.hero-clouds` — pale lavender-white, low opacity, read as
+  moonlit clouds against the dark sky), occasional shooting stars
+  (`.shooting-star` — long idle cycle, brief streak, so they're rare
+  rather than a constant repeating effect), and a chibi
+  astronaut-with-bunny-ears mascot (nods to "rabbit enthusiast").
+- **The sky stays put**: `.stars`, `.grain`, `.bg-planets`, and the
+  `body::before`/`body::after` glow layers are all `position: fixed` —
+  the same background is visible from the moment the page loads and stays
+  that way for the whole scroll, rather than scrolling through a much
+  taller canvas. (A version where these scrolled with the page — the
+  ambient layers spanning the full document, deep space at the top fading
+  to a warm horizon glow at the true bottom — was tried and reverted;
+  Jasmine wanted the background kept consistent throughout instead.
+  `initStarfield()` in `js/main.js` sizes star count off viewport area
+  (`window.innerWidth * window.innerHeight`), not document height, to
+  match — don't switch that back to document-height sizing without also
+  reverting these to `fixed`.) `body::after` uses `mix-blend-mode: screen`
+  (correct since the background is dark; a past light-mode attempt
+  briefly needed `multiply` instead — don't copy that back in now).
+- `.horizon-glow` + `.city-skyline` in the footer — a warm dawn/dusk glow
+  and a simple hand-drawn building-silhouette skyline — are a separate,
+  deliberate exception: unlike the fixed sky above, these live inside
+  `<footer>` (`position: relative`) and scroll normally with it, so they
+  only ever appear once, right at the true bottom of the page — "landing
+  back home on Earth" after a whole page of space. Present on `index.html`
+  and all three case-study footers.
+- A floating mail envelope (`.mail-envelope`, gently bobbing) sits by the
+  Doodle Mail panel — a literal nod to "a magical mailbox floating in
+  space," the site's stated personality; a good template for where a new
+  hand-drawn touch should attach to something real on the page rather than
+  floating decoratively with no connection to content.
 - The 4-point spark/sparkle mark (`✦`, drawn as a small inline SVG) is a
   recurring accent — logo, galaxy core, hero ribbon tip. Reuse it as a
   bullet/flourish rather than inventing a new icon for the same job.
@@ -107,11 +300,23 @@ these instead.
 
 **Spacing & layout**
 - Horizontal page padding: `8%`–`10%` (`6%` on mobile).
-- Nav is fixed, white, `76px` tall, with the rainbow gradient as a 4px strip
+- Nav is fixed, `76px` tall, with the rainbow gradient as a 4px strip
   along its bottom edge. Nav links read About / Projects / **logo** /
   Playground / Contact — the logo sits in the middle slot as one evenly
   spaced row (a specific storyboard detail — don't move the logo back to
   the left without checking with Jasmine).
+- **Nav color**: `var(--nav-bg)` (`#161233`, a smidge darker than
+  `var(--bg)`) with light text (`var(--text)`, and the per-link accents
+  use the `--c-*` soft/pastel tier) — **not** the light `--paper` surface
+  used elsewhere (planet-card tooltips, Doodle Mail's paper texture).
+  Those two are deliberately different surfaces now; don't merge the nav
+  back onto `--paper` or its text back onto `--ink`/`--d-*`, which were
+  calibrated for a light background. Below the nav, `.site-nav::after`
+  hangs a puffy scalloped fringe (same color as the nav, a repeating row
+  of circles, not an SVG/raster asset) so the bottom edge reads as a
+  cloud silhouette instead of a hard flat line — "make it look like
+  clouds." Reuse that repeating-radial-gradient-circle technique for any
+  future cloud-edge treatment rather than hand-drawing an SVG cloud path.
 
 ## Single-page navigation
 
@@ -145,19 +350,19 @@ one filled ribbon (`.comet-trail` markup, driven by `initCometTrail()` in
 is why it's absent from `case-studies/*.html`). Because the whole site is
 now one page, the trail runs the full length of it — hero through footer,
 including the About/Projects/Playground/Contact sections — not just a short
-home-page hero anymore. It runs down the middle-right of the page with a
-short, gentle sway (like a wire loosely held vertically, not a taut
-straight line or the old wide edge-to-edge sweep), and the stroke widens
-only where the path actually curves/dodges — otherwise it holds one
-reference width — rather than a round brush's constant width everywhere
-or a calligraphy nib's width-by-direction. It actively steers around
-every heading, paragraph, link, card, and form on the page
-(`OBSTACLE_SELECTOR` in the JS) so it never overlaps or sits under text —
-if a new section's element should also be avoided, add its selector there.
-A twinkling star rides the ribbon at the current scroll position and
-scrolls to top on click; the ribbon itself only reveals up to the star's
-position, so it reads as a trail the comet leaves behind rather than a
-path already laid out ahead of it.
+home-page hero anymore. It's a single straight vertical line hugging the
+right edge of the page, one constant width its whole length — no sway,
+no obstacle-dodging (an earlier version steered around headings/cards/
+forms; that was deliberately dropped for a plain straight line, so it now
+runs straight through/behind whatever's in front of it, relying on
+z-index — the ribbon sits behind main content — to stay out of the way of
+readability). A star rides the ribbon at the current scroll position and
+scrolls to top on click, pulsing its own glow continuously (not just while
+scrolling) rather than growing/shrinking in size; the ribbon itself only
+reveals up to just under the star's position, so it reads as a trail the
+comet leaves behind rather than a path already laid out ahead of it, and
+the star always sits right at the trail's leading edge rather than the two
+drifting out of sync.
 
 ## Content & voice
 
@@ -189,7 +394,10 @@ path already laid out ahead of it.
 3. **No dependency creep.** Don't add a CSS/JS framework, icon library, or
    build tool to solve a problem that plain CSS/HTML already solves. If a
    real need arises (e.g. multi-page routing, a CMS for case studies),
-   surface the tradeoff to Jasmine before adding it.
+   surface the tradeoff to Jasmine before adding it. One exception exists
+   today: Playground's Doodle Mail tab lazy-loads the EmailJS SDK from its
+   CDN, but only at the moment someone presses Send — surfaced here as
+   that tradeoff, not silently added. See the Doodle Mail entry below.
 4. **Stay on-system.** New colors, fonts, radii, or motion patterns should
    be justified against the design system above, not introduced ad hoc.
    If a new page genuinely needs to break the system (e.g. a distinct
@@ -205,28 +413,47 @@ path already laid out ahead of it.
 ## Repo structure
 
 - `index.html` — the entire site as one page. In scroll order: hero (comet
-  trail, mascot, tagline strip) → `#about` (real bio pulled from Jasmine's
-  previous Framer portfolio, hover avatar frame, rabbit icon, a
+  trail, mascot) → `#about` (real bio pulled from Jasmine's
+  previous Framer portfolio, hover avatar frame, a
   "sketchbook" of 5 doodles floating around the bio/avatar content — each
   one will be a drawing of a personal object, with its hover/focus tooltip
   a fun fact about Jasmine tied to that object; below 700px it becomes a
   static list; both the art and the fun-fact captions are still
   placeholder, see `images/` below) → `#projects`
-  (galaxy of hover/focus-able "planet" project cards — Comet Commute,
+  (a "constellation map" of always-visible project cards — Comet Commute,
   Elevator Accessibility, DreamScape, Lucky's First Day — each linking out
-  to a full write-up, see `case-studies/` below, with a list fallback for
-  small screens) → `#playground` (grid of loose-experiment tiles; explicitly
-  allowed to feel rougher than the rest of the site, see rule 4; content is
-  placeholder) → `#contact` (direct links + a contact form **not yet wired
-  to a backend**, marked inline; social links LinkedIn/Behance/Dribbble are
-  still `[TBD]` — Jasmine's previous portfolio didn't expose them in a
-  fetchable form) → one shared footer. See "Single-page navigation" above
-  for how the anchors/scrollspy work. Every planet's tooltip and fallback
-  card includes a "View case study" link (`.view-case`); keep tooltip cards
-  positioned adjacent to/overlapping their planet (not detached) — CSS
-  `:hover` drops the instant the pointer leaves `.planet`, and
-  `.planet-card` is `pointer-events: none` at rest, so a gap between planet
-  and card breaks the ability to mouse from one onto the other.
+  to a full write-up, see `case-studies/` below) → `#playground` (two
+  tabs: "Experiments", a grid of loose-experiment tiles — explicitly
+  allowed to feel rougher than the rest of the site, see rule 4; content
+  is placeholder — and "Doodle Mail", a real HTML5-Canvas draw-and-send
+  guestbook, see the entry below) → `#contact` (direct links + a contact
+  form **not yet wired to a backend**, marked inline; social links
+  LinkedIn/Behance/Dribbble are still `[TBD]` — Jasmine's previous
+  portfolio didn't expose them in a fetchable form) → one shared footer.
+  See "Single-page navigation" above for how the anchors/scrollspy work.
+
+  Projects replaced its original hover-only "galaxy of planet" interaction
+  (content hidden until hover/focus) with the `.constellation-card` grid:
+  every project is always visible, titled, described, and clickable in
+  normal document flow — a deliberate accessibility/usability call, since
+  a recruiter skimming the page should never need to discover an
+  interaction to see what Jasmine has built. Each card is a single `<a>`
+  wrapping its whole thumbnail+title+description (maximum click target,
+  no nested interactive elements), styled as a hand-placed polaroid/
+  postcard (`--paper` background, a per-card `--rotate` custom property
+  for its resting tilt, a `--hover-rotate` it straightens toward, `--accent`
+  /`--accent-deep` for its washi-tape/pin-star/link color) sitting over a
+  purely decorative starfield/constellation-line/moon/cloud layer
+  (`.constellation-lines`, `.constellation-star`, `.constellation-moon`,
+  `.constellation-cloud`) that's hidden below 700px along with the grid's
+  organic stagger. Card thumbnails are small abstract line-art SVGs in
+  each project's accent color (not fake screenshots — see rule 6) rather
+  than photography. Hovering/focusing any card toggles one shared
+  `.is-active` class on the section (`initConstellation()` in
+  `js/main.js`) that brightens all the lines/stars together, instead of
+  computing which stars are "nearest" to a given card. `.planet-card` and
+  `.view-case` are still shared with the About section's `.doodle`
+  tooltips (see below) — don't delete them when touching Projects.
 - `case-studies/` — one HTML page per case study (`comet-commute.html`,
   `elevator-accessibility.html`, `dreamscape.html`), real UT Dallas
   coursework/designathon projects with real research, decisions, and
@@ -239,14 +466,42 @@ path already laid out ahead of it.
 - `images/` — the one exception to "no raster/external image assets": 5
   small swappable placeholder SVGs (`doodle-1.svg`…`doodle-5.svg`) used in
   the About section, meant to be directly overwritten with Jasmine's own art.
+- **Doodle Mail** (`#panel-doodlemail` in `index.html`, `initDoodleMail()`
+  in `js/main.js`) — a draw-and-send guestbook on Playground's second tab.
+  The canvas (color picker, brush size, eraser, undo, clear, pointer-event
+  drawing so mouse/trackpad/touch all work) is fully real and needs no
+  setup. Sending the doodle by email depends on
+  [EmailJS](https://www.emailjs.com) — a free serverless send-from-the-
+  browser service, chosen so this stays a static site with no backend to
+  host. `EMAILJS_CONFIG` in `js/main.js` holds three `[TBD: ...]`
+  placeholders (public key, service ID, template ID) that only resolve
+  once Jasmine creates her own EmailJS account, an Email Service, and an
+  Email Template with `from_name`/`from_email`/`message`/`doodle_image`
+  params (`doodle_image` mapped to a dynamic attachment in the template;
+  the template's own "To" address is where her inbox is set, not in this
+  code). Until those are filled in, Send shows an honest "not set up yet"
+  message — same pattern as the Contact section's unwired form — rather
+  than silently failing or faking success. The EmailJS SDK itself is
+  lazy-loaded from its CDN only at the moment someone presses Send, so
+  visitors who never open the tab (or who doodle without sending) never
+  pay for that request; see rule 3 above for why this dependency exists.
+  A `DOODLE_DAILY_LIMIT` constant (`js/main.js`, default 3) caps sends per
+  browser per day via `localStorage` — this is a courtesy speed bump
+  against casual over-sending, explicitly **not** real spam protection
+  (clearing storage, a private window, or a different browser all get
+  around it). Actual abuse protection belongs server-side, i.e. in
+  EmailJS's own account dashboard (its monthly send quota, optionally
+  reCAPTCHA) once `EMAILJS_CONFIG` is filled in — don't present the
+  client-side counter as more than what it is if extending it.
 - `css/style.css` — the entire design system and every component's styles.
 - `js/main.js` — nav toggle/scrollspy active-link logic, the comet trail,
-  and starfield generation.
+  starfield generation, the Playground tabs, and Doodle Mail.
 - `README.md` — one-line project description.
 - Remaining placeholder content: the About section's sketchbook doodle art
   (each should become a drawing of a personal object) and fun-fact
-  captions (each a fun fact about Jasmine tied to that object), all of
-  Playground, and the contact form's backend wiring — see rule 6.
+  captions (each a fun fact about Jasmine tied to that object), the
+  Experiments tab of Playground, Doodle Mail's EmailJS keys (see above),
+  and the contact form's backend wiring — see rule 6.
 
 ## Available skills
 
