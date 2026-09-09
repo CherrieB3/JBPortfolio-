@@ -161,11 +161,14 @@
             </div>
 
             <div class="mascot-wrap">
-                <!-- Temporary placeholder — swap for real character art when ready.
-                     Real file in images/ (not inline SVG) so it can be replaced
-                     directly, same pattern as the About section's doodle slots. -->
-                <img class="mascot" src="images/mascot-placeholder.svg"
-                    alt="Placeholder — mascot art coming soon">
+                <button type="button" class="mascot-btn" aria-label="Boop the astronaut">
+                    <img class="mascot" src="images/mascot-astronaut.png"
+                        data-default-src="images/mascot-astronaut.png"
+                        data-default-alt="Chibi illustration of Jasmine as an astronaut with bunny ears on her helmet, floating"
+                        data-alt-src="images/mascot-astronaut-alt.png"
+                        data-alt-alt="Chibi illustration of Jasmine as an astronaut, now scrunching her face mid-sneeze"
+                        alt="Chibi illustration of Jasmine as an astronaut with bunny ears on her helmet, floating">
+                </button>
                 <svg class="hero-spark hero-spark-a" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 C13 6 14 9 24 12 C14 15 13 18 12 24 C11 18 10 15 0 12 C10 9 11 6 12 0 Z"
                         fill="#f0a8c9" />
@@ -195,22 +198,12 @@
                 <div class="about-copy reveal">
                     <h2>About</h2>
                     <p>
-                        I'm a product designer and digital artist from McKinney, Texas, currently studying at UT
-                        Dallas. I've always found myself drawn to the space where art, usability, and storytelling
-                        meet — and that's exactly where I try to design: interfaces that feel intuitive and
-                        functional, but still full of personality.
+                        Hey! I'm Jasmine! A UX designer and digital artist from McKinney, Texas, studying at UT Dallas. I
+                        been interested in design all my life, and have been working on it professionally for a few years now.
                     </p>
                     <p>
-                        My background is rooted in digital art, and it shows in how I approach a project — I care as
-                        much about how something feels to use as whether it works. In practice, that means starting
-                        from how people actually interact with what's in front of them, then designing toward
-                        something that's both practical and genuinely enjoyable.
-                    </p>
-                    <p>
-                        Outside of formal projects, I'm pretty much always drawing — sketchbooks, doodles, whatever's
-                        on my mind that day. It's part of why illustration and storytelling keep finding their way
-                        into my UX work, and probably why there's a rabbit hiding somewhere on every page of this
-                        site.
+                        Outside of formal projects, I'm pretty much always drawing! I do commission work, and personal experimental work too! That's part of why illustration keeps finding its way into my UX work, and why
+                        I've embraced this style as part of my design identity. It allows me to blend my love for illustration with UX design!
                     </p>
                     <a class="btn" href="#contact" style="margin-top:10px; display:inline-block;">Say hello</a>
                 </div>
@@ -241,7 +234,7 @@
                 </button>
                 <div class="planet-card" style="top:2%; left:13%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
-                    <p>Drawing swaps in at <code>images/doodle-1.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
+                    <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
                 <button class="doodle doodle-2" aria-label="Object drawing placeholder two — hover for a fun fact">
@@ -249,7 +242,7 @@
                 </button>
                 <div class="planet-card" style="top:64%; left:8%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
-                    <p>Drawing swaps in at <code>images/doodle-2.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
+                    <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
                 <button class="doodle doodle-3" aria-label="Object drawing placeholder three — hover for a fun fact">
@@ -257,7 +250,7 @@
                 </button>
                 <div class="planet-card" style="top:2%; left:56%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
-                    <p>Drawing swaps in at <code>images/doodle-3.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
+                    <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
                 <button class="doodle doodle-4" aria-label="Object drawing placeholder four — hover for a fun fact">
@@ -265,7 +258,7 @@
                 </button>
                 <div class="planet-card" style="top:68%; left:58%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
-                    <p>Drawing swaps in at <code>images/doodle-4.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
+                    <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
                 <button class="doodle doodle-5" aria-label="Object drawing placeholder five — hover for a fun fact">
@@ -273,30 +266,30 @@
                 </button>
                 <div class="planet-card" style="top:34%; left:66%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
-                    <p>Drawing swaps in at <code>images/doodle-5.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
+                    <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
             </div>
 
             <div class="doodles-fallback reveal-fade">
                 <div class="card">
                     <img src="images/doodle-1.svg" alt="">
-                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-1.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
                 <div class="card">
                     <img src="images/doodle-2.svg" alt="">
-                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-2.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
                 <div class="card">
                     <img src="images/doodle-3.svg" alt="">
-                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-3.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
                 <div class="card">
                     <img src="images/doodle-4.svg" alt="">
-                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-4.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
                 <div class="card">
                     <img src="images/doodle-5.svg" alt="">
-                    <div><h3><span class="tbd">[TBD: object]</span></h3><p>Drawing swaps in at <code>images/doodle-5.svg</code>. Fun fact: <span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
+                    <div><h3><span class="tbd">[TBD: object]</span></h3><p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p></div>
                 </div>
             </div>
         </section>
@@ -310,110 +303,80 @@
                 <g class="orbit-spin orbit-spin--rev"><circle cx="120" cy="58" r="4" fill="#bfe8d4" /></g>
             </svg>
             <h2 class="reveal">Projects</h2>
-            <p class="eyebrow" style="margin-top:14px;">PINNED TO THE STAR MAP ✦</p>
+            <p class="eyebrow" style="margin-top:14px;">ORBITING THE WORK ✦</p>
         </section>
 
-        <section aria-label="Projects" class="constellation reveal-fade">
-            <!-- Constellation lines + scattered stars/moon — purely decorative,
-                 painted first so the cards sit on top. Lines and stars brighten
-                 together when any card is hovered/focused (.is-active on the
-                 section, toggled by initConstellation() in js/main.js), rather
-                 than trying to track exact per-card positions through every
-                 breakpoint's reflow. Hidden on narrow screens, where the cards
-                 stack in a single column and the constellation reads as noise
-                 rather than a map. -->
-            <svg class="constellation-lines" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M120,90 C260,180 300,60 470,150 C600,220 640,110 830,260 C900,320 780,380 640,430"
-                    fill="none" stroke="#d6c6f0" stroke-width="1.5" stroke-dasharray="2 10" stroke-linecap="round" />
-            </svg>
-            <svg class="constellation-moon" viewBox="0 0 80 80" aria-hidden="true">
-                <path d="M46,8 A32,32 0 1 0 46,72 A24,24 0 0 1 46,8 Z" fill="#eddb9c" opacity=".9" />
-            </svg>
-            <span class="constellation-star" style="top:8%; left:44%; width:5px; height:5px; animation-delay:.3s;" aria-hidden="true"></span>
-            <span class="constellation-star" style="top:34%; left:58%; width:4px; height:4px; animation-delay:1.4s;" aria-hidden="true"></span>
-            <span class="constellation-star" style="top:64%; left:70%; width:6px; height:6px; animation-delay:.8s;" aria-hidden="true"></span>
-            <span class="constellation-star" style="top:20%; left:88%; width:4px; height:4px; animation-delay:2s;" aria-hidden="true"></span>
-            <div class="constellation-cloud" aria-hidden="true"></div>
-
-            <p class="eyebrow constellation-note">Every card below is clickable — click or tab in to open the full case study.</p>
-
-            <div class="constellation-grid">
-                <a class="constellation-card" href="case-studies/comet-commute.html"
-                    style="--rotate:-3deg; --hover-rotate:-1deg; --accent:#f7d4ab; --accent-deep:#9c5620;">
-                    <span class="constellation-tape" aria-hidden="true"></span>
-                    <span class="constellation-card-star" aria-hidden="true"></span>
-                    <div class="constellation-thumb">
-                        <svg viewBox="0 0 100 70" aria-hidden="true">
-                            <circle cx="30" cy="35" r="20" fill="#f7d4ab" />
-                            <circle cx="30" cy="35" r="20" fill="none" stroke="#9c5620" stroke-width="2" opacity=".35" />
-                            <path d="M62,20 L90,20 M58,35 L92,35 M64,50 L88,50" stroke="#9c5620" stroke-width="2.5" stroke-linecap="round" opacity=".4" />
-                        </svg>
-                    </div>
-                    <div class="constellation-card-body">
-                        <h3>Comet Commute</h3>
-                        <p>Real-time parking and predictive commute suggestions, built into UT Dallas's campus app.</p>
-                        <span class="view-case">View case study <span class="arrow">→</span></span>
-                    </div>
-                </a>
-
-                <a class="constellation-card" href="case-studies/elevator-accessibility.html"
-                    style="--rotate:2deg; --hover-rotate:0deg; --accent:#b3dcf0; --accent-deep:#2f6488; margin-top:52px;">
-                    <span class="constellation-tape" aria-hidden="true"></span>
-                    <span class="constellation-card-star" aria-hidden="true"></span>
-                    <div class="constellation-thumb">
-                        <svg viewBox="0 0 100 70" aria-hidden="true">
-                            <rect x="40" y="10" width="20" height="50" rx="4" fill="#b3dcf0" />
-                            <rect x="40" y="10" width="20" height="50" rx="4" fill="none" stroke="#2f6488" stroke-width="2" opacity=".35" />
-                            <circle cx="50" cy="22" r="3" fill="#2f6488" opacity=".5" />
-                            <path d="M20,60 Q50,40 80,60" stroke="#2f6488" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".4" />
-                        </svg>
-                    </div>
-                    <div class="constellation-card-body">
-                        <h3>Elevator Accessibility</h3>
-                        <p>Audio, haptic, and RFID concepts for independent elevator navigation.</p>
-                        <span class="view-case">View case study <span class="arrow">→</span></span>
-                    </div>
-                </a>
-
-                <a class="constellation-card" href="case-studies/dreamscape.html"
-                    style="--rotate:-2deg; --hover-rotate:0deg; --accent:#d6c6f0; --accent-deep:#6f5498; margin-top:14px;">
-                    <span class="constellation-tape" aria-hidden="true"></span>
-                    <span class="constellation-card-star" aria-hidden="true"></span>
-                    <div class="constellation-thumb">
-                        <svg viewBox="0 0 100 70" aria-hidden="true">
-                            <path d="M62,15 A20,20 0 1 0 62,55 A15,15 0 0 1 62,15 Z" fill="#d6c6f0" />
-                            <path d="M62,15 A20,20 0 1 0 62,55 A15,15 0 0 1 62,15 Z" fill="none" stroke="#6f5498" stroke-width="2" opacity=".35" />
-                            <circle cx="24" cy="20" r="2" fill="#6f5498" opacity=".5" />
-                            <circle cx="18" cy="32" r="1.5" fill="#6f5498" opacity=".5" />
-                            <circle cx="28" cy="42" r="2.5" fill="#6f5498" opacity=".5" />
-                        </svg>
-                    </div>
-                    <div class="constellation-card-body">
-                        <h3>DreamScape</h3>
-                        <p>A speculative dream-visualization app designed in a 24-hour UX Club designathon.</p>
-                        <span class="view-case">View case study <span class="arrow">→</span></span>
-                    </div>
-                </a>
-
-                <a class="constellation-card" href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener"
-                    style="--rotate:3deg; --hover-rotate:1deg; --accent:#f0a8c9; --accent-deep:#a8455f; margin-top:68px;">
-                    <span class="constellation-tape" aria-hidden="true"></span>
-                    <span class="constellation-card-star" aria-hidden="true"></span>
-                    <div class="constellation-thumb">
-                        <svg viewBox="0 0 100 70" aria-hidden="true">
-                            <path d="M20,20 L30,45 L50,25 L70,50 L80,20" fill="none" stroke="#a8455f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".5" />
-                            <circle cx="20" cy="20" r="4" fill="#f0a8c9" />
-                            <circle cx="50" cy="25" r="4" fill="#f0a8c9" />
-                            <circle cx="80" cy="20" r="4" fill="#f0a8c9" />
-                        </svg>
-                    </div>
-                    <div class="constellation-card-body">
-                        <h3>Lucky's First Day</h3>
-                        <p>A non-linear visual narrative confronting autism stereotypes and the discomfort of new situations.</p>
-                        <span class="view-case">View project <span class="arrow">↗</span></span>
-                    </div>
-                </a>
+        <section aria-label="Projects" class="orbit-section reveal-fade">
+            <p class="eyebrow" style="text-align:center;">EXPLORE THE WORK AS A SYSTEM ✦ — drag, scroll, or use the arrows</p>
+            <div class="orbit-deck" id="orbitDeck">
+                <div class="orbit-glow" aria-hidden="true"></div>
+                <button type="button" class="orbit-nav orbit-nav--prev" aria-label="Previous project">
+                    <span class="arrow">←</span>
+                </button>
+                <div class="orbit-track" id="orbitTrack" role="listbox" tabindex="0" aria-label="Projects">
+                    <a class="orbit-planet" role="option" aria-selected="true"
+                        href="case-studies/comet-commute.html"
+                        data-title="Comet Commute"
+                        data-type="UX Research &amp; Interaction Design"
+                        data-role="UX Researcher &amp; Interaction Designer"
+                        data-summary="A concept for reducing parking stress at UT Dallas by bringing real-time availability and predictive suggestions into the campus app students already use."
+                        data-tags="Team Project, UX Research, May 2025"
+                        data-accent="#f7d4ab" data-accent-deep="#9c5620" data-cta="View Case Study">
+                        <span class="orbit-ring" aria-hidden="true"></span>
+                        <img src="images/orbit-comet.svg" alt="Comet Commute">
+                    </a>
+                    <a class="orbit-planet" role="option" aria-selected="false"
+                        href="case-studies/elevator-accessibility.html"
+                        data-title="Elevator Accessibility"
+                        data-type="Accessibility &amp; Inclusive Design"
+                        data-role="Accessibility &amp; Interaction Designer"
+                        data-summary="A concept for making elevators easier and safer for visually impaired users to navigate independently, combining audio guidance, haptic feedback, and personalized RFID access."
+                        data-tags="Team Project, Accessibility, March 2025"
+                        data-accent="#b3dcf0" data-accent-deep="#2f6488" data-cta="View Case Study">
+                        <span class="orbit-ring" aria-hidden="true"></span>
+                        <img src="images/orbit-elevator.svg" alt="Elevator Accessibility">
+                    </a>
+                    <a class="orbit-planet" role="option" aria-selected="false"
+                        href="case-studies/dreamscape.html"
+                        data-title="DreamScape"
+                        data-type="24-Hour Designathon Concept"
+                        data-role="UX &amp; Interaction Designer"
+                        data-summary="A speculative app for visualizing and reflecting on dreams, designed around the prompt: what might people use in the future?"
+                        data-tags="Designathon, Speculative Design, Oct 2025"
+                        data-accent="#d6c6f0" data-accent-deep="#6f5498" data-cta="View Case Study">
+                        <span class="orbit-ring" aria-hidden="true"></span>
+                        <img src="images/orbit-dreamscape.svg" alt="DreamScape">
+                    </a>
+                    <a class="orbit-planet" role="option" aria-selected="false"
+                        href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener"
+                        data-title="Lucky's First Day"
+                        data-type="Illustrated Narrative"
+                        data-role="Illustrator"
+                        data-summary="A non-linear visual narrative confronting autism stereotypes and the discomfort of new situations."
+                        data-tags="Illustration, Visual Storytelling"
+                        data-accent="#f0a8c9" data-accent-deep="#a8455f" data-cta="View Project">
+                        <span class="orbit-ring" aria-hidden="true"></span>
+                        <img src="images/orbit-lucky.svg" alt="Lucky's First Day">
+                    </a>
+                </div>
+                <button type="button" class="orbit-nav orbit-nav--next" aria-label="Next project">
+                    <span class="arrow">→</span>
+                </button>
             </div>
+
+            <div class="orbit-info">
+                <p class="eyebrow" id="orbitType">UX Research &amp; Interaction Design</p>
+                <h3 id="orbitTitle">Comet Commute</h3>
+                <p class="orbit-role" id="orbitRole">UX Researcher &amp; Interaction Designer</p>
+                <p id="orbitSummary">A concept for reducing parking stress at UT Dallas by bringing real-time
+                    availability and predictive suggestions into the campus app students already use.</p>
+                <div class="orbit-tags" id="orbitTags">
+                    <span>Team Project</span><span>UX Research</span><span>May 2025</span>
+                </div>
+                <a class="btn" id="orbitCta" href="case-studies/comet-commute.html">View Case Study <span class="arrow">→</span></a>
+            </div>
+
+            <div class="orbit-dots" id="orbitDots" role="tablist" aria-label="Jump to project"></div>
         </section>
 
         <section id="playground" class="page-hero" style="min-height:auto; padding-bottom:0;">
@@ -585,7 +548,7 @@
             <div class="contact-grid reveal-fade">
                 <div class="contact-direct">
                     <a href="mailto:jflower2k6@gmail.com">✉ jflower2k6@gmail.com</a>
-                    <a href="#" class="tbd">LinkedIn — [TBD]</a>
+                    <a href="https://www.linkedin.com/in/jasmine-b-1a2929231/" target="_blank" rel="noopener">LinkedIn</a>
                     <a href="#" class="tbd">Behance / Dribbble — [TBD]</a>
                 </div>
 

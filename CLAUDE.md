@@ -46,8 +46,8 @@ just its content.
 - Vanilla JS only (`js/main.js`): mobile nav toggle, active-nav-link
   marking, and the home-page comet trail (see below). Prefer extending this
   file over adding a library for new interactivity.
-- No raster image assets — the mascot, spark mark, and planets
-  are all inline SVG/CSS. This was a deliberate choice (avoids an asset
+- No raster image assets by default — the spark mark and planets
+  are inline SVG/CSS. This was a deliberate choice (avoids an asset
   pipeline, keeps everything crisp and themeable) as well as the fix for the
   old dangling `astronaut.png` reference. Keep new illustration work in this
   same inline-SVG, line-art style rather than introducing image files unless
@@ -58,6 +58,17 @@ just its content.
   without touching any HTML/CSS. Any future "swap this for my own art" request
   should follow this same pattern (a real file in `images/`, referenced by
   `<img src>`) rather than going back to inline SVG.
+- Exception: `images/mascot-astronaut.png` is Jasmine's own real character
+  art for the hero mascot (a chibi astronaut with bunny ears), replacing
+  what was originally a placeholder SVG referenced the same way. This is
+  the same swap-the-file pattern as the doodle slots, just already
+  fulfilled rather than still pending — a template for future "here's my
+  real art for X" requests: drop the file in `images/`, point `<img src>`
+  at it, no inline SVG. `images/mascot-astronaut-alt.png` is a second real
+  file alongside it — an alternate expression (mid-sneeze/scrunched-eyes)
+  in the same pose/crop, swapped in on click (see the mascot-click entry
+  under "Texture & interaction" below). Same resize-on-intake treatment as
+  the primary file (source was 2048px, saved at 1400px into `images/`).
 
 ## Design system
 
@@ -191,7 +202,7 @@ focal-point moments elsewhere on the page; this is specifically about
 card/panel treatment, not removing glow from the site altogether.
 
 **Icon stroke weight** — the hand-drawn line-art marks (avatar-face,
-mail-envelope, city-skyline antenna, the doodle-placeholder/mascot/rabbit
+mail-envelope, city-skyline antenna, the doodle-placeholder/rabbit
 line art) all use `stroke-width="3"`. Keep any new stroke-based icon at
 3 too, rather than picking a new value per icon — this is what keeps
 them reading as one consistent set rather than a grab-bag of styles.
@@ -234,6 +245,32 @@ stacked on top of the rest of the site's existing motion/decoration.
   "rabbit enthusiast" detail in the hero rather than an arbitrary gimmick.
   Reuses the site's existing line-art rabbit silhouette (no emoji, no new
   illustration asset).
+- The hero mascot is a click/tap/keyboard-activatable `<button>`
+  (`.mascot-btn`, wrapping the `<img class="mascot">`) that swaps to
+  `mascot-astronaut-alt.png` on activation, then reverts to
+  `mascot-astronaut.png` on its own after `MASCOT_ALT_DURATION_MS` (0.5s) —
+  a timed swap rather than a manual toggle, so the alt expression always
+  reads as a momentary reaction rather than a persistent state
+  (`initMascotToggle()` in `js/main.js`, driven by `data-default-src`/
+  `data-alt-src`/`-alt` attributes on the `<img>` so the two source/alt
+  pairs live in the markup, not duplicated in JS; a second click while
+  already showing the alt expression restarts the timer rather than
+  stacking one). A real mouse click only counts on the actual drawing,
+  not the square crop's transparent padding around the floating pose —
+  `hitsDrawing()` samples the clicked pixel's alpha channel against an
+  offscreen canvas rather than approximating a smaller CSS hit-box, since
+  the pose is diagonal/irregular (an inset rectangle or circle would
+  either clip a limb or still catch empty corners). Keyboard/AT activation
+  (`MouseEvent.detail === 0`) always goes through untested, since there's
+  no meaningful pointer coordinate to sample in that case. Both images
+  share the same square crop/pose, so the swap holds size exactly — no
+  separate sizing logic needed. A small hover/active scale lives on
+  `.mascot-btn`, not `.mascot` itself, since `.mascot` already drives its
+  own `transform` via the float animation and a second directly-set
+  `transform` on the same element would just be overridden every frame;
+  follow that split (transform the wrapper, not an already-animating
+  child) for any future hover effect on an element with its own running
+  transform animation.
 - Full page loads (`index.html` <-> `case-studies/*.html`, and case study
   <-> case study via the prev/next links) get a quiet wormhole feel instead
   of the browser's default hard cut: the outgoing page eases down and
@@ -420,52 +457,134 @@ drifting out of sync.
   a fun fact about Jasmine tied to that object; below 700px it becomes a
   static list; both the art and the fun-fact captions are still
   placeholder, see `images/` below) → `#projects`
-  (a "constellation map" of always-visible project cards — Comet Commute,
-  Elevator Accessibility, DreamScape, Lucky's First Day — each linking out
-  to a full write-up, see `case-studies/` below) → `#playground` (two
-  tabs: "Experiments", a grid of loose-experiment tiles — explicitly
-  allowed to feel rougher than the rest of the site, see rule 4; content
-  is placeholder — and "Doodle Mail", a real HTML5-Canvas draw-and-send
-  guestbook, see the entry below) → `#contact` (direct links + a contact
-  form **not yet wired to a backend**, marked inline; social links
-  LinkedIn/Behance/Dribbble are still `[TBD]` — Jasmine's previous
-  portfolio didn't expose them in a fetchable form) → one shared footer.
-  See "Single-page navigation" above for how the anchors/scrollspy work.
+  (Project Orbit — a drag/swipe/wheel/arrow-key/button carousel of the 4
+  projects — Comet Commute, Elevator Accessibility, DreamScape, Lucky's
+  First Day — as large circular "planet" cards, the active one centered
+  and biggest, each linking out to a full write-up, see `case-studies/`
+  below and the entry further down for how it works) → `#playground` (two
+  tabs: "Experiments", a horizontal scroll-snap deck of loose-experiment
+  tiles — explicitly allowed to feel rougher than the rest of the site,
+  see rule 4; content is placeholder — and "Doodle Mail", a real
+  HTML5-Canvas draw-and-send guestbook, see the entry below) → `#contact`
+  (direct links + a contact form **not yet wired to a backend**, marked
+  inline; LinkedIn is now a real link, Behance/Dribbble are still `[TBD]` —
+  Jasmine's previous portfolio didn't expose them in a fetchable form) →
+  one shared footer. See "Single-page navigation" above for how the
+  anchors/scrollspy work.
 
-  Projects replaced its original hover-only "galaxy of planet" interaction
-  (content hidden until hover/focus) with the `.constellation-card` grid:
-  every project is always visible, titled, described, and clickable in
-  normal document flow — a deliberate accessibility/usability call, since
-  a recruiter skimming the page should never need to discover an
-  interaction to see what Jasmine has built. Each card is a single `<a>`
-  wrapping its whole thumbnail+title+description (maximum click target,
-  no nested interactive elements), styled as a hand-placed polaroid/
-  postcard (`--paper` background, a per-card `--rotate` custom property
-  for its resting tilt, a `--hover-rotate` it straightens toward, `--accent`
-  /`--accent-deep` for its washi-tape/pin-star/link color) sitting over a
-  purely decorative starfield/constellation-line/moon/cloud layer
-  (`.constellation-lines`, `.constellation-star`, `.constellation-moon`,
-  `.constellation-cloud`) that's hidden below 700px along with the grid's
-  organic stagger. Card thumbnails are small abstract line-art SVGs in
-  each project's accent color (not fake screenshots — see rule 6) rather
-  than photography. Hovering/focusing any card toggles one shared
-  `.is-active` class on the section (`initConstellation()` in
-  `js/main.js`) that brightens all the lines/stars together, instead of
-  computing which stars are "nearest" to a given card. `.planet-card` and
-  `.view-case` are still shared with the About section's `.doodle`
-  tooltips (see below) — don't delete them when touching Projects.
+  Projects has gone through two redesigns: an original hover-only
+  "galaxy of planet" interaction (content hidden until hover/focus) was
+  replaced with an always-visible `.constellation-card` grid (every
+  project titled/described/clickable in normal document flow, a
+  deliberate accessibility/recruiter-scanning call) — which was then
+  itself replaced with **Project Orbit**, at Jasmine's explicit request,
+  after she saw it built first as a Playground experiment and decided she
+  wanted it as the primary navigation instead of an addition. That's a
+  real, knowingly-accepted step back from "every project visible without
+  an interaction": only the active planet's full details show at once,
+  with neighbors as peek-only circles. See the **Project Orbit** entry
+  below for how it works; `.planet-card` and `.view-case` are still
+  shared with the About section's `.doodle` tooltips (see below) — don't
+  delete them when touching Projects, even though Projects itself no
+  longer uses `.planet-card`.
 - `case-studies/` — one HTML page per case study (`comet-commute.html`,
   `elevator-accessibility.html`, `dreamscape.html`), real UT Dallas
   coursework/designathon projects with real research, decisions, and
   outcomes. Each sets `--case-accent` on `<body>` (a rainbow token matching
-  its planet's color) that themes its back-link, section-heading
-  underlines, and list bullets. Reuses `.page-hero`, `.card`, `.btn`, and
-  the shared nav/footer rather than introducing new page chrome. Lucky's
-  First Day has no page here — it's an existing standalone site, linked to
+  its planet's color) that themes its back-link, chapter numerals, quote
+  marks, and list bullets. Reuses `.page-hero`, `.card`, `.btn`, and the
+  shared nav/footer rather than introducing new page chrome. Lucky's First
+  Day has no page here — it's an existing standalone site, linked to
   directly.
+
+  The layout is a wide "presentation deck" (redesigned per a reference
+  Jasmine shared, laurenlangdesign.com/supplierone) rather than a narrow
+  centered blog column — a ~1320px-wide stage, large numbered chapter
+  headers, alternating full-width/split/text sections, and generous
+  spacing, so the page reads like a UX design review instead of an
+  article. It's **deliberately kept on the site's own dark cosmic
+  background + pastel accent palette** rather than that reference's white
+  one — a full light-mode version of the whole site was tried earlier and
+  explicitly rejected ("I don't like it"), so this widens/re-paces the
+  layout without touching that decision; don't reintroduce a white/light
+  background here even if a future reference calls for one without
+  checking first.
+
+  Every case study follows the same 7-chapter structure — Hero → Overview
+  → Research → Process → Design Iterations → Final Solution → Results →
+  Reflection — via a shared `.case-chapter` component system:
+  - `.case-mockup` (full-bleed, 16:9) for the hero's featured image and
+    Final Solution's large edge-to-edge mockup.
+  - `.case-quickfacts` — Role/Timeline/Team/Tools as a wide underlined
+    strip under the hero, not a boxed card.
+  - `.case-chapter` / `.case-chapter--tint` — one wide section per
+    chapter, alternating a faint background wash every other chapter (the
+    brief's "background changes between sections," done as a soft wash
+    rather than a hard block). `.case-chapter-header` is the large
+    numbered heading (`<span class="num">01</span><h2>…</h2>` + a
+    trailing rule) that acts as the chapter break.
+  - `.case-overview-grid` — Problem/Goal/Impact as three `.card`s in
+    Overview, instead of paragraphs. "Impact" is honestly marked
+    `.tbd`/`[TBD]` on all 3 pages, since none of these projects have
+    shipped — never invent a metric here (rule 6).
+  - `.case-callout-grid` + `.case-quote` — Research findings as callout
+    cards, plus a large quote-block device. Since no real user quotes
+    exist yet for any of the 3 projects, every `.case-quote` used for an
+    actual quote is filled with `[TBD — add a real quote…]` text and a
+    generic `<cite>Research participant</cite>` rather than a fabricated
+    line; `.case-quote` is also reused (without the `<blockquote>`/`cite`)
+    for pulling an *existing* sentence out of the surrounding prose into
+    a mid-chapter standout — that reuse is fine, inventing the quoted
+    words is not.
+  - `.case-split-visual` / `.case-split-visual--reverse` — Process's
+    alternating image-left/text-right and text-left/image-right layout.
+  - `.case-visual-box` (4:3) — the general-purpose placeholder image box:
+    process diagrams, `.case-gallery` design-iteration tiles, research
+    artifacts. Each `<img>` points at a small placeholder SVG in
+    `images/` (a dashed frame + the site's spark glyph, in that page's
+    accent color) — see the `images/` entry below for the swap-the-file
+    pattern.
+  - `.case-feature-split` — Final Solution's feature highlights, in
+    `.card`s under the big mockup.
+  - `.case-impact-grid` — Results' large numbers/impact cards. Same rule
+    as Overview's Impact card: no real metrics exist for any of these
+    projects, so every `.num` holds `<span class="tbd">[TBD]</span>`,
+    never an invented figure.
+  - `.case-reflection` / a closing `.case-list` — Reflection's lessons
+    learned, kept as whatever real form each case study already had
+    (prose for Comet Commute/Elevator, a bullet list for DreamScape).
+
+  Apply this same chapter structure to any new case study rather than
+  inventing a different format per page — and if a case study doesn't
+  cleanly have all 7 beats yet (e.g. no real "Results" data), keep the
+  chapter and mark its content `[TBD]` rather than skipping the chapter
+  or fabricating content to fill it.
 - `images/` — the one exception to "no raster/external image assets": 5
   small swappable placeholder SVGs (`doodle-1.svg`…`doodle-5.svg`) used in
-  the About section, meant to be directly overwritten with Jasmine's own art.
+  the About section; 9 more for the case studies —
+  `case-<project>-research.svg`, `case-<project>-solution.svg` (or
+  `-prototype.svg` for DreamScape), and `case-<project>-wide.svg`, for
+  `comet`/`elevator`/`dreamscape`; and 4 more (`orbit-comet.svg`,
+  `orbit-elevator.svg`, `orbit-dreamscape.svg`, `orbit-lucky.svg`) for
+  Project Orbit's planets — these reuse the exact motif from each
+  project's Projects-section thumbnail (circle, elevator shaft, crescent
+  moon, zigzag path) recomposed to fill a square so it crops well into a
+  circle, rather than a generic placeholder shared across all 4. All are
+  meant to be directly overwritten with Jasmine's own art or real
+  screenshots — no HTML/CSS edits needed, just replace the file, the same
+  swap-the-file pattern as the About page's doodle slots. Each is a
+  dashed frame + the site's spark glyph in that page's accent color;
+  `object-fit: cover` on `.case-mockup img`/`.case-visual-box img`/
+  `.orbit-planet img` crops any real image cleanly regardless of its
+  actual aspect ratio, so the same placeholder file can be (and currently
+  is) reused across more than one slot on a page. Follow this same "real
+  file in `images/`, referenced by `<img src>`"
+  pattern for any future image slot rather than an inline-SVG placeholder
+  or a text-only callout. `mascot-astronaut.png` (hero section) is the one
+  file in this directory that isn't a placeholder — it's Jasmine's real,
+  final character art, resized/compressed on intake (from a 2048px/1.3MB
+  source down to 1024px/~390KB, since the mascot never displays wider than
+  ~380px) rather than served at its original resolution.
 - **Doodle Mail** (`#panel-doodlemail` in `index.html`, `initDoodleMail()`
   in `js/main.js`) — a draw-and-send guestbook on Playground's second tab.
   The canvas (color picker, brush size, eraser, undo, clear, pointer-event
@@ -493,9 +612,43 @@ drifting out of sync.
   EmailJS's own account dashboard (its monthly send quota, optionally
   reCAPTCHA) once `EMAILJS_CONFIG` is filled in — don't present the
   client-side counter as more than what it is if extending it.
+- **Project Orbit** (`class="orbit-section"` in `index.html`'s `#projects`,
+  `initProjectOrbit()` in `js/main.js`) — the Projects section's project
+  navigation: a drag/swipe/wheel/arrow-key/button carousel of the 4
+  projects as large circular "planet" cards, the active one centered and
+  biggest with neighbors peeking in on either side. First built as an
+  *additional*, exploratory Playground-tab experiment alongside the
+  always-visible `.constellation-card` grid that was Projects' section at
+  the time (so a recruiter skimming the page never had to discover an
+  interaction to see what Jasmine had built) — then, once Jasmine had
+  actually seen it running, she asked for it to fully replace that grid
+  instead, a real and knowingly-accepted step back from "every project
+  visible without an interaction." **If asked to redo Projects again,
+  Project Orbit is the current, intended state — don't reintroduce the
+  constellation grid without being asked.** Each planet is currently
+  placeholder line-art (`images/orbit-*.svg` — the same abstract-icon
+  language the old Projects-grid thumbnails used: a circle for Comet
+  Commute, an elevator shaft, a crescent moon, a zigzag path — in that
+  project's accent color), not a real screenshot, since none of the 4
+  projects have a real hero image/mockup/screenshot yet (rule 6); swap
+  the file for a real circular crop later, `object-fit: cover` handles
+  any aspect ratio. Sizing and centering math lives in JS (not pure CSS):
+  `render()` computes each planet's *target* width from its distance
+  from the active index, then translates `.orbit-track` so the active
+  planet's center lands in the deck's horizontal center — done from
+  target widths rather than read-mid-transition layout, so the centering
+  is correct even while the resize/scale transition is still animating.
+  The "cinematic zoom" into a case study on click is the same sitewide
+  cross-document View Transition used everywhere else (top of
+  `css/style.css`) rather than a bespoke one-off animation — reuse that
+  instead of building a parallel transition system if this needs to feel
+  more dramatic later. A `dragMoved` flag suppresses the native click a
+  browser still fires on an `<a>` right after a drag-release, so swiping
+  to browse never accidentally opens a project.
 - `css/style.css` — the entire design system and every component's styles.
 - `js/main.js` — nav toggle/scrollspy active-link logic, the comet trail,
-  starfield generation, the Playground tabs, and Doodle Mail.
+  starfield generation, Project Orbit, the Playground tabs, and Doodle
+  Mail.
 - `README.md` — one-line project description.
 - Remaining placeholder content: the About section's sketchbook doodle art
   (each should become a drawing of a personal object) and fun-fact

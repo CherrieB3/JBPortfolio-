@@ -12,8 +12,64 @@ document.addEventListener('DOMContentLoaded', () => {
   initPlaygroundTabs();
   initTiltCards();
   initRabbitEgg();
-  initConstellation();
+  initProjectOrbit();
+  initMascotToggle();
 });
+
+// Clicking (or tapping/keyboard-activating) the hero mascot swaps its
+// expression for MASCOT_ALT_DURATION_MS, then reverts on its own — a
+// small "boop" easter egg in the same spirit as the rabbit hop. Driven by
+// data attributes on the <img> so the source/alt pairs live in the markup
+// rather than duplicated here.
+const MASCOT_ALT_DURATION_MS = 500;
+
+function initMascotToggle() {
+  const btn = document.querySelector('.mascot-btn');
+  const img = btn && btn.querySelector('.mascot');
+  if (!btn || !img) return;
+
+  // The mascot's square crop has a lot of transparent padding around the
+  // floating pose — .mascot-btn covers that whole square (so the hover
+  // target stays generous), but a real mouse click should only register
+  // on the drawing itself. Sampled against an offscreen canvas rather
+  // than a fixed CSS hit-box since the pose is irregular/diagonal, not a
+  // shape a simple inset rectangle or circle could approximate.
+  const hitCanvas = document.createElement('canvas');
+  const hitCtx = hitCanvas.getContext('2d', { willReadFrequently: true });
+
+  function hitsDrawing(clientX, clientY) {
+    const rect = img.getBoundingClientRect();
+    const px = Math.floor((clientX - rect.left) / rect.width * img.naturalWidth);
+    const py = Math.floor((clientY - rect.top) / rect.height * img.naturalHeight);
+    if (px < 0 || py < 0 || px >= img.naturalWidth || py >= img.naturalHeight) return false;
+    hitCanvas.width = img.naturalWidth;
+    hitCanvas.height = img.naturalHeight;
+    hitCtx.clearRect(0, 0, hitCanvas.width, hitCanvas.height);
+    hitCtx.drawImage(img, 0, 0);
+    return hitCtx.getImageData(px, py, 1, 1).data[3] > 10;
+  }
+
+  let revertTimer = null;
+
+  btn.addEventListener('click', (e) => {
+    // Keyboard/AT activation (Enter/Space on the button) fires a click
+    // with no real pointer position — MouseEvent.detail is 0 for those,
+    // vs. >=1 for an actual mouse click — so let those through untested
+    // rather than pixel-testing a coordinate that isn't meaningful here.
+    if (e.detail !== 0 && !hitsDrawing(e.clientX, e.clientY)) return;
+
+    img.src = img.dataset.altSrc;
+    img.alt = img.dataset.altAlt;
+
+    // A second click while already showing the alt expression just
+    // restarts the revert window instead of stacking timers.
+    clearTimeout(revertTimer);
+    revertTimer = setTimeout(() => {
+      img.src = img.dataset.defaultSrc;
+      img.alt = img.dataset.defaultAlt;
+    }, MASCOT_ALT_DURATION_MS);
+  });
+}
 
 // A magnetic tilt toward the cursor on .card/.sticker-card — the card
 // leans as if it were a rigid plate pivoting under your pointer, on top
@@ -41,21 +97,188 @@ function initTiltCards() {
   });
 }
 
-// Projects' constellation map: hovering/focusing any project card
-// brightens the decorative constellation lines and stars behind the whole
-// section (one shared .is-active toggle, not per-card proximity math) —
-// the "nearby stars glow, lines illuminate" part of the hover brief. A
-// no-op if the constellation markup isn't on the page.
-function initConstellation() {
-  const section = document.querySelector('.constellation');
-  if (!section) return;
-  const cards = section.querySelectorAll('.constellation-card');
-  cards.forEach(card => {
-    card.addEventListener('mouseenter', () => section.classList.add('is-active'));
-    card.addEventListener('mouseleave', () => section.classList.remove('is-active'));
-    card.addEventListener('focus', () => section.classList.add('is-active'));
-    card.addEventListener('blur', () => section.classList.remove('is-active'));
+// Project Orbit — the Projects section's project navigation: a
+// drag/swipe/wheel/arrow-key/button carousel of circular "planet"
+// project cards, the active one centered and biggest. Originally built
+// as a secondary Playground-tab experiment alongside an always-visible
+// project grid, then moved here to replace that grid entirely (Jasmine's
+// call, made after seeing both and being told the tradeoff: only the
+// active project's full details are visible at once here, versus every
+// project being scannable without interaction in the old grid). Sizing/
+// position math is done here in JS (not pure CSS) because the active
+// planet's centering depends on every planet's *target* width at the new
+// index, which has to be computed before the resize transition runs, not
+// read from mid-transition layout.
+function initProjectOrbit() {
+  const deck = document.getElementById('orbitDeck');
+  const track = document.getElementById('orbitTrack');
+  if (!deck || !track) return;
+
+  const planets = Array.from(track.querySelectorAll('.orbit-planet'));
+  if (!planets.length) return;
+
+  const glow = deck.querySelector('.orbit-glow');
+  const dotsWrap = document.getElementById('orbitDots');
+  const typeEl = document.getElementById('orbitType');
+  const titleEl = document.getElementById('orbitTitle');
+  const roleEl = document.getElementById('orbitRole');
+  const summaryEl = document.getElementById('orbitSummary');
+  const tagsEl = document.getElementById('orbitTags');
+  const ctaEl = document.getElementById('orbitCta');
+  const prevBtn = deck.querySelector('.orbit-nav--prev');
+  const nextBtn = deck.querySelector('.orbit-nav--next');
+
+  let active = 0;
+  const GAP = () => (window.innerWidth <= 700 ? 28 : 56);
+  const SIZE_MAX = () => (window.innerWidth <= 700 ? 140 : 220);
+  const SIZE_STEP = () => (window.innerWidth <= 700 ? 34 : 60);
+  const SIZE_MIN = () => (window.innerWidth <= 700 ? 64 : 90);
+
+  function widthForDist(dist) {
+    return Math.max(SIZE_MIN(), SIZE_MAX() - dist * SIZE_STEP());
+  }
+
+  // Dots (built once — a small tab-like jump control, not part of the
+  // drag/scroll gesture set).
+  planets.forEach((p, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.setAttribute('aria-label', `Show ${p.dataset.title}`);
+    dot.addEventListener('click', () => goTo(i, { focus: false }));
+    dotsWrap.appendChild(dot);
   });
+  const dots = Array.from(dotsWrap.children);
+
+  function render() {
+    const widths = planets.map((_, i) => widthForDist(Math.abs(i - active)));
+    let x = 0;
+    const centers = [];
+    widths.forEach((w, i) => {
+      centers.push(x + w / 2);
+      x += w + GAP();
+    });
+
+    planets.forEach((p, i) => {
+      const dist = Math.abs(i - active);
+      const w = widths[i];
+      p.style.setProperty('--dist', dist);
+      p.style.width = `${w}px`;
+      p.style.height = `${w}px`;
+      p.style.setProperty('--planet-accent', p.dataset.accent);
+      p.classList.toggle('is-active', i === active);
+      p.setAttribute('aria-selected', String(i === active));
+    });
+
+    const deckWidth = deck.getBoundingClientRect().width;
+    const offset = deckWidth / 2 - centers[active];
+    track.style.transform = `translateX(${offset}px)`;
+
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === active));
+
+    const p = planets[active];
+    typeEl.textContent = p.dataset.type;
+    titleEl.textContent = p.dataset.title;
+    roleEl.textContent = p.dataset.role;
+    summaryEl.textContent = p.dataset.summary;
+    tagsEl.innerHTML = p.dataset.tags.split(',').map(t => `<span>${t.trim()}</span>`).join('');
+    ctaEl.textContent = '';
+    ctaEl.append(p.dataset.cta || 'View Case Study', Object.assign(document.createElement('span'), { className: 'arrow', textContent: ' →' }));
+    ctaEl.href = p.getAttribute('href');
+    if (p.hasAttribute('target')) { ctaEl.target = p.getAttribute('target'); ctaEl.rel = p.getAttribute('rel'); }
+    else { ctaEl.removeAttribute('target'); ctaEl.removeAttribute('rel'); }
+    if (glow) glow.style.backgroundColor = p.dataset.accent;
+  }
+
+  function goTo(i, { focus = true } = {}) {
+    active = Math.max(0, Math.min(planets.length - 1, i));
+    render();
+    if (focus) planets[active].focus({ preventScroll: true });
+  }
+
+  render();
+  window.addEventListener('resize', render);
+
+  prevBtn.addEventListener('click', () => goTo(active - 1));
+  nextBtn.addEventListener('click', () => goTo(active + 1));
+
+  // Clicking any non-active planet just re-centers it instead of
+  // following the link immediately — a click on the already-active one
+  // (or its real "View Case Study" button) is what navigates.
+  planets.forEach((p, i) => {
+    p.addEventListener('click', (e) => {
+      if (i !== active) { e.preventDefault(); goTo(i, { focus: false }); }
+    });
+  });
+
+  track.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); goTo(active + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(active - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    else if (e.key === 'End') { e.preventDefault(); goTo(planets.length - 1); }
+  });
+
+  // Mouse wheel / trackpad — either axis, debounced to one step per
+  // gesture so a single scroll doesn't fly through several planets.
+  let wheelLocked = false;
+  deck.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (wheelLocked) return;
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (Math.abs(delta) < 12) return;
+    wheelLocked = true;
+    goTo(active + (delta > 0 ? 1 : -1), { focus: false });
+    setTimeout(() => { wheelLocked = false; }, 420);
+  }, { passive: false });
+
+  // Drag / swipe — live-follows the pointer while held, then snaps to
+  // the nearest planet on release using distance + velocity (a light
+  // momentum feel without a full physics simulation). dragMoved guards
+  // against the native "click" a browser still fires on the anchor right
+  // after a drag-release — without it, swiping to browse could
+  // accidentally open whichever planet's link ends up under the pointer.
+  let dragging = false, dragMoved = false, dragStartX = 0, dragStartTime = 0, baseOffset = 0;
+
+  function currentTranslateX() {
+    const m = new DOMMatrix(getComputedStyle(track).transform);
+    return m.m41;
+  }
+
+  track.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    dragMoved = false;
+    dragStartX = e.clientX;
+    dragStartTime = performance.now();
+    baseOffset = currentTranslateX();
+    track.classList.add('is-dragging');
+    track.setPointerCapture(e.pointerId);
+  });
+
+  track.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - dragStartX;
+    if (Math.abs(dx) > 6) dragMoved = true;
+    track.style.transform = `translateX(${baseOffset + dx}px)`;
+  });
+
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    track.classList.remove('is-dragging');
+    const dx = e.clientX - dragStartX;
+    const dt = Math.max(1, performance.now() - dragStartTime);
+    const velocity = dx / dt; // px/ms
+    if (Math.abs(dx) > 60 || Math.abs(velocity) > .5) {
+      goTo(active + (dx < 0 ? 1 : -1), { focus: false });
+    } else {
+      render(); // snap back to the current planet
+    }
+  }
+
+  track.addEventListener('pointerup', endDrag);
+  track.addEventListener('pointercancel', endDrag);
+  planets.forEach(p => p.addEventListener('click', (e) => {
+    if (dragMoved) { e.preventDefault(); dragMoved = false; }
+  }));
 }
 
 // A small hidden easter egg grounded in something real about Jasmine (the
@@ -198,11 +421,13 @@ function initStarfield() {
 function initCustomCursor() {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
-  const CLICKABLE_SELECTOR = [
-    'a', 'button', 'input', 'textarea', 'select', 'label',
-    '.btn', '.card', '.planet', '.sticker-card', '.view-case',
-    '[role="button"]', '[onclick]',
-  ].join(', ');
+  // Only real action-triggering elements — a link that actually navigates
+  // somewhere, a button, or an ARIA role="button" — get the "click me"
+  // cursor. Static panels like .card/.sticker-card (never links, just
+  // content) and plain text-entry fields (input/textarea/select/label —
+  // clicking just focuses them to type, not an interaction) don't
+  // qualify, even though they're hoverable/have their own styling.
+  const CLICKABLE_SELECTOR = ['a[href]', 'button', '[role="button"]'].join(', ');
 
   const cursor = document.createElement('div');
   cursor.className = 'cursor';
@@ -395,6 +620,18 @@ function initCometTrail() {
   let lastTick = null;
 
   function layout() {
+    // Collapse first so .comet-trail's own (possibly stale) height isn't
+    // counted in the measurement below — it's position:absolute, so its
+    // height directly contributes to document.documentElement.scrollHeight.
+    // The <svg> child needs the same treatment: its own height attribute
+    // still overflows the zeroed-out wrapper (overflow:visible on
+    // .comet-trail svg) and would still get counted otherwise. Skipping
+    // this would create a feedback loop: once it grows to match a taller
+    // page (e.g. the Doodle Mail panel), switching back to shorter content
+    // could never shrink it, since every recalculation would just measure
+    // its own leftover inflated height again.
+    trail.style.height = '0';
+    svg.setAttribute('height', 0);
     const docHeight = document.documentElement.scrollHeight;
     const w = window.innerWidth;
 
@@ -965,10 +1202,7 @@ function initDoodleMail() {
   });
 }
 
-// A small celebratory sparkle burst from the Send button on success —
-// deliberately separate from the custom cursor's own burst effect (that
-// one only exists on hover-capable pointers), so this still fires on the
-// touch devices most doodles will actually come from.
+// A small celebratory sparkle burst from the Send button on success.
 function spawnDoodleBurst(originEl) {
   const rect = originEl.getBoundingClientRect();
   const x = rect.left + rect.width / 2;

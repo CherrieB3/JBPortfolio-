@@ -51,131 +51,203 @@
                 prompt: what might people use in the future?</p>
         </section>
 
-        <section class="case-meta">
-            <dl class="case-meta-grid">
-                <div>
-                    <dt>Role</dt>
-                    <dd>UX &amp; Interaction Designer</dd>
+        <div class="case-mockup reveal">
+            <img src="../images/case-dreamscape-wide.svg" alt="Placeholder — swap in the featured concept screen or mockup">
+        </div>
+
+        <dl class="case-quickfacts reveal">
+            <div>
+                <dt>Role</dt>
+                <dd>UX &amp; Interaction Designer</dd>
+            </div>
+            <div>
+                <dt>Format</dt>
+                <dd>24-hour designathon</dd>
+            </div>
+            <div>
+                <dt>Timeline</dt>
+                <dd>Oct 25–26, 2025</dd>
+            </div>
+            <div>
+                <dt>Tools</dt>
+                <dd>Figma, Spline</dd>
+            </div>
+        </dl>
+
+        <section class="case-chapter reveal">
+            <div class="case-chapter-header"><span class="num">01</span><h2>Overview</h2></div>
+            <div class="case-overview-grid">
+                <div class="card">
+                    <h3>Problem</h3>
+                    <p>Dreams fade quickly after waking, leaving only fragments of emotion or imagery — and existing
+                        sleep-tracking apps focus on metrics like duration or heart rate, overlooking the emotional
+                        and visual depth of dreaming.</p>
                 </div>
-                <div>
-                    <dt>Format</dt>
-                    <dd>24-hour designathon</dd>
+                <div class="card">
+                    <h3>Goal</h3>
+                    <p>Visualize and document users' dreams for self-reflection and mental wellness — converting REM
+                        sleep data into visual, textual, and interactive formats, with a glassmorphism-inspired
+                        interface and an AI companion named Snoozy.</p>
                 </div>
-                <div>
-                    <dt>Timeline</dt>
-                    <dd>Oct 25–26, 2025</dd>
+                <div class="card">
+                    <h3>Impact</h3>
+                    <p class="tbd">This was a 24-hour designathon concept, not a shipped product, so there's no real
+                        usage data yet. [TBD: add outcomes if this gets built or tested.]</p>
                 </div>
-                <div>
-                    <dt>Tools</dt>
-                    <dd>Figma, Spline</dd>
-                </div>
-            </dl>
+            </div>
         </section>
 
-        <section class="case-section reveal">
-            <h2>Overview</h2>
-            <p>DreamScape is a speculative, futuristic app designed during UT Dallas's UX Club 24-hour designathon,
-                built around the prompt of imagining an app people might use in the future. It visualizes and
-                documents users' dreams for self-reflection and mental wellness — converting REM sleep data into
-                visual, textual, and interactive formats while filtering sensitive content. With a
-                glassmorphism-inspired interface and an AI companion named Snoozy, the app offers an immersive, safe,
-                and emotionally engaging way to explore the subconscious.</p>
-            <h3>Core features</h3>
-            <ol class="case-list case-list--numbered">
-                <li><strong>Dream visualization</strong> — converts REM sleep data into visual, textual, and
-                    interactive formats</li>
-                <li><strong>Content filtering</strong> — screens potentially distressing content before it's shown
-                    to the user</li>
-                <li><strong>Snoozy, the AI companion</strong> — guides users through reviewing and reflecting on
-                    their dream recordings</li>
-            </ol>
-        </section>
-
-        <section class="case-section reveal">
-            <h2>The Problem</h2>
-            <p>Dreams fade quickly after waking, leaving behind only fragments of emotion or imagery. Despite their
-                deep connection to our subconscious, there's currently no reliable way to record or revisit them —
-                which limits opportunities for self-reflection, mental health insight, and creative exploration.
-                Existing sleep-tracking apps focus on metrics like duration or heart rate, overlooking the emotional
-                and visual depth of dreaming. DreamScape addresses that gap by imagining a secure, immersive way to
-                visualize and understand our dreams.</p>
-        </section>
-
-        <section class="case-section reveal">
-            <h2>Research</h2>
+        <section class="case-chapter case-chapter--tint reveal">
+            <div class="case-chapter-header"><span class="num">02</span><h2>Research</h2></div>
             <p>Research shows that visualizing and reflecting on dreams can offer real mental health benefits when
                 privacy and safety are prioritized. Clinicians and care teams can use patient-generated
                 visualizations to encourage self-reflection, motivate behavior change, and inform treatment — and
-                both patients and clinicians point to the value of a digital intermediary, or "digital navigator," to
-                help interpret these visualizations accurately (Chang et al., 2023, MDPI).</p>
-            <p>Privacy is a central concern, especially for users with lived experience of mental illness. People are
-                generally willing to share personal health data to improve care and support research, but only when
-                there are real safeguards against misuse, discrimination, or unintended exposure — which points to
-                granular control over shared data, easy revocation, and privacy-first design as best practices (Diva
-                Portal; Medium).</p>
+                both patients and clinicians point to the value of a digital intermediary, or "digital navigator,"
+                to help interpret these visualizations accurately (Chang et al., 2023, MDPI).</p>
+            <p>Privacy is a central concern, especially for users with lived experience of mental illness. People
+                are generally willing to share personal health data to improve care and support research, but only
+                when there are real safeguards against misuse, discrimination, or unintended exposure — which
+                points to granular control over shared data, easy revocation, and privacy-first design as best
+                practices (Diva Portal; Medium).</p>
             <p>Dream content can be shaped by pre-sleep media exposure, which affects recall, vividness, and
                 emotional tone — for higher-fidelity REM recordings, minimizing external visual stimuli before sleep
                 is recommended (PMC). Trauma sensitivity matters too: visualizing dream content can be distressing,
                 so trauma-informed design — filtering, blurring, and opt-in access for potentially distressing
                 content — helps protect psychological safety without losing the reflective or therapeutic benefit
                 (NCBI).</p>
-            <p>Effective UX for neurotechnology and privacy-sensitive tools depends on just-in-time consent prompts,
-                layered transparency, contextual integrity, and periodic reminders to review privacy settings — with
-                regulatory engagement essential, since dream-decoding technologies raise genuinely new ethical and
-                safety questions.</p>
-            <h3>Design implications</h3>
-            <ul class="case-list">
-                <li>Exportable visualizations for clinicians, with digital-navigator support</li>
-                <li>Privacy-by-default, with two-factor and biometric protections</li>
-                <li>Trauma-informed safety through filtered, flagged, or blurred content and in-app grounding
-                    supports</li>
-                <li>High-quality REM capture through a controlled pre-sleep environment</li>
-                <li>Early engagement with policymakers to help establish ethical standards for sensitive
-                    neurotechnology</li>
-            </ul>
-            <p>These findings directly shaped DreamScape's design — aiming for something clinically useful,
-                privacy-conscious, trauma-informed, and ethically responsible.</p>
-            <figure class="case-visual">
-                <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="currentColor" /></svg>
-                <p>Visual placeholder — add the research/planning board synthesis here</p>
+            <div class="case-callout-grid">
+                <div class="card">
+                    <h3>Design implications</h3>
+                    <ul class="case-list">
+                        <li>Exportable visualizations for clinicians, with digital-navigator support</li>
+                        <li>Privacy-by-default, with two-factor and biometric protections</li>
+                        <li>Trauma-informed safety through filtered, flagged, or blurred content and in-app
+                            grounding supports</li>
+                        <li>High-quality REM capture through a controlled pre-sleep environment</li>
+                        <li>Early engagement with policymakers to help establish ethical standards for sensitive
+                            neurotechnology</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="case-quote" style="padding-left:20px; font-size:1.3rem;">
+                These findings directly shaped DreamScape's design — aiming for something clinically useful,
+                privacy-conscious, trauma-informed, and ethically responsible.
+            </p>
+            <figure>
+                <div class="case-visual-box">
+                    <img src="../images/case-dreamscape-research.svg" alt="Placeholder — swap in the research/planning board synthesis">
+                </div>
                 <figcaption>[Add: research citations board, condensed]</figcaption>
             </figure>
         </section>
 
-        <section class="case-section reveal case-section--wide">
-            <h2>Design Challenges</h2>
-            <div class="case-grid-2">
-                <div class="card">
-                    <h4>Privacy vs. clinical value</h4>
+        <section class="case-chapter reveal">
+            <div class="case-chapter-header"><span class="num">03</span><h2>Process</h2></div>
+            <div class="case-split-visual">
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-dreamscape-research.svg" alt="Placeholder — swap in a diagram of the privacy-vs-clinical-value tradeoff">
+                    </div>
+                    <figcaption>[Add: privacy/clinical-value decision diagram]</figcaption>
+                </figure>
+                <div>
+                    <h3>Privacy vs. clinical value</h3>
                     <p>Resolved with privacy-by-default settings, two-factor/biometric login, and opt-in exports for
                         a "digital navigator" to review.</p>
                 </div>
-                <div class="card">
-                    <h4>Immersion vs. emotional safety</h4>
+            </div>
+            <div class="case-split-visual case-split-visual--reverse">
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-dreamscape-prototype.svg" alt="Placeholder — swap in a diagram of the immersion-vs-safety tradeoff">
+                    </div>
+                    <figcaption>[Add: immersion/emotional-safety decision diagram]</figcaption>
+                </figure>
+                <div>
+                    <h3>Immersion vs. emotional safety</h3>
                     <p>Resolved with trauma-informed filtering, blurring, opt-in access to flagged content, and
                         in-app grounding supports.</p>
                 </div>
             </div>
         </section>
 
-        <section class="case-section reveal case-section--wide">
-            <h2>How We Built It</h2>
-            <div class="case-grid-2">
+        <section class="case-chapter case-chapter--tint reveal">
+            <div class="case-chapter-header"><span class="num">04</span><h2>Design Iterations</h2></div>
+            <p>Built in Figma (a glassmorphic system: soft blurs, gradients, and layered transparency) and Spline
+                (the 3D elements, including Snoozy, the AI companion who guides users through their dream
+                recordings) — swap the placeholders below for real sketches/screens as they're exported.</p>
+            <div class="case-gallery">
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-dreamscape-research.svg" alt="Placeholder — swap in an early wireframe">
+                    </div>
+                    <figcaption>[Add: early Figma wireframe]</figcaption>
+                </figure>
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-dreamscape-prototype.svg" alt="Placeholder — swap in a Snoozy concept sketch">
+                    </div>
+                    <figcaption>[Add: Snoozy concept sketch (Spline)]</figcaption>
+                </figure>
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-dreamscape-wide.svg" alt="Placeholder — swap in a glassmorphic UI iteration">
+                    </div>
+                    <figcaption>[Add: glassmorphic UI iteration]</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="case-chapter reveal">
+            <div class="case-chapter-header"><span class="num">05</span><h2>Final Solution</h2></div>
+            <p>See the work in full — the interactive prototype, the pitch deck, and the research board it grew
+                from.</p>
+            <div class="case-mockup">
+                <img src="../images/case-dreamscape-wide.svg" alt="Placeholder — swap in key screens from the Figma prototype">
+            </div>
+            <div class="case-feature-split">
                 <div class="card">
-                    <h4>Figma</h4>
-                    <p>Designed the interface using a glassmorphic system: soft blurs, gradients, and layered
-                        transparency for depth.</p>
+                    <h3>Dream visualization</h3>
+                    <p>Converts REM sleep data into visual, textual, and interactive formats.</p>
                 </div>
                 <div class="card">
-                    <h4>Spline</h4>
-                    <p>Created the 3D visual elements, including Snoozy, the AI companion who guides users through
-                        their dream recordings.</p>
+                    <h3>Content filtering</h3>
+                    <p>Screens potentially distressing content before it's shown to the user.</p>
+                </div>
+                <div class="card">
+                    <h3>Snoozy, the AI companion</h3>
+                    <p>Guides users through reviewing and reflecting on their dream recordings.</p>
+                </div>
+            </div>
+            <div class="case-links">
+                <a class="btn" href="https://www.figma.com/proto/tGSuZnt90sJURlK7vrsUot/TheApp?page-id=0%3A1&node-id=195-44&m=draw&scaling=scale-down&content-scaling=fixed&starting-point-node-id=220%3A484&t=al7d6f4lJZmUnPwI-1" target="_blank" rel="noopener">View Prototype ✦</a>
+                <a href="https://www.figma.com/slides/T82kmCIE6atAVeX7BgOY8l/DreamScape?node-id=1-311&t=cNRLU24Pud1xGSB0-1" target="_blank" rel="noopener">View Presentation</a>
+                <a href="https://www.figma.com/board/hyp6nlV7BqqQg6ZqCKtqlp/Planning?node-id=0-1&t=Ye2wFCF2TyRbEtIe-1" target="_blank" rel="noopener">Research &amp; Planning Board</a>
+            </div>
+        </section>
+
+        <section class="case-chapter case-chapter--tint reveal">
+            <div class="case-chapter-header"><span class="num">06</span><h2>Results</h2></div>
+            <p class="tbd">This was a 24-hour designathon concept rather than a shipped product, so there's no real
+                usage data to report yet — these are the metrics we'd want to track if it were built and tested.</p>
+            <div class="case-impact-grid">
+                <div>
+                    <div class="num"><span class="tbd">[TBD]</span></div>
+                    <div class="label">Self-reported reflection value</div>
+                </div>
+                <div>
+                    <div class="num"><span class="tbd">[TBD]</span></div>
+                    <div class="label">Trauma-safety flag accuracy</div>
+                </div>
+                <div>
+                    <div class="num"><span class="tbd">[TBD]</span></div>
+                    <div class="label">Judge/audience reception score</div>
                 </div>
             </div>
         </section>
 
-        <section class="case-section reveal">
-            <h2>What I Learned</h2>
+        <section class="case-chapter reveal">
+            <div class="case-chapter-header"><span class="num">07</span><h2>Reflection</h2></div>
             <ul class="case-list">
                 <li>Balancing speculative design with realism was crucial for keeping the concept engaging rather
                     than far-fetched</li>
@@ -184,22 +256,6 @@
                 <li>Learned how much storytelling does to ground an experimental idea, making it feel emotionally
                     resonant and user-centered</li>
             </ul>
-        </section>
-
-        <section class="case-section reveal case-section--wide">
-            <h2>Final Prototype &amp; Presentation</h2>
-            <p>See the work in full — the interactive prototype, the pitch deck, and the research board it grew
-                from.</p>
-            <figure class="case-visual">
-                <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="currentColor" /></svg>
-                <p>Visual placeholder — add key screens from the Figma prototype here</p>
-                <figcaption>[Add: glassmorphic UI screens + Snoozy concept art]</figcaption>
-            </figure>
-            <div class="case-links">
-                <a class="btn" href="https://www.figma.com/proto/tGSuZnt90sJURlK7vrsUot/TheApp?page-id=0%3A1&node-id=195-44&m=draw&scaling=scale-down&content-scaling=fixed&starting-point-node-id=220%3A484&t=al7d6f4lJZmUnPwI-1" target="_blank" rel="noopener">View Prototype ✦</a>
-                <a href="https://www.figma.com/slides/T82kmCIE6atAVeX7BgOY8l/DreamScape?node-id=1-311&t=cNRLU24Pud1xGSB0-1" target="_blank" rel="noopener">View Presentation</a>
-                <a href="https://www.figma.com/board/hyp6nlV7BqqQg6ZqCKtqlp/Planning?node-id=0-1&t=Ye2wFCF2TyRbEtIe-1" target="_blank" rel="noopener">Research &amp; Planning Board</a>
-            </div>
         </section>
 
         <nav class="case-prevnext" aria-label="More case studies">
