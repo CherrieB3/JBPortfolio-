@@ -391,15 +391,15 @@
             <div class="playground-tabs" role="tablist" aria-label="Playground views">
                 <button type="button" class="playground-tab is-active" role="tab" id="tab-experiments"
                     aria-selected="true" aria-controls="panel-experiments">Experiments</button>
-                <button type="button" class="playground-tab" role="tab" id="tab-freedraw" aria-selected="false"
-                    aria-controls="panel-freedraw" tabindex="-1">Free Draw</button>
+                <button type="button" class="playground-tab" role="tab" id="tab-doodlemail" aria-selected="false"
+                    aria-controls="panel-doodlemail" tabindex="-1">Doodle Mail</button>
             </div>
 
             <div id="panel-experiments" class="playground-panel" role="tabpanel" aria-labelledby="tab-experiments">
                 <p class="eyebrow" style="margin-bottom:16px;">SCROLL FOR MORE ✦</p>
                 <div class="playground-deck reveal-fade" tabindex="0" aria-label="Experiment tiles, scroll horizontally">
                     <div class="sticker-card sticker-card--wide">
-                        <h3>Rabbit doodles</h3>
+                        <h3>Animations</h3>
                         <p class="tbd">[TBD]</p>
                     </div>
                     <div class="sticker-card">
@@ -413,8 +413,8 @@
                 </div>
             </div>
 
-            <div id="panel-freedraw" class="playground-panel freedraw" role="tabpanel"
-                aria-labelledby="tab-freedraw" hidden>
+            <div id="panel-doodlemail" class="playground-panel doodlemail" role="tabpanel"
+                aria-labelledby="tab-doodlemail" hidden>
 
                 <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#eddb9c" />
@@ -422,20 +422,33 @@
                 <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#a8e0cf" />
                 </svg>
+                <svg class="hero-orbit doodlemail-orbit" viewBox="0 0 240 240" aria-hidden="true">
+                    <circle class="orbit-ring" cx="120" cy="120" r="95" stroke="#f0a8c9" />
+                    <g class="orbit-spin"><circle cx="215" cy="120" r="6" fill="#d6c6f0" /></g>
+                </svg>
 
-                <p class="eyebrow">JUST A LITTLE SPACE TO DOODLE ✦</p>
+                <!-- A little envelope, floating and gently spinning — "a magical
+                     mailbox floating in space" is the whole idea of this feature,
+                     so it gets its own small illustration rather than just an icon. -->
+                <svg class="mail-envelope" viewBox="0 0 64 48" fill="none" aria-hidden="true">
+                    <rect x="2" y="2" width="60" height="44" rx="8" fill="#fffbf4" stroke="#d6c6f0" stroke-width="3" />
+                    <path d="M4,8 L32,30 L60,8" stroke="#f0a8c9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#eddb9c" transform="translate(44,-10) scale(.5)" />
+                </svg>
+
+                <p class="eyebrow">Send me a doodle! ✦</p>
                 <p style="color:var(--text-dim); max-width:56ch;">
-                    Grab a color and draw whatever's on your mind — no pressure,
-                    nothing saved, just a little canvas to play on.
+                    Grab a color, draw whatever's on your mind, and send it straight to my
+                    inbox — a little note for my guestbook, drawn instead of typed!
                 </p>
 
                 <div class="doodle-paper">
                     <span class="tape tape-a" aria-hidden="true"></span>
                     <span class="tape tape-b" aria-hidden="true"></span>
                     <canvas id="doodleCanvas" class="doodle-canvas"
-                        aria-label="Drawing canvas — draw with your mouse, trackpad, or finger"
+                        aria-label="Doodle drawing canvas — draw with your mouse, trackpad, or finger"
                         role="img">Your browser doesn't support the drawing canvas — try a more
-                        recent browser to draw here.</canvas>
+                        recent browser to use Doodle Mail.</canvas>
                 </div>
 
                 <div class="doodle-toolbar" role="group" aria-label="Drawing tools">
@@ -451,6 +464,36 @@
                     <button type="button" id="doodleUndo" class="doodle-tool-btn" disabled>↩ Undo</button>
                     <button type="button" id="doodleClear" class="doodle-tool-btn">Clear</button>
                 </div>
+
+                <form class="contact-form doodlemail-form" id="doodlemailForm">
+                    <p class="eyebrow" style="margin-top:0;">OPTIONAL — SO I KNOW WHO SAID HI</p>
+                    <div class="doodlemail-row">
+                        <div>
+                            <label for="doodleName">Name <span class="tbd">(optional)</span></label>
+                            <input type="text" id="doodleName" name="name" autocomplete="name">
+                        </div>
+                        <div>
+                            <label for="doodleEmail">Email <span class="tbd">(optional)</span></label>
+                            <input type="email" id="doodleEmail" name="email" autocomplete="email">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="doodleMessage">Message <span class="tbd">(optional)</span></label>
+                        <textarea id="doodleMessage" name="message" rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn doodle-send-btn" id="doodleSendBtn">
+                        <span class="doodle-send-label">Send Me Your Doodle</span>
+                    </button>
+
+                    <p class="doodlemail-status" id="doodlemailStatus" role="status" aria-live="polite"></p>
+
+                    <p class="tbd doodlemail-note">
+                        [Doodle sending uses EmailJS and needs Jasmine's own account keys —
+                        see EMAILJS_CONFIG in js/main.js — before this can actually deliver
+                        doodles to an inbox.]
+                    </p>
+                </form>
             </div>
         </section>
 
@@ -471,7 +514,7 @@
             <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#b3dcf0" /></svg>
             <svg class="mini-spark spark-c" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#eddb9c" /></svg>
             <h2 class="reveal">Let's talk</h2>
-            <p class="eyebrow" style="margin-top:14px;">PROJECTS, COLLABORATIONS, OR JUST TO SAY HI</p>
+            <p class="eyebrow" style="margin-top:14px;">Since you made it all the way here, why not send a message!</p>
         </section>
 
         <section class="contact-body">
@@ -479,11 +522,11 @@
                 <div class="contact-direct">
                     <a href="mailto:jflower2k6@gmail.com">✉ jflower2k6@gmail.com</a>
                     <a href="https://www.linkedin.com/in/jasmine-b-1a2929231/" target="_blank" rel="noopener">LinkedIn</a>
-                    <a href="#" class="tbd">Behance / Dribbble — [TBD]</a>
+                    <a href="#" class="tbd">Resume</a>
                 </div>
 
                 <div>
-                    <form class="contact-form" id="contactForm" action="https://formspree.io/f/xrpgwbwo" method="POST" aria-label="Contact form">
+                    <form class="contact-form" aria-label="Contact form">
                         <div>
                             <label for="name">Name</label>
                             <input type="text" id="name" name="name" autocomplete="name" required>
@@ -496,8 +539,10 @@
                             <label for="message">Message</label>
                             <textarea id="message" name="message" rows="5" required></textarea>
                         </div>
-                        <button class="btn" type="submit" id="contactSendBtn">Send it ✦</button>
-                        <p class="contact-form-status" id="contactFormStatus" role="status" aria-live="polite"></p>
+                        <button class="btn" type="submit">Send it ✦</button>
+                        <p class="tbd" style="font-size:.85rem;">
+                            [TBD: This form will use EmailJS to send messages to Jasmine's inbox. See EMAILJS_CONFIG in js/main.js.]
+                        </p>
                     </form>
                 </div>
             </div>
@@ -566,7 +611,7 @@
             </g>
         </svg>
 
-        <h2 class="hand footer-title reveal">Let's build something <span class="gradient">amazing</span></h2>
+        <h2 class="hand footer-title reveal"> <span class="gradient">Thanks for stopping by!</span></h2>
         <p class="eyebrow" style="margin-top:20px;">GET IN TOUCH</p>
         <a class="footer-email" href="mailto:jflower2k6@gmail.com">jflower2k6@gmail.com</a>
         <div class="socials">
