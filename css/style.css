@@ -378,13 +378,17 @@ h3 { font-family: 'Baloo 2', cursive; font-weight: 600; line-height: 1.15; }
    sizing/positioning by the image's own box alone leaves a visually large
    gap under "Hi! I'm" — the negative margin-top pulls the art up so the
    *letters* sit close under "Hi! I'm" instead of the empty swoosh space
-   doing that job. Sized in em so both stay proportional as the hero
-   heading's own responsive clamp() scales. */
+   doing that job. A first pass at this used -.55em, which read as too
+   much overlap; Jasmine asked for it dialed back to just a slight
+   overlap, paired with nudging "Hi! I'm" itself right via text-indent on
+   .hero-text h1 — re-balance both together if this needs another pass,
+   rather than just one or the other. Sized in em so both stay
+   proportional as the hero heading's own responsive clamp() scales. */
 .hero-name-mark {
   display: block;
   height: 2.2em;
   width: auto;
-  margin-top: -.55em;
+  margin-top: -.25em;
 }
 
 /* Single-hue accents for small emphasis words — an alternative to reaching
@@ -551,6 +555,34 @@ a { color: inherit; }
     0% { transform: translate(0, 0) scale(1); opacity: 1; }
     100% { transform: translate(var(--dx), var(--dy)) scale(.25); opacity: 0; }
   }
+}
+
+/* =========================================================
+   Skip link — WCAG 2.4.1 (Bypass Blocks). The nav repeats on every page
+   and every page load, so without this a keyboard/screen-reader user has
+   to tab through all 5 nav links before reaching real content every
+   single time. Off-screen until focused, then jumps above even the fixed
+   nav (z-index 1000 vs the nav's 200) so it's never hidden behind it.
+   Solid fill + border, matching the site's own "cards are bordered, not
+   glass" rule, so it reads clearly against whatever's behind it. */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 1000;
+  background: var(--nav-bg);
+  color: var(--text);
+  border: 1.5px solid var(--c-blue);
+  border-radius: var(--radius-sm);
+  padding: 12px 20px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top .2s ease;
+}
+
+.skip-link:focus {
+  top: 16px;
 }
 
 /* =========================================================
@@ -878,7 +910,12 @@ section { padding: 60px 8% 100px; position: relative; }
    feeling to avoid; an editorial page never gives every block the same
    air around it. */
 section[aria-label="Project galaxy"] { padding: 10px 8% 170px; }
-section[aria-label="Playground content"] { padding: 4px 8% 70px; }
+/* Top padding bumped from an original 4px — that tiny value only worked
+   because the now-removed .playground-tabs (a 46px-tall pill row with its
+   own 8px/36px top/bottom margin) supplied the real gap under the
+   Playground heading above (which sets its own padding-bottom:0). With
+   the tabs gone, this section's own padding has to carry that gap. */
+section[aria-label="Playground content"] { padding: 48px 8% 70px; }
 .contact-body { padding: 34px 8% 150px; }
 
 /* Running-head margin label — an editorial-magazine device (the sideways
@@ -1112,7 +1149,11 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 .hero-text { max-width: 620px; position: relative; z-index: 1; }
-.hero-text h1 { font-size: clamp(3.2rem, 7.5vw, 6rem); margin-bottom: 22px; letter-spacing: -.01em; }
+/* text-indent only touches the h1's first line ("Hi! I'm") — the name
+   wordmark below it is its own block box, on its own line, so this
+   doesn't shift it too. Nudges "Hi! I'm" right so the wordmark's
+   overlap with it (see .hero-name-mark) reads as slight, not heavy. */
+.hero-text h1 { font-size: clamp(3.2rem, 7.5vw, 6rem); margin-bottom: 22px; letter-spacing: -.01em; text-indent: .2em; }
 .hero-text h2 { font-family: 'Inter', sans-serif; font-weight: 400; color: var(--text-dim); margin-bottom: 36px; font-size: 1.2rem; line-height: 1.65; max-width: 520px; }
 
 /* Hero content is above the fold and visible on first paint, so it gets a
@@ -1330,8 +1371,16 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   z-index: 5;
 }
 
-.planet-card h4 { font-family: 'Baloo 2', cursive; margin-bottom: 6px; }
+/* h3, not h4 — "About" (h2) has no h3 between it and these tooltips in
+   the DOM, so h4 here was a skipped heading level (WCAG 1.3.1). Matches
+   the level already used by .doodles-fallback's equivalent content. */
+.planet-card h3 { font-family: 'Baloo 2', cursive; margin-bottom: 6px; }
 .planet-card p { font-size: .92rem; color: #3a3660; }
+/* .tbd's sitewide color (--text-mute) is tuned for the dark page
+   background (6.5:1 there) — on .planet-card's light --paper surface it
+   drops to ~2.5:1 and fails AA. This override keeps the same "muted
+   placeholder" feel at an equivalent 6.5:1 against --paper instead. */
+.planet-card .tbd { color: #5c5780; }
 .planet-card code, .doodles-fallback code {
   font-family: monospace;
   font-size: .85em;
@@ -1413,6 +1462,23 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   /* Magnetic tilt toward the cursor (initTiltCards() in js/main.js). */
   --tilt-x: 0deg;
   --tilt-y: 0deg;
+  /* Each tile is a plain <a> to its own playground/*.html placeholder
+     page (same "plain link, sitewide view-transition just works" pattern
+     as .project-visual) — reset the anchor defaults so it still reads as
+     a card, not a link. */
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sticker-view {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: var(--c-pink);
 }
 
 @media (max-width: 560px) {
@@ -1450,154 +1516,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   to { stroke-dashoffset: 0; }
 }
 
-/* =========================================================
-   Playground tabs + Free Draw — a small local tab pattern scoped to
-   #playground (see initPlaygroundTabs() in js/main.js), and a simple
-   drawing space built on HTML5 Canvas (see initFreeDraw()).
-   ========================================================= */
-
-.playground-tabs {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: 8px 0 36px;
-}
-
-.playground-tab {
-  font-family: 'Baloo 2', cursive;
-  font-weight: 700;
-  font-size: .95rem;
-  color: var(--text-dim);
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 999px;
-  padding: 10px 22px;
-  cursor: pointer;
-  transition: transform .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease;
-}
-
-.playground-tab:hover { color: var(--text); transform: translateY(-2px); }
-
-.playground-tab.is-active {
-  color: white;
-  background: var(--d-blue);
-  box-shadow: 0 10px 26px -10px rgba(47, 100, 136, .35);
-}
-
-.freedraw { position: relative; max-width: 720px; }
-
-/* A page taped into a space journal — dot-grid paper, a slight rotate, a
-   couple of "tape" strips at the corners, and a rainbow strip underneath
-   nodding to the site's signature gradient without inventing new motifs. */
-.doodle-paper {
-  position: relative;
-  background: var(--paper);
-  border-radius: 6px;
-  padding: 14px;
-  transform: rotate(-1.2deg);
-  box-shadow: 0 30px 60px -20px rgba(61, 51, 79, .55), 0 2px 0 rgba(61, 51, 79, .1);
-  margin: 22px 0 30px;
-  background-image:
-    linear-gradient(rgba(16, 12, 38, .06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 12, 38, .06) 1px, transparent 1px);
-  background-size: 26px 26px;
-}
-
-.doodle-paper::after {
-  content: '';
-  position: absolute;
-  left: 14px; right: 14px; bottom: -6px;
-  height: 4px;
-  border-radius: 4px;
-  background: var(--gradient-rainbow);
-  opacity: .8;
-}
-
-.doodle-paper .tape {
-  position: absolute;
-  top: -14px;
-  width: 74px; height: 26px;
-  background: rgba(255, 255, 255, .55);
-  border: 1px solid rgba(255, 255, 255, .7);
-  box-shadow: 0 4px 10px rgba(61, 51, 79, .25);
-}
-
-.doodle-paper .tape-a { left: 6%; transform: rotate(-8deg); }
-.doodle-paper .tape-b { right: 6%; transform: rotate(6deg); }
-
-.doodle-canvas {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 3px;
-  /* Drawing surfaces don't offer a native pointer to hide behind, so the
-     custom cursor is deliberately let through here (rather than staying
-     invisible) — a visible crosshair over blank paper. */
-  cursor: crosshair;
-  touch-action: none; /* keep touch drawing from also scrolling the page */
-}
-
-.doodle-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 28px;
-}
-
-.doodle-tool {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 999px;
-  padding: 8px 14px;
-}
-
-.doodle-tool-label {
-  font-size: .78rem;
-  color: var(--text-mute);
-  letter-spacing: .5px;
-  text-transform: uppercase;
-}
-
-.doodle-tool input[type="color"] {
-  width: 26px; height: 26px;
-  border: none;
-  border-radius: 50%;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-/* Tidy the native color-swatch chrome so it reads as a plain round swatch
-   matching the rest of the pill, not a browser widget. */
-.doodle-tool input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-.doodle-tool input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
-.doodle-tool input[type="color"]::-moz-color-swatch { border: none; border-radius: 50%; }
-
-.doodle-tool input[type="range"] { accent-color: var(--c-pink); cursor: pointer; }
-
-.doodle-tool-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 999px;
-  padding: 9px 16px;
-  color: var(--text-dim);
-  font-family: 'Inter', sans-serif;
-  font-size: .9rem;
-  cursor: pointer;
-  transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
-}
-
-.doodle-tool-btn:hover { color: var(--text); transform: translateY(-2px); border-color: rgba(255, 255, 255, .25); }
-.doodle-tool-btn.is-active { background: var(--d-red); color: white; border-color: var(--d-red); }
-.doodle-tool-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
-
 /* The hidden "type rabbit" easter egg — see initRabbitEgg()/hopRabbit()
    in js/main.js. A silhouette bounds across the screen left to right in a
    few arcs, like a real hop, then fades out and removes itself. */
@@ -1629,9 +1547,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   .rabbit-hop { display: none; }
 }
 
-@media (max-width: 700px) {
-  .doodle-paper .tape { width: 54px; height: 20px; }
-}
 
 /* =========================================================
    Projects — a stacked list of "project spreads" (a bordered info card

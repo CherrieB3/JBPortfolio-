@@ -19,9 +19,11 @@ just its content.
   Playground/Contact as one continuous page with anchor sections
   (`#about`, `#projects`, `#playground`, `#contact`); nav links scroll to
   them instead of loading separate URLs (see "Single-page navigation"
-  below). `case-studies/*.html` are the exception — full project write-ups
-  stay as separate detail pages linked out from the Projects section, the
-  way a one-pager still needs somewhere to put real depth. Shared
+  below). `case-studies/*.html` and `playground/*.html` are the exception
+  — full project write-ups and Experiments-tile detail pages stay as
+  separate pages linked out from the Projects and Playground sections
+  respectively, the way a one-pager still needs somewhere to put real
+  depth. Shared
   `css/style.css` + `js/main.js`. No build step, no framework, no
   package.json — keep it that way unless a real need arises (see rule 3).
 - Fonts are self-hosted (`fonts/*.woff2`, declared in `css/style.css`), not
@@ -191,7 +193,25 @@ through them like flipping through a stack. Native CSS scroll-snap, no
 carousel library (rule 3) — trackpad, wheel, touch, and keyboard (the
 deck is `tabindex="0"`) all just work without JS. Limited to 3 placeholder
 tiles by request; extend by adding more `.sticker-card`s to the deck
-rather than reverting to a fixed grid.
+rather than reverting to a fixed grid. Each `.sticker-card` is a plain
+`<a>` to its own placeholder page under `playground/` (`animations.html`,
+`sketch-dump.html`, `color-studies.html`) — same "plain link, sitewide
+cross-document view transition just works" pattern as `.project-visual`
+in Projects, at Jasmine's request. `.sticker-card` picked up
+`display:block; text-decoration:none; color:inherit;` to still read as a
+card rather than a link, plus a small `.sticker-view` "View →" line so
+the tile's clickability is legible at a glance rather than relying on the
+hover-lift alone. Each `playground/*.html` page reuses the same nav/
+footer/view-transition boilerplate as `case-studies/*.html` (`data-page=
+"playground"` so the nav highlights correctly, `--case-accent` set to a
+rainbow token per page — teal for Animations, purple for Sketch Dump,
+gold for Color Studies) but deliberately skips the full 7-chapter
+case-study structure (Role/Timeline/Team/Tools etc. would be fabricated
+for a loose experiments category that isn't a project) — just a
+`.page-hero` title/hook and a single `.card` marked `[TBD]`/"Coming soon"
+explaining the page is a placeholder, per rule 6. Follow this same
+lightweight template (not the full case-study chapter system) for any
+other Playground sub-page.
 
 **Type weight scale** — `h1`/`.hand` 800, `h2` 700, `h3` 600 (all
 `Baloo 2`) — a real step down in weight per level, not one flat 700
@@ -379,7 +399,7 @@ stacked on top of the rest of the site's existing motion/decoration.
   blank line in some browsers) — and noticeably larger than the
   surrounding text (`height: 2.2em`, sized off the heading's own
   responsive `clamp()` font-size rather than a fixed pixel height) so it
-  reads as the focal point of the greeting. `margin-top: -.55em` pulls it
+  reads as the focal point of the greeting. `margin-top: -.25em` pulls it
   up toward "Hi! I'm": the source PNG's own canvas is roughly 36% dead
   space above the actual letterforms (the comet swoosh arcs well above
   "Jasmine" before the letters begin — measured directly off the file's
@@ -387,9 +407,15 @@ stacked on top of the rest of the site's existing motion/decoration.
   image's *box* sits close but the visible *letters* end up floating well
   below "Hi! I'm" with an oversized gap; the negative margin compensates
   for that dead space so the letters — not the empty swoosh area — are
-  what visually aligns with the line above. Re-measure that ratio before
-  changing `.hero-name-mark`'s height again, rather than reusing this
-  exact margin value at a different size. This whole treatment (own line,
+  what visually aligns with the line above. A first pass used `-.55em`,
+  which read as too much overlap; Jasmine asked for just a slight overlap
+  instead, so it was dialed back to `-.25em`, paired with `text-indent:
+  .2em` on `.hero-text h1` to nudge "Hi! I'm" itself right (that
+  text-indent only touches the h1's first line, so it doesn't also shift
+  the wordmark below it). Re-balance both together if this needs another
+  pass, not just the margin alone — and re-measure the dead-space ratio
+  before changing `.hero-name-mark`'s height again, rather than reusing
+  either value at a different size. This whole treatment (own line,
   sized up, pulled up to align) came out of a few rounds of Jasmine's
   direct feedback — earlier versions kept the name inline with "Hi! I'm"
   at a smaller size with a trailing spark glyph (`✦`) after it, both of
@@ -398,10 +424,10 @@ stacked on top of the rest of the site's existing motion/decoration.
 - **Nav color**: `var(--nav-bg)` (`#161233`, a smidge darker than
   `var(--bg)`) with light text (`var(--text)`, and the per-link accents
   use the `--c-*` soft/pastel tier) — **not** the light `--paper` surface
-  used elsewhere (planet-card tooltips, Free Draw's paper texture).
-  Those two are deliberately different surfaces now; don't merge the nav
-  back onto `--paper` or its text back onto `--ink`/`--d-*`, which were
-  calibrated for a light background. Below the nav, `.site-nav::after`
+  used elsewhere (planet-card tooltips). Those two are deliberately
+  different surfaces now; don't merge the nav back onto `--paper` or its
+  text back onto `--ink`/`--d-*`, which were calibrated for a light
+  background. Below the nav, `.site-nav::after`
   hangs a puffy scalloped fringe (same color as the nav, a repeating row
   of circles, not an SVG/raster asset) so the bottom edge reads as a
   cloud silhouette instead of a hard flat line — "make it look like
@@ -424,13 +450,16 @@ touch nav or section markup:
   It only activates if those section ids exist in the DOM, so it's a no-op
   elsewhere.
 
-`case-studies/*.html` are the one exception to "single page" — full project
-write-ups stay as separate pages linked from the Projects section (a
-one-pager still needs somewhere to put real depth). Their nav/footer/back
-links point at `../index.html#about` etc.; keep that pattern for any new
-case-study page. Their own `initNav()` still uses the older
-`body[data-page]` static match (they set `data-page="projects"`), since
-scroll-spying doesn't apply to a page that isn't the anchor-section one.
+`case-studies/*.html` and `playground/*.html` are the exceptions to
+"single page" — full project write-ups and Experiments-tile detail pages
+stay as separate pages linked from the Projects and Playground sections
+respectively (a one-pager still needs somewhere to put real depth). Their
+nav/footer/back links point at `../index.html#about` etc. (case studies)
+or `../index.html#playground` (playground pages); keep that pattern for
+any new page in either set. Their own `initNav()` still uses the older
+`body[data-page]` static match (case studies set `data-page="projects"`,
+playground pages set `data-page="playground"`), since scroll-spying
+doesn't apply to a page that isn't the anchor-section one.
 
 ## Comet trail
 
@@ -474,7 +503,34 @@ drifting out of sync.
    contrast (4.5:1) against its background; large display text meets AA
    large-text contrast (3:1). Every `<img>` needs meaningful `alt` text
    (decorative images get `alt=""`). Use semantic HTML (`nav`, `section`,
-   `footer`, heading levels in order) — don't reach for `div`-soup.
+   `footer`, heading levels in order) — don't reach for `div`-soup. A full
+   pass found and fixed several real violations of this rule (Jasmine
+   asked "is my site ADA compliant" — in practice ADA compliance is
+   measured against WCAG, so this is that audit): (a) the About section's
+   `.planet-card` hover/focus tooltips used `<h4>` directly under the
+   "About" `<h2>` with no `<h3>` between them — changed to `<h3>` to match
+   the level `.doodles-fallback` already correctly used for the same
+   content; (b) `.tbd`'s sitewide color (`--text-mute`) is calibrated for
+   the dark page background (6.5:1 there) but dropped to ~2.5:1 inside
+   `.planet-card`'s light `--paper` surface — added a scoped
+   `.planet-card .tbd` override (`#5c5780`) landing at an equivalent
+   ~6.5:1 against paper; any other spot that puts `.tbd` on a light/paper
+   surface needs the same kind of override, not the bare sitewide color;
+   (c) the main contact form (`#contact`) was missing `id="contactForm"`,
+   an `action`, and the `#contactFormStatus` element entirely, so
+   `initContactForm()` in `js/main.js` could never find and wire it up —
+   it was silently submitting nowhere. Fixed with `id="contactForm"`,
+   `action="https://formspree.io/f/xrpgwbwo"`, `id="contactSendBtn"`, and
+   `<p class="contact-form-status" id="contactFormStatus" role="status"
+   aria-live="polite">` in place of a stale, inaccurate "[TBD: uses
+   EmailJS]" note — don't reintroduce that note, the form is real now;
+   (d) added a `.skip-link` ("Skip to content", WCAG 2.4.1 Bypass Blocks)
+   as the first element after `<body>` on all 8 pages (`index.html` + all
+   4 `case-studies/*.html` + all 3 `playground/*.html`), jumping to a new
+   `id="main-content"` on each page's `<main>` — off-screen (`top:-100px`)
+   until `:focus` (`top:16px`), `z-index:1000` so it clears the fixed
+   nav. Any new top-level page needs this same skip-link + `id=
+   "main-content"` pair, not just the pages that existed at audit time.
 2. **Mobile-first responsiveness.** Any new page or section must be checked
    at mobile widths (~375px) before being called done; add media queries
    rather than letting content overflow or truncate. The About section's
@@ -485,10 +541,13 @@ drifting out of sync.
 3. **No dependency creep.** Don't add a CSS/JS framework, icon library, or
    build tool to solve a problem that plain CSS/HTML already solves. If a
    real need arises (e.g. multi-page routing, a CMS for case studies),
-   surface the tradeoff to Jasmine before adding it. (Playground's
-   drawing space, Free Draw, briefly depended on EmailJS + Imgur to email
-   drawings to Jasmine — that dependency was removed along with the
-   send-to-email feature itself; see the Free Draw entry below for why.)
+   surface the tradeoff to Jasmine before adding it. (Playground once had
+   a second tab, a canvas drawing space, that itself replaced an earlier
+   "Doodle Mail" feature which briefly depended on EmailJS + Imgur to
+   email drawings to Jasmine — see the "Playground" entry further down
+   for that whole history. Both the email dependency and, later, the
+   drawing space itself were removed; Playground is back to a single
+   Experiments deck with no tabs.)
 4. **Stay on-system.** New colors, fonts, radii, or motion patterns should
    be justified against the design system above, not introduced ad hoc.
    If a new page genuinely needs to break the system (e.g. a distinct
@@ -519,11 +578,16 @@ drifting out of sync.
   a bordered info card (title, one-line summary, tag pills, CTA) paired
   with a tilted photo, every project fully visible without an
   interaction, each linking out to a full write-up; see `case-studies/`
-  below and the entry further down for how it works) → `#playground` (two
-  tabs: "Experiments", a horizontal scroll-snap deck of loose-experiment
-  tiles — explicitly allowed to feel rougher than the rest of the site,
-  see rule 4; content is placeholder — and "Free Draw", a real
-  HTML5-Canvas drawing space, see the entry below) → `#contact`
+  below and the entry further down for how it works) → `#playground` (a
+  single horizontal scroll-snap deck of loose-experiment tiles,
+  "Experiments" — explicitly allowed to feel rougher than the rest of the
+  site, see rule 4; content is placeholder, each tile linking to its own
+  `playground/*.html` page, see the entry below. Playground used to have
+  a second tab, "Free Draw," a real HTML5-Canvas drawing space — removed
+  at Jasmine's explicit request; see its entry further down for the full
+  history. Don't reintroduce the tab UI for a single remaining panel if
+  Playground ever grows a second thing again — reconsider from scratch
+  whether tabs are still the right pattern) → `#contact`
   (direct links + a contact form wired to Jasmine's own Formspree endpoint,
   see the entry below; LinkedIn is now a real link, Behance/Dribbble are
   still `[TBD]` — Jasmine's previous portfolio didn't expose them in a
@@ -784,35 +848,38 @@ drifting out of sync.
   which cuts off the screen's header/title — center-crop is fine for
   ordinary photography, not for UI screenshots where the top/leading edge
   matters.
-- **Free Draw** (`#panel-freedraw` in `index.html`, `initFreeDraw()` in
-  `js/main.js`) — a simple, no-strings-attached drawing space on
-  Playground's second tab: color picker, brush size, eraser, undo, clear,
-  pointer-event drawing so mouse/trackpad/touch all work. Fully
-  client-side and ephemeral — nothing is saved or sent anywhere; the
-  drawing exists only in the tab for as long as it's open.
+- **Free Draw (removed)** — Playground used to have a second tab, a
+  simple no-strings-attached HTML5-Canvas drawing space (color picker,
+  brush size, eraser, undo, clear), before Jasmine asked for the whole
+  tab removed. Playground is back to just the single "Experiments" deck
+  with no tab UI (a single-tab tablist wasn't meaningful, so the
+  `role="tablist"`/`.playground-tabs` markup and `initPlaygroundTabs()`/
+  `initFreeDraw()` in `js/main.js` were removed too, not just hidden) —
+  don't reintroduce any of that scaffolding for a single panel.
 
-  This used to be **Doodle Mail**, a draw-and-email-it-to-Jasmine
-  guestbook. It was removed — not just descoped, actually torn out —
-  after a real, hands-on attempt to wire it up ran into a wall worth
-  remembering if anything like it comes up again: **every free-tier path
-  for getting a browser-drawn image into an email hit a dead end.**
-  EmailJS (the send-from-the-browser service used) hard-caps combined
-  template variables at 50KB, so a real canvas PNG never fit. Compressing
-  it down and embedding it as `<img src="data:...">` technically fit, but
-  Gmail silently strips inline data-URI images regardless of size — so
-  nothing showed up, with no error to debug. Real email attachments would
-  have sidestepped that, but both EmailJS's and Formspree's attachment
-  features are paywalled on their free plans (confirmed directly against
-  each service's own docs/UI, not assumed). Routing the image through
-  Imgur's free anonymous upload API and emailing a real image URL instead
-  of embedding one *did* work end-to-end — but at that point, given how
-  much infrastructure (EmailJS + Imgur, two API keys, a compression step)
-  it took just to email a doodle, Jasmine's call was to drop the
-  send-to-email idea entirely and keep only the actually-fun part: the
-  canvas. **If a future request wants doodles to reach Jasmine again,
-  don't restart from EmailJS** — re-read this note first, since the
-  constraint is the free tier landscape itself, not a bug in any one
-  attempt.
+  Before that removal, Free Draw itself had replaced an even earlier
+  feature, **Doodle Mail**, a draw-and-email-it-to-Jasmine guestbook. That
+  was torn out — not just descoped — after a real, hands-on attempt to
+  wire it up ran into a wall worth remembering if anything like it comes
+  up again: **every free-tier path for getting a browser-drawn image into
+  an email hit a dead end.** EmailJS (the send-from-the-browser service
+  used) hard-caps combined template variables at 50KB, so a real canvas
+  PNG never fit. Compressing it down and embedding it as `<img
+  src="data:...">` technically fit, but Gmail silently strips inline
+  data-URI images regardless of size — so nothing showed up, with no
+  error to debug. Real email attachments would have sidestepped that, but
+  both EmailJS's and Formspree's attachment features are paywalled on
+  their free plans (confirmed directly against each service's own
+  docs/UI, not assumed). Routing the image through Imgur's free anonymous
+  upload API and emailing a real image URL instead of embedding one *did*
+  work end-to-end — but at that point, given how much infrastructure
+  (EmailJS + Imgur, two API keys, a compression step) it took just to
+  email a doodle, Jasmine's call was to drop the send-to-email idea
+  entirely and keep only the actually-fun part: the canvas — which she
+  later had removed too, per above. **If a future request wants doodles
+  to reach Jasmine again, don't restart from EmailJS** — re-read this
+  note first, since the constraint is the free tier landscape itself, not
+  a bug in any one attempt.
 - **Projects list** (`class="projects-list"` in `index.html`'s
   `#projects`, pure HTML/CSS — no JS driving it) — the Projects section's
   content: all 4 projects stacked vertically as `.project-spread`s, each
@@ -871,16 +938,22 @@ drifting out of sync.
   Formspree's default "thanks" page. No daily-limit counter here (unlike
   the old Doodle Mail) — Formspree's own free-tier submission cap is the
   real abuse guard for this form.
+- `playground/` — one placeholder page per Experiments tile
+  (`animations.html`, `sketch-dump.html`, `color-studies.html`), linked
+  from `.sticker-card` in `index.html`'s Experiments deck. See the
+  Experiments-tiles entry above for the template these follow (shared
+  nav/footer, no full case-study chapter structure).
 - `css/style.css` — the entire design system and every component's styles.
 - `js/main.js` — nav toggle/scrollspy active-link logic, the comet trail,
-  starfield generation, the Playground tabs, Free Draw, and the contact
-  form.
+  starfield generation, and the contact form.
 - `README.md` — one-line project description.
 - Remaining placeholder content: the About section's sketchbook doodle art
   (each should become a drawing of a personal object) and fun-fact
   captions (each a fun fact about Jasmine tied to that object — some
   already filled in, see the markup), and the Experiments tab of
-  Playground — see rule 6.
+  Playground — its 3 tiles now link out to real `playground/*.html`
+  pages (see above), but those pages' actual content is still `[TBD]` —
+  see rule 6.
 
 ## Available skills
 

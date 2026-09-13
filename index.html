@@ -10,6 +10,7 @@
 </head>
 
 <body data-page="home" id="top">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="comet-trail" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg" focusable="false">
             <defs>
@@ -84,7 +85,7 @@
         <div class="nav-underline" aria-hidden="true"></div>
     </header>
 
-    <main>
+    <main id="main-content">
         <section class="hero">
             <!-- Soft drifting clouds — slow, low-contrast, layered behind
                  everything else in the hero. Plain rounded shapes rather than a
@@ -210,7 +211,7 @@
                     <img src="images/doodle-1.svg" alt="">
                 </button>
                 <div class="planet-card" style="top:2%; left:13%;">
-                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <h3><span class="tbd">[TBD: object]</span></h3>
                     <p><span class="tbd">[TBD: I've been learning to sew!]</span></p>
                 </div>
 
@@ -218,7 +219,7 @@
                     <img src="images/doodle-2.svg" alt="">
                 </button>
                 <div class="planet-card" style="top:64%; left:8%;">
-                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <h3><span class="tbd">[TBD: object]</span></h3>
                     <p><span class="tbd">[I'm mixed! I'm Tibetan and Indian!]</span></p>
                 </div>
 
@@ -226,7 +227,7 @@
                     <img src="images/doodle-3.svg" alt="">
                 </button>
                 <div class="planet-card" style="top:2%; left:56%;">
-                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <h3><span class="tbd">[TBD: object]</span></h3>
                     <p><span class="tbd">[I love to read horror novels and watch scary things!]</span></p>
                 </div>
 
@@ -234,7 +235,7 @@
                     <img src="images/doodle-4.svg" alt="">
                 </button>
                 <div class="planet-card" style="top:68%; left:58%;">
-                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <h3><span class="tbd">[TBD: object]</span></h3>
                     <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
 
@@ -242,7 +243,7 @@
                     <img src="images/doodle-5.svg" alt="">
                 </button>
                 <div class="planet-card" style="top:34%; left:66%;">
-                    <h4><span class="tbd">[TBD: object]</span></h4>
+                    <h3><span class="tbd">[TBD: object]</span></h3>
                     <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
                 </div>
             </div>
@@ -374,70 +375,23 @@
         </section>
 
         <section aria-label="Playground content">
-            <div class="playground-tabs" role="tablist" aria-label="Playground views">
-                <button type="button" class="playground-tab is-active" role="tab" id="tab-experiments"
-                    aria-selected="true" aria-controls="panel-experiments">Experiments</button>
-                <button type="button" class="playground-tab" role="tab" id="tab-freedraw" aria-selected="false"
-                    aria-controls="panel-freedraw" tabindex="-1">Free Draw</button>
-            </div>
-
-            <div id="panel-experiments" class="playground-panel" role="tabpanel" aria-labelledby="tab-experiments">
-                <p class="eyebrow" style="margin-bottom:16px;">SCROLL FOR MORE ✦</p>
-                <div class="playground-deck reveal-fade" tabindex="0" aria-label="Experiment tiles, scroll horizontally">
-                    <div class="sticker-card sticker-card--wide">
-                        <h3>Animations</h3>
-                        <p class="tbd">[TBD]</p>
-                    </div>
-                    <div class="sticker-card">
-                        <h3>Sketch dump</h3>
-                        <p class="tbd">[TBD]</p>
-                    </div>
-                    <div class="sticker-card">
-                        <h3>Color studies</h3>
-                        <p class="tbd">[TBD]</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="panel-freedraw" class="playground-panel" role="tabpanel"
-                aria-labelledby="tab-freedraw" hidden>
-
-                <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#f6e093" />
-                </svg>
-                <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#9fe9d3" />
-                </svg>
-
-                <p class="eyebrow">Free Draw ✦</p>
-                <p style="color:var(--text-dim); max-width:56ch;">
-                    A simple, no-strings-attached drawing space — grab a color and doodle
-                    whatever's on your mind. Nothing is saved or sent anywhere; the drawing
-                    only exists here for as long as this tab is open.
-                </p>
-
-                <div class="doodle-paper">
-                    <span class="tape tape-a" aria-hidden="true"></span>
-                    <span class="tape tape-b" aria-hidden="true"></span>
-                    <canvas id="doodleCanvas" class="doodle-canvas"
-                        aria-label="Drawing canvas — draw with your mouse, trackpad, or finger"
-                        role="img">Your browser doesn't support the drawing canvas — try a more
-                        recent browser to use Free Draw.</canvas>
-                </div>
-
-                <div class="doodle-toolbar" role="group" aria-label="Drawing tools">
-                    <label class="doodle-tool">
-                        <span class="doodle-tool-label">Color</span>
-                        <input type="color" id="doodleColor" value="#f8a0c8" aria-label="Brush color">
-                    </label>
-                    <label class="doodle-tool">
-                        <span class="doodle-tool-label">Brush</span>
-                        <input type="range" id="doodleSize" min="2" max="40" value="8" aria-label="Brush size">
-                    </label>
-                    <button type="button" id="doodleEraser" class="doodle-tool-btn" aria-pressed="false">Eraser</button>
-                    <button type="button" id="doodleUndo" class="doodle-tool-btn" disabled>↩ Undo</button>
-                    <button type="button" id="doodleClear" class="doodle-tool-btn">Clear</button>
-                </div>
+            <p class="eyebrow" style="margin-bottom:16px;">SCROLL FOR MORE ✦</p>
+            <div class="playground-deck reveal-fade" tabindex="0" aria-label="Experiment tiles, scroll horizontally">
+                <a class="sticker-card sticker-card--wide" href="playground/animations.html">
+                    <h3>Animations</h3>
+                    <p class="tbd">[TBD]</p>
+                    <span class="sticker-view">View →</span>
+                </a>
+                <a class="sticker-card" href="playground/sketch-dump.html">
+                    <h3>Sketch dump</h3>
+                    <p class="tbd">[TBD]</p>
+                    <span class="sticker-view">View →</span>
+                </a>
+                <a class="sticker-card" href="playground/color-studies.html">
+                    <h3>Color studies</h3>
+                    <p class="tbd">[TBD]</p>
+                    <span class="sticker-view">View →</span>
+                </a>
             </div>
         </section>
 
@@ -470,7 +424,7 @@
                 </div>
 
                 <div>
-                    <form class="contact-form" aria-label="Contact form">
+                    <form class="contact-form" id="contactForm" action="https://formspree.io/f/xrpgwbwo" aria-label="Contact form">
                         <div>
                             <label for="name">Name</label>
                             <input type="text" id="name" name="name" autocomplete="name" required>
@@ -483,10 +437,8 @@
                             <label for="message">Message</label>
                             <textarea id="message" name="message" rows="5" required></textarea>
                         </div>
-                        <button class="btn" type="submit">Send it ✦</button>
-                        <p class="tbd" style="font-size:.85rem;">
-                            [TBD: This form will use EmailJS to send messages to Jasmine's inbox. See EMAILJS_CONFIG in js/main.js.]
-                        </p>
+                        <button class="btn" type="submit" id="contactSendBtn">Send it ✦</button>
+                        <p class="contact-form-status" id="contactFormStatus" role="status" aria-live="polite"></p>
                     </form>
                 </div>
             </div>
