@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initPlaygroundTabs();
   initTiltCards();
   initRabbitEgg();
-  initProjectOrbit();
   initMascotToggle();
+  initContactForm();
 });
 
 // Clicking (or tapping/keyboard-activating) the hero mascot swaps its
@@ -71,6 +71,43 @@ function initMascotToggle() {
   });
 }
 
+// The Contact section's form, wired to Jasmine's Formspree endpoint.
+// Submitted via fetch rather than a plain HTML POST so a visitor gets an
+// inline success/error message and stays on the page, instead of being
+// bounced to Formspree's own default "thanks" page.
+function initContactForm() {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+
+  const sendBtn = document.getElementById('contactSendBtn');
+  const statusEl = document.getElementById('contactFormStatus');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    sendBtn.disabled = true;
+    statusEl.textContent = '';
+    statusEl.className = 'contact-form-status';
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      if (!response.ok) throw new Error('Form submission failed');
+      statusEl.textContent = "Thanks for reaching out — I'll get back to you soon!";
+      statusEl.className = 'contact-form-status is-success';
+      form.reset();
+    } catch (err) {
+      console.error('Contact form submission failed:', err);
+      statusEl.textContent = "That didn't go through — mind trying again, or emailing me directly?";
+      statusEl.className = 'contact-form-status is-error';
+    } finally {
+      sendBtn.disabled = false;
+    }
+  });
+}
+
 // A magnetic tilt toward the cursor on .card/.sticker-card — the card
 // leans as if it were a rigid plate pivoting under your pointer, on top
 // of (not instead of) each one's existing lift/scale hover. Only on real
@@ -97,190 +134,6 @@ function initTiltCards() {
   });
 }
 
-// Project Orbit — the Projects section's project navigation: a
-// drag/swipe/wheel/arrow-key/button carousel of circular "planet"
-// project cards, the active one centered and biggest. Originally built
-// as a secondary Playground-tab experiment alongside an always-visible
-// project grid, then moved here to replace that grid entirely (Jasmine's
-// call, made after seeing both and being told the tradeoff: only the
-// active project's full details are visible at once here, versus every
-// project being scannable without interaction in the old grid). Sizing/
-// position math is done here in JS (not pure CSS) because the active
-// planet's centering depends on every planet's *target* width at the new
-// index, which has to be computed before the resize transition runs, not
-// read from mid-transition layout.
-function initProjectOrbit() {
-  const deck = document.getElementById('orbitDeck');
-  const track = document.getElementById('orbitTrack');
-  if (!deck || !track) return;
-
-  const planets = Array.from(track.querySelectorAll('.orbit-planet'));
-  if (!planets.length) return;
-
-  const glow = deck.querySelector('.orbit-glow');
-  const dotsWrap = document.getElementById('orbitDots');
-  const typeEl = document.getElementById('orbitType');
-  const titleEl = document.getElementById('orbitTitle');
-  const roleEl = document.getElementById('orbitRole');
-  const summaryEl = document.getElementById('orbitSummary');
-  const tagsEl = document.getElementById('orbitTags');
-  const ctaEl = document.getElementById('orbitCta');
-  const prevBtn = deck.querySelector('.orbit-nav--prev');
-  const nextBtn = deck.querySelector('.orbit-nav--next');
-
-  let active = 0;
-  const GAP = () => (window.innerWidth <= 700 ? 28 : 56);
-  const SIZE_MAX = () => (window.innerWidth <= 700 ? 140 : 220);
-  const SIZE_STEP = () => (window.innerWidth <= 700 ? 34 : 60);
-  const SIZE_MIN = () => (window.innerWidth <= 700 ? 64 : 90);
-
-  function widthForDist(dist) {
-    return Math.max(SIZE_MIN(), SIZE_MAX() - dist * SIZE_STEP());
-  }
-
-  // Dots (built once — a small tab-like jump control, not part of the
-  // drag/scroll gesture set).
-  planets.forEach((p, i) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.setAttribute('aria-label', `Show ${p.dataset.title}`);
-    dot.addEventListener('click', () => goTo(i, { focus: false }));
-    dotsWrap.appendChild(dot);
-  });
-  const dots = Array.from(dotsWrap.children);
-
-  function render() {
-    const widths = planets.map((_, i) => widthForDist(Math.abs(i - active)));
-    let x = 0;
-    const centers = [];
-    widths.forEach((w, i) => {
-      centers.push(x + w / 2);
-      x += w + GAP();
-    });
-
-    planets.forEach((p, i) => {
-      const dist = Math.abs(i - active);
-      const w = widths[i];
-      p.style.setProperty('--dist', dist);
-      p.style.width = `${w}px`;
-      p.style.height = `${w}px`;
-      p.style.setProperty('--planet-accent', p.dataset.accent);
-      p.classList.toggle('is-active', i === active);
-      p.setAttribute('aria-selected', String(i === active));
-    });
-
-    const deckWidth = deck.getBoundingClientRect().width;
-    const offset = deckWidth / 2 - centers[active];
-    track.style.transform = `translateX(${offset}px)`;
-
-    dots.forEach((d, i) => d.classList.toggle('is-active', i === active));
-
-    const p = planets[active];
-    typeEl.textContent = p.dataset.type;
-    titleEl.textContent = p.dataset.title;
-    roleEl.textContent = p.dataset.role;
-    summaryEl.textContent = p.dataset.summary;
-    tagsEl.innerHTML = p.dataset.tags.split(',').map(t => `<span>${t.trim()}</span>`).join('');
-    ctaEl.textContent = '';
-    ctaEl.append(p.dataset.cta || 'View Case Study', Object.assign(document.createElement('span'), { className: 'arrow', textContent: ' →' }));
-    ctaEl.href = p.getAttribute('href');
-    if (p.hasAttribute('target')) { ctaEl.target = p.getAttribute('target'); ctaEl.rel = p.getAttribute('rel'); }
-    else { ctaEl.removeAttribute('target'); ctaEl.removeAttribute('rel'); }
-    if (glow) glow.style.backgroundColor = p.dataset.accent;
-  }
-
-  function goTo(i, { focus = true } = {}) {
-    active = Math.max(0, Math.min(planets.length - 1, i));
-    render();
-    if (focus) planets[active].focus({ preventScroll: true });
-  }
-
-  render();
-  window.addEventListener('resize', render);
-
-  prevBtn.addEventListener('click', () => goTo(active - 1));
-  nextBtn.addEventListener('click', () => goTo(active + 1));
-
-  // Clicking any non-active planet just re-centers it instead of
-  // following the link immediately — a click on the already-active one
-  // (or its real "View Case Study" button) is what navigates.
-  planets.forEach((p, i) => {
-    p.addEventListener('click', (e) => {
-      if (i !== active) { e.preventDefault(); goTo(i, { focus: false }); }
-    });
-  });
-
-  track.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); goTo(active + 1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(active - 1); }
-    else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
-    else if (e.key === 'End') { e.preventDefault(); goTo(planets.length - 1); }
-  });
-
-  // Mouse wheel / trackpad — either axis, debounced to one step per
-  // gesture so a single scroll doesn't fly through several planets.
-  let wheelLocked = false;
-  deck.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    if (wheelLocked) return;
-    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    if (Math.abs(delta) < 12) return;
-    wheelLocked = true;
-    goTo(active + (delta > 0 ? 1 : -1), { focus: false });
-    setTimeout(() => { wheelLocked = false; }, 420);
-  }, { passive: false });
-
-  // Drag / swipe — live-follows the pointer while held, then snaps to
-  // the nearest planet on release using distance + velocity (a light
-  // momentum feel without a full physics simulation). dragMoved guards
-  // against the native "click" a browser still fires on the anchor right
-  // after a drag-release — without it, swiping to browse could
-  // accidentally open whichever planet's link ends up under the pointer.
-  let dragging = false, dragMoved = false, dragStartX = 0, dragStartTime = 0, baseOffset = 0;
-
-  function currentTranslateX() {
-    const m = new DOMMatrix(getComputedStyle(track).transform);
-    return m.m41;
-  }
-
-  track.addEventListener('pointerdown', (e) => {
-    dragging = true;
-    dragMoved = false;
-    dragStartX = e.clientX;
-    dragStartTime = performance.now();
-    baseOffset = currentTranslateX();
-    track.classList.add('is-dragging');
-    track.setPointerCapture(e.pointerId);
-  });
-
-  track.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - dragStartX;
-    if (Math.abs(dx) > 6) dragMoved = true;
-    track.style.transform = `translateX(${baseOffset + dx}px)`;
-  });
-
-  function endDrag(e) {
-    if (!dragging) return;
-    dragging = false;
-    track.classList.remove('is-dragging');
-    const dx = e.clientX - dragStartX;
-    const dt = Math.max(1, performance.now() - dragStartTime);
-    const velocity = dx / dt; // px/ms
-    if (Math.abs(dx) > 60 || Math.abs(velocity) > .5) {
-      goTo(active + (dx < 0 ? 1 : -1), { focus: false });
-    } else {
-      render(); // snap back to the current planet
-    }
-  }
-
-  track.addEventListener('pointerup', endDrag);
-  track.addEventListener('pointercancel', endDrag);
-  planets.forEach(p => p.addEventListener('click', (e) => {
-    if (dragMoved) { e.preventDefault(); dragMoved = false; }
-  }));
-}
-
 // A small hidden easter egg grounded in something real about Jasmine (the
 // "rabbit enthusiast" line in the hero) rather than an arbitrary gimmick:
 // type "rabbit" anywhere on the page and a little hop of sparks bounds
@@ -293,8 +146,8 @@ function initRabbitEgg() {
   window.addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return; // don't hijack real shortcuts
     // Don't fire while someone's actually typing into a field — e.g.
-    // writing "rabbit" into the Doodle Mail message box shouldn't launch
-    // a hop mid-sentence.
+    // writing "rabbit" into the contact form shouldn't launch a hop
+    // mid-sentence.
     const tag = e.target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) { progress = 0; return; }
     const key = e.key.toLowerCase();
@@ -627,9 +480,9 @@ function initCometTrail() {
     // still overflows the zeroed-out wrapper (overflow:visible on
     // .comet-trail svg) and would still get counted otherwise. Skipping
     // this would create a feedback loop: once it grows to match a taller
-    // page (e.g. the Doodle Mail panel), switching back to shorter content
-    // could never shrink it, since every recalculation would just measure
-    // its own leftover inflated height again.
+    // page (e.g. one of the Playground panels), switching back to shorter
+    // content could never shrink it, since every recalculation would just
+    // measure its own leftover inflated height again.
     trail.style.height = '0';
     svg.setAttribute('height', 0);
     const docHeight = document.documentElement.scrollHeight;
@@ -858,7 +711,7 @@ function initCometTrail() {
 }
 
 // =========================================================
-// Playground tabs — a small local tab pattern (Experiments / Doodle Mail)
+// Playground tabs — a small local tab pattern (Experiments / Free Draw)
 // scoped entirely inside #playground, following the WAI-ARIA APG tabs
 // pattern (roving tabindex, arrow-key navigation, automatic activation).
 // Independent of the site-wide #about/#projects/#playground/#contact
@@ -869,7 +722,7 @@ function initPlaygroundTabs() {
   const panels = Array.from(document.querySelectorAll('.playground-panel'));
   if (!tabs.length) return;
 
-  let doodleMailReady = false;
+  let freeDrawReady = false;
 
   function activate(tab, { focus = true } = {}) {
     tabs.forEach(t => {
@@ -885,9 +738,9 @@ function initPlaygroundTabs() {
     // itself against — initializing it while its panel is still [hidden]
     // (0×0) would leave it permanently the wrong size. Set up lazily, once,
     // the first time this tab is actually shown.
-    if (tab.id === 'tab-doodlemail' && !doodleMailReady) {
-      doodleMailReady = true;
-      initDoodleMail();
+    if (tab.id === 'tab-freedraw' && !freeDrawReady) {
+      freeDrawReady = true;
+      initFreeDraw();
     }
     // The comet trail only recomputes what it needs to dodge on
     // resize/load — nudge it to re-lay-out now that this panel's content
@@ -909,81 +762,19 @@ function initPlaygroundTabs() {
 }
 
 // =========================================================
-// Doodle Mail — draw-and-send guestbook. Everything here (canvas drawing,
-// undo, eraser, clear) is fully functional client-side. Only the actual
-// emailing depends on EmailJS, a small serverless send-from-the-browser
-// service — see EMAILJS_CONFIG below. The SDK is loaded lazily, from
-// EmailJS's CDN, only at the moment someone actually presses Send, so
-// visitors who never open this tab (or who just doodle without sending)
-// never pay for that request. Until Jasmine drops her own EmailJS keys in
-// below, Send shows an honest "not set up yet" message rather than
-// silently failing or pretending to succeed — same pattern as the
-// Contact section's unwired form.
+// Free Draw — a simple, no-strings-attached drawing space on
+// Playground's second tab: color picker, brush size, eraser, undo,
+// clear, pointer-event drawing so mouse/trackpad/touch all work. Purely
+// client-side and ephemeral — nothing is saved or sent anywhere; the
+// drawing only exists in the browser tab for as long as it's open. This
+// used to be "Doodle Mail," a draw-and-email-it-to-Jasmine guestbook, but
+// that depended on EmailJS/Imgur/Formspree in various combinations to
+// get an image into an email at all (every free-tier path either
+// paywalled attachments or got silently stripped by Gmail) — removed at
+// Jasmine's request rather than keep fighting that, in favor of just
+// keeping the actually-fun part: the canvas itself.
 // =========================================================
-
-// Fill these in from a free https://www.emailjs.com account: an Email
-// Service, an Email Template (with template params from_name, from_email,
-// message, doodle_image — map doodle_image to a dynamic attachment in the
-// template, and set the template's "To" address to Jasmine's own inbox
-// there, not here), and the account's Public Key.
-const EMAILJS_CONFIG = {
-  publicKey: '[TBD: EmailJS public key]',
-  serviceId: '[TBD: EmailJS service ID]',
-  templateId: '[TBD: EmailJS template ID]',
-};
-
-function isEmailJSConfigured() {
-  return Object.values(EMAILJS_CONFIG).every(v => !v.startsWith('[TBD'));
-}
-
-// --- Per-browser daily send limit ---
-// This is a courtesy speed bump, not real spam protection — it lives in
-// localStorage, so anyone can clear it, use a private window, or switch
-// browsers to get around it. It's here to stop a single well-behaved
-// visitor from accidentally (or a bored one from casually) firing off a
-// pile of doodles in one sitting, not to stop a determined spammer.
-// Actual abuse protection needs to live server-side — EmailJS's own
-// account dashboard has its own monthly send quota and can require
-// reCAPTCHA on top of it; set those up there once EMAILJS_CONFIG is
-// filled in, rather than relying on this.
-const DOODLE_DAILY_LIMIT = 3;
-const DOODLE_SEND_LOG_KEY = 'doodlemail_sends';
-
-function todayKey() {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-}
-
-function getDoodleSendCount() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(DOODLE_SEND_LOG_KEY) || '{}');
-    return raw.day === todayKey() ? (raw.count || 0) : 0;
-  } catch (_) {
-    return 0; // localStorage unavailable (e.g. some private-browsing modes) — don't block sending over it
-  }
-}
-
-function recordDoodleSend() {
-  try {
-    localStorage.setItem(DOODLE_SEND_LOG_KEY, JSON.stringify({ day: todayKey(), count: getDoodleSendCount() + 1 }));
-  } catch (_) { /* nothing to persist to — the limit just won't carry across reloads this session */ }
-}
-
-let emailjsLoadPromise = null;
-function loadEmailJS() {
-  if (window.emailjs) return Promise.resolve();
-  if (emailjsLoadPromise) return emailjsLoadPromise;
-  emailjsLoadPromise = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-    script.onload = resolve;
-    script.onerror = () => reject(new Error('EmailJS failed to load'));
-    document.head.appendChild(script);
-  });
-  return emailjsLoadPromise;
-}
-
-function initDoodleMail() {
+function initFreeDraw() {
   const canvas = document.getElementById('doodleCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -993,10 +784,6 @@ function initDoodleMail() {
   const eraserBtn = document.getElementById('doodleEraser');
   const undoBtn = document.getElementById('doodleUndo');
   const clearBtn = document.getElementById('doodleClear');
-  const form = document.getElementById('doodlemailForm');
-  const sendBtn = document.getElementById('doodleSendBtn');
-  const sendLabel = sendBtn.querySelector('.doodle-send-label');
-  const statusEl = document.getElementById('doodlemailStatus');
 
   let drawing = false;
   let erasing = false;
@@ -1120,107 +907,4 @@ function initDoodleMail() {
   });
 
   fitCanvas();
-
-  // Reflects today's send count in the UI: disables Send and swaps in a
-  // "come back tomorrow" message once DOODLE_DAILY_LIMIT is reached, and
-  // otherwise leaves a quiet reminder of how many are left. Returns
-  // whether the limit has been hit, so the submit handler can gate on it.
-  function updateDoodleLimitUI() {
-    const remaining = DOODLE_DAILY_LIMIT - getDoodleSendCount();
-    if (remaining <= 0) {
-      sendBtn.disabled = true;
-      sendLabel.textContent = "That's the limit for today ✦";
-      statusEl.textContent = `You've sent ${DOODLE_DAILY_LIMIT} doodles today — thank you! Come back tomorrow for more.`;
-      statusEl.className = 'doodlemail-status';
-      return true;
-    }
-    sendBtn.disabled = false;
-    sendLabel.textContent = 'Send Me Your Doodle';
-    statusEl.textContent = remaining < DOODLE_DAILY_LIMIT
-      ? `${remaining} of ${DOODLE_DAILY_LIMIT} doodles left today.`
-      : '';
-    statusEl.className = 'doodlemail-status';
-    return false;
-  }
-
-  updateDoodleLimitUI();
-
-  // --- Send ---
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    if (updateDoodleLimitUI()) return; // at today's limit — message is already showing
-
-    if (!hasDrawn) {
-      statusEl.textContent = "The page is still blank — draw something first!";
-      statusEl.className = 'doodlemail-status is-error';
-      return;
-    }
-
-    if (!isEmailJSConfigured()) {
-      statusEl.textContent = "Doodle sending isn't set up on this site yet — but no worries, your drawing is staying right here.";
-      statusEl.className = 'doodlemail-status is-error';
-      return;
-    }
-
-    sendBtn.disabled = true;
-    sendBtn.classList.add('is-loading');
-    sendLabel.textContent = 'Sending your doodle…';
-    statusEl.textContent = '';
-    statusEl.className = 'doodlemail-status';
-
-    try {
-      await loadEmailJS();
-      window.emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
-      await window.emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
-        from_name: document.getElementById('doodleName').value || 'Someone from the cosmos',
-        from_email: document.getElementById('doodleEmail').value || 'not provided',
-        message: document.getElementById('doodleMessage').value || '(no message)',
-        doodle_image: canvas.toDataURL('image/png'),
-      });
-
-      recordDoodleSend();
-
-      sendBtn.classList.remove('is-loading');
-      sendBtn.classList.add('is-success');
-      sendLabel.textContent = 'Doodle sent! ✦';
-      statusEl.textContent = "Your doodle just landed in Jasmine's cosmic guestbook. Thank you!";
-      statusEl.className = 'doodlemail-status is-success';
-      spawnDoodleBurst(sendBtn);
-
-      setTimeout(() => {
-        sendBtn.classList.remove('is-success');
-        updateDoodleLimitUI(); // re-enables Send and resets the label, unless this send just hit the daily cap
-      }, 4000);
-    } catch (err) {
-      sendBtn.classList.remove('is-loading');
-      sendBtn.disabled = false;
-      sendLabel.textContent = 'Send Me Your Doodle';
-      statusEl.textContent = "That didn't go through — mind trying again in a moment?";
-      statusEl.className = 'doodlemail-status is-error';
-    }
-  });
-}
-
-// A small celebratory sparkle burst from the Send button on success.
-function spawnDoodleBurst(originEl) {
-  const rect = originEl.getBoundingClientRect();
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
-  const colors = ['#f0a8c9', '#b3dcf0', '#eddb9c', '#bfe8d4', '#d6c6f0', '#f7d4ab', '#a8e0cf'];
-  const count = 10;
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
-    const dist = 40 + Math.random() * 34;
-    const spark = document.createElement('div');
-    spark.className = 'doodle-burst';
-    spark.style.left = `${x}px`;
-    spark.style.top = `${y}px`;
-    spark.style.color = colors[i % colors.length];
-    spark.style.setProperty('--dx', `${(Math.cos(angle) * dist).toFixed(1)}px`);
-    spark.style.setProperty('--dy', `${(Math.sin(angle) * dist).toFixed(1)}px`);
-    spark.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="currentColor"/></svg>';
-    spark.addEventListener('animationend', () => spark.remove());
-    document.body.appendChild(spark);
-  }
 }

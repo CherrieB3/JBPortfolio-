@@ -297,13 +297,16 @@ stacked on top of the rest of the site's existing motion/decoration.
 - Cosmic theme, dark background with the pastel Bee-and-PuppyCat accent
   palette (see "Art direction" above): starfield background (`.stars`,
   pastel-colored dots, not plain white), soft radial-gradient glows,
-  background planets/moons (`.bg-planets`), slow-drifting clouds in the
-  hero (`.hero-clouds` — pale lavender-white, low opacity, read as
-  moonlit clouds against the dark sky), occasional shooting stars
-  (`.shooting-star` — long idle cycle, brief streak, so they're rare
+  slow-drifting clouds in the hero (`.hero-clouds` — pale lavender-white,
+  low opacity, read as moonlit clouds against the dark sky), occasional
+  shooting stars (`.shooting-star`, in the fixed `.shooting-stars` layer
+  on `index.html` only — long idle cycle, brief streak, so they're rare
   rather than a constant repeating effect), and a chibi
   astronaut-with-bunny-ears mascot (nods to "rabbit enthusiast").
-- **The sky stays put**: `.stars`, `.grain`, `.bg-planets`, and the
+  Background planets/moons (formerly `.bg-planets`) were removed at
+  Jasmine's request — don't reintroduce them without checking with her
+  first.
+- **The sky stays put**: `.stars`, `.grain`, `.shooting-stars`, and the
   `body::before`/`body::after` glow layers are all `position: fixed` —
   the same background is visible from the moment the page loads and stays
   that way for the whole scroll, rather than scrolling through a much
@@ -324,11 +327,6 @@ stacked on top of the rest of the site's existing motion/decoration.
   only ever appear once, right at the true bottom of the page — "landing
   back home on Earth" after a whole page of space. Present on `index.html`
   and all three case-study footers.
-- A floating mail envelope (`.mail-envelope`, gently bobbing) sits by the
-  Doodle Mail panel — a literal nod to "a magical mailbox floating in
-  space," the site's stated personality; a good template for where a new
-  hand-drawn touch should attach to something real on the page rather than
-  floating decoratively with no connection to content.
 - The 4-point spark/sparkle mark (`✦`, drawn as a small inline SVG) is a
   recurring accent — logo, galaxy core, hero ribbon tip. Reuse it as a
   bullet/flourish rather than inventing a new icon for the same job.
@@ -345,7 +343,7 @@ stacked on top of the rest of the site's existing motion/decoration.
 - **Nav color**: `var(--nav-bg)` (`#161233`, a smidge darker than
   `var(--bg)`) with light text (`var(--text)`, and the per-link accents
   use the `--c-*` soft/pastel tier) — **not** the light `--paper` surface
-  used elsewhere (planet-card tooltips, Doodle Mail's paper texture).
+  used elsewhere (planet-card tooltips, Free Draw's paper texture).
   Those two are deliberately different surfaces now; don't merge the nav
   back onto `--paper` or its text back onto `--ink`/`--d-*`, which were
   calibrated for a light background. Below the nav, `.site-nav::after`
@@ -424,17 +422,18 @@ drifting out of sync.
    `footer`, heading levels in order) — don't reach for `div`-soup.
 2. **Mobile-first responsiveness.** Any new page or section must be checked
    at mobile widths (~375px) before being called done; add media queries
-   rather than letting content overflow or truncate. The galaxy/planet
-   layout on Projects is hover-driven and hidden below 700px in favor of
-   `.projects-list-fallback` — follow that pattern (a touch-friendly
-   fallback, not just a squeezed version) for any other hover-only UI.
+   rather than letting content overflow or truncate. The About section's
+   sketchbook doodles are hover/focus-driven and hidden below 700px in
+   favor of `.doodles-fallback` (a plain static list) — follow that
+   pattern (a touch-friendly fallback, not just a squeezed version) for
+   any other hover-only UI.
 3. **No dependency creep.** Don't add a CSS/JS framework, icon library, or
    build tool to solve a problem that plain CSS/HTML already solves. If a
    real need arises (e.g. multi-page routing, a CMS for case studies),
-   surface the tradeoff to Jasmine before adding it. One exception exists
-   today: Playground's Doodle Mail tab lazy-loads the EmailJS SDK from its
-   CDN, but only at the moment someone presses Send — surfaced here as
-   that tradeoff, not silently added. See the Doodle Mail entry below.
+   surface the tradeoff to Jasmine before adding it. (Playground's
+   drawing space, Free Draw, briefly depended on EmailJS + Imgur to email
+   drawings to Jasmine — that dependency was removed along with the
+   send-to-email feature itself; see the Free Draw entry below for why.)
 4. **Stay on-system.** New colors, fonts, radii, or motion patterns should
    be justified against the design system above, not introduced ad hoc.
    If a new page genuinely needs to break the system (e.g. a distinct
@@ -457,41 +456,52 @@ drifting out of sync.
   a fun fact about Jasmine tied to that object; below 700px it becomes a
   static list; both the art and the fun-fact captions are still
   placeholder, see `images/` below) → `#projects`
-  (Project Orbit — a drag/swipe/wheel/arrow-key/button carousel of the 4
-  projects — Comet Commute, Elevator Accessibility, DreamScape, Lucky's
-  First Day — as large circular "planet" cards, the active one centered
-  and biggest, each linking out to a full write-up, see `case-studies/`
+  (a stacked list of the 4 projects — Comet Commute, Elevator
+  Accessibility, DreamScape, Lucky's First Day — each a "project spread":
+  a bordered info card (title, one-line summary, tag pills, CTA) paired
+  with a tilted photo, every project fully visible without an
+  interaction, each linking out to a full write-up; see `case-studies/`
   below and the entry further down for how it works) → `#playground` (two
   tabs: "Experiments", a horizontal scroll-snap deck of loose-experiment
   tiles — explicitly allowed to feel rougher than the rest of the site,
-  see rule 4; content is placeholder — and "Doodle Mail", a real
-  HTML5-Canvas draw-and-send guestbook, see the entry below) → `#contact`
-  (direct links + a contact form **not yet wired to a backend**, marked
-  inline; LinkedIn is now a real link, Behance/Dribbble are still `[TBD]` —
-  Jasmine's previous portfolio didn't expose them in a fetchable form) →
+  see rule 4; content is placeholder — and "Free Draw", a real
+  HTML5-Canvas drawing space, see the entry below) → `#contact`
+  (direct links + a contact form wired to Jasmine's own Formspree endpoint,
+  see the entry below; LinkedIn is now a real link, Behance/Dribbble are
+  still `[TBD]` — Jasmine's previous portfolio didn't expose them in a
+  fetchable form) →
   one shared footer. See "Single-page navigation" above for how the
   anchors/scrollspy work.
 
-  Projects has gone through two redesigns: an original hover-only
-  "galaxy of planet" interaction (content hidden until hover/focus) was
+  Projects has gone through three redesigns. An original hover-only
+  "galaxy of planets" interaction (content hidden until hover/focus) was
   replaced with an always-visible `.constellation-card` grid (every
   project titled/described/clickable in normal document flow, a
   deliberate accessibility/recruiter-scanning call) — which was then
-  itself replaced with **Project Orbit**, at Jasmine's explicit request,
-  after she saw it built first as a Playground experiment and decided she
-  wanted it as the primary navigation instead of an addition. That's a
-  real, knowingly-accepted step back from "every project visible without
-  an interaction": only the active planet's full details show at once,
-  with neighbors as peek-only circles. See the **Project Orbit** entry
-  below for how it works; `.planet-card` and `.view-case` are still
-  shared with the About section's `.doodle` tooltips (see below) — don't
-  delete them when touching Projects, even though Projects itself no
-  longer uses `.planet-card`.
+  itself replaced with **Project Orbit**, a drag/swipe/wheel/arrow-key/
+  button carousel of circular "planet" cards, at Jasmine's explicit
+  request, after she saw it built first as a Playground experiment and
+  decided she wanted it as the primary navigation instead of an addition.
+  That was a real, knowingly-accepted step back from "every project
+  visible without an interaction": only the active planet's full details
+  showed at once, with neighbors as peek-only circles. **Project Orbit
+  was then itself replaced** by the current stacked `.project-spread`
+  list (see the entry further down) at Jasmine's explicit request, after
+  she shared a reference (wallofportfolios.in's "selected works" layout)
+  — this restores "every project visible without an interaction" while
+  keeping a more editorial, less grid-like presentation than the old
+  `.constellation-card` version. **If asked to redo Projects again, the
+  `.project-spread` list is the current, intended state** — don't
+  reintroduce Project Orbit's carousel or the constellation grid without
+  being asked. `.planet-card` and `.view-case` are still shared with the
+  About section's `.doodle` tooltips (see below) — don't delete them when
+  touching Projects, even though Projects itself doesn't use them.
 - `case-studies/` — one HTML page per case study (`comet-commute.html`,
   `elevator-accessibility.html`, `dreamscape.html`), real UT Dallas
   coursework/designathon projects with real research, decisions, and
   outcomes. Each sets `--case-accent` on `<body>` (a rainbow token matching
-  its planet's color) that themes its back-link, chapter numerals, quote
+  its project's accent color on the Projects list) that themes its
+  back-link, chapter numerals, quote
   marks, and list bullets. Reuses `.page-hero`, `.card`, `.btn`, and the
   shared nav/footer rather than introducing new page chrome. Lucky's First
   Day has no page here — it's an existing standalone site, linked to
@@ -566,95 +576,106 @@ drifting out of sync.
   `-prototype.svg` for DreamScape), and `case-<project>-wide.svg`, for
   `comet`/`elevator`/`dreamscape`; and 4 more (`orbit-comet.svg`,
   `orbit-elevator.svg`, `orbit-dreamscape.svg`, `orbit-lucky.svg`) for
-  Project Orbit's planets — these reuse the exact motif from each
-  project's Projects-section thumbnail (circle, elevator shaft, crescent
-  moon, zigzag path) recomposed to fill a square so it crops well into a
-  circle, rather than a generic placeholder shared across all 4. All are
-  meant to be directly overwritten with Jasmine's own art or real
-  screenshots — no HTML/CSS edits needed, just replace the file, the same
-  swap-the-file pattern as the About page's doodle slots. Each is a
-  dashed frame + the site's spark glyph in that page's accent color;
-  `object-fit: cover` on `.case-mockup img`/`.case-visual-box img`/
-  `.orbit-planet img` crops any real image cleanly regardless of its
-  actual aspect ratio, so the same placeholder file can be (and currently
-  is) reused across more than one slot on a page. Follow this same "real
-  file in `images/`, referenced by `<img src>`"
+  the Projects list's `.project-visual` photos — these reuse the exact
+  motif from each project's original thumbnail (circle, elevator shaft,
+  crescent moon, zigzag path), a full-bleed circular composition filling
+  the square viewBox edge-to-edge, so it still crops cleanly into the
+  list's portrait (3:4) photo slot, rather than a generic placeholder
+  shared across all 4. All are meant to be directly overwritten with
+  Jasmine's own art or real screenshots — no HTML/CSS edits needed, just
+  replace the file, the same swap-the-file pattern as the About page's
+  doodle slots. `object-fit: cover` on `.case-mockup img`/
+  `.case-visual-box img`/`.project-visual img` crops any real image
+  cleanly regardless of its actual aspect ratio, so the same placeholder
+  file can be (and currently is) reused across more than one slot on a
+  page. Follow this same "real file in `images/`, referenced by `<img src>`"
   pattern for any future image slot rather than an inline-SVG placeholder
   or a text-only callout. `mascot-astronaut.png` (hero section) is the one
   file in this directory that isn't a placeholder — it's Jasmine's real,
   final character art, resized/compressed on intake (from a 2048px/1.3MB
   source down to 1024px/~390KB, since the mascot never displays wider than
   ~380px) rather than served at its original resolution.
-- **Doodle Mail** (`#panel-doodlemail` in `index.html`, `initDoodleMail()`
-  in `js/main.js`) — a draw-and-send guestbook on Playground's second tab.
-  The canvas (color picker, brush size, eraser, undo, clear, pointer-event
-  drawing so mouse/trackpad/touch all work) is fully real and needs no
-  setup. Sending the doodle by email depends on
-  [EmailJS](https://www.emailjs.com) — a free serverless send-from-the-
-  browser service, chosen so this stays a static site with no backend to
-  host. `EMAILJS_CONFIG` in `js/main.js` holds three `[TBD: ...]`
-  placeholders (public key, service ID, template ID) that only resolve
-  once Jasmine creates her own EmailJS account, an Email Service, and an
-  Email Template with `from_name`/`from_email`/`message`/`doodle_image`
-  params (`doodle_image` mapped to a dynamic attachment in the template;
-  the template's own "To" address is where her inbox is set, not in this
-  code). Until those are filled in, Send shows an honest "not set up yet"
-  message — same pattern as the Contact section's unwired form — rather
-  than silently failing or faking success. The EmailJS SDK itself is
-  lazy-loaded from its CDN only at the moment someone presses Send, so
-  visitors who never open the tab (or who doodle without sending) never
-  pay for that request; see rule 3 above for why this dependency exists.
-  A `DOODLE_DAILY_LIMIT` constant (`js/main.js`, default 3) caps sends per
-  browser per day via `localStorage` — this is a courtesy speed bump
-  against casual over-sending, explicitly **not** real spam protection
-  (clearing storage, a private window, or a different browser all get
-  around it). Actual abuse protection belongs server-side, i.e. in
-  EmailJS's own account dashboard (its monthly send quota, optionally
-  reCAPTCHA) once `EMAILJS_CONFIG` is filled in — don't present the
-  client-side counter as more than what it is if extending it.
-- **Project Orbit** (`class="orbit-section"` in `index.html`'s `#projects`,
-  `initProjectOrbit()` in `js/main.js`) — the Projects section's project
-  navigation: a drag/swipe/wheel/arrow-key/button carousel of the 4
-  projects as large circular "planet" cards, the active one centered and
-  biggest with neighbors peeking in on either side. First built as an
-  *additional*, exploratory Playground-tab experiment alongside the
-  always-visible `.constellation-card` grid that was Projects' section at
-  the time (so a recruiter skimming the page never had to discover an
-  interaction to see what Jasmine had built) — then, once Jasmine had
-  actually seen it running, she asked for it to fully replace that grid
-  instead, a real and knowingly-accepted step back from "every project
-  visible without an interaction." **If asked to redo Projects again,
-  Project Orbit is the current, intended state — don't reintroduce the
-  constellation grid without being asked.** Each planet is currently
-  placeholder line-art (`images/orbit-*.svg` — the same abstract-icon
-  language the old Projects-grid thumbnails used: a circle for Comet
-  Commute, an elevator shaft, a crescent moon, a zigzag path — in that
-  project's accent color), not a real screenshot, since none of the 4
-  projects have a real hero image/mockup/screenshot yet (rule 6); swap
-  the file for a real circular crop later, `object-fit: cover` handles
-  any aspect ratio. Sizing and centering math lives in JS (not pure CSS):
-  `render()` computes each planet's *target* width from its distance
-  from the active index, then translates `.orbit-track` so the active
-  planet's center lands in the deck's horizontal center — done from
-  target widths rather than read-mid-transition layout, so the centering
-  is correct even while the resize/scale transition is still animating.
-  The "cinematic zoom" into a case study on click is the same sitewide
-  cross-document View Transition used everywhere else (top of
-  `css/style.css`) rather than a bespoke one-off animation — reuse that
-  instead of building a parallel transition system if this needs to feel
-  more dramatic later. A `dragMoved` flag suppresses the native click a
-  browser still fires on an `<a>` right after a drag-release, so swiping
-  to browse never accidentally opens a project.
+- **Free Draw** (`#panel-freedraw` in `index.html`, `initFreeDraw()` in
+  `js/main.js`) — a simple, no-strings-attached drawing space on
+  Playground's second tab: color picker, brush size, eraser, undo, clear,
+  pointer-event drawing so mouse/trackpad/touch all work. Fully
+  client-side and ephemeral — nothing is saved or sent anywhere; the
+  drawing exists only in the tab for as long as it's open.
+
+  This used to be **Doodle Mail**, a draw-and-email-it-to-Jasmine
+  guestbook. It was removed — not just descoped, actually torn out —
+  after a real, hands-on attempt to wire it up ran into a wall worth
+  remembering if anything like it comes up again: **every free-tier path
+  for getting a browser-drawn image into an email hit a dead end.**
+  EmailJS (the send-from-the-browser service used) hard-caps combined
+  template variables at 50KB, so a real canvas PNG never fit. Compressing
+  it down and embedding it as `<img src="data:...">` technically fit, but
+  Gmail silently strips inline data-URI images regardless of size — so
+  nothing showed up, with no error to debug. Real email attachments would
+  have sidestepped that, but both EmailJS's and Formspree's attachment
+  features are paywalled on their free plans (confirmed directly against
+  each service's own docs/UI, not assumed). Routing the image through
+  Imgur's free anonymous upload API and emailing a real image URL instead
+  of embedding one *did* work end-to-end — but at that point, given how
+  much infrastructure (EmailJS + Imgur, two API keys, a compression step)
+  it took just to email a doodle, Jasmine's call was to drop the
+  send-to-email idea entirely and keep only the actually-fun part: the
+  canvas. **If a future request wants doodles to reach Jasmine again,
+  don't restart from EmailJS** — re-read this note first, since the
+  constraint is the free tier landscape itself, not a bug in any one
+  attempt.
+- **Projects list** (`class="projects-list"` in `index.html`'s
+  `#projects`, pure HTML/CSS — no JS driving it) — the Projects section's
+  content: all 4 projects stacked vertically as `.project-spread`s, each
+  a `.project-card` (title, one-line summary, `.project-tags` pills, CTA
+  button) paired with a tilted `.project-visual` photo. Replaced **Project
+  Orbit** (a drag/swipe/wheel/arrow-key/button carousel of circular
+  "planet" cards) at Jasmine's explicit request, after she shared a
+  reference (wallofportfolios.in's "selected works" layout — a
+  notebook-page-style info card next to a tilted photo, repeated down the
+  page) and asked for something similar. Adapted to this site's own
+  system rather than copied literally (rule 4): the reference's cream
+  paper + hot-pink pills became this site's existing translucent
+  `.card`-style panel + pills filled with each project's own
+  `--accent-deep` (the same per-project color pair the old orbit rings
+  and CTAs already used, set inline per `.project-spread` — reuse this
+  pattern rather than introducing a new palette per project). **If asked
+  to redo Projects again, this list is the current, intended state** —
+  don't reintroduce Project Orbit's carousel or the constellation grid
+  without being asked. This also restores "every project visible without
+  an interaction," undoing Project Orbit's tradeoff in the other
+  direction. `.project-spread:nth-child(odd)`/`(even)` alternate the tilt
+  direction on the card and photo (a few degrees each way) for a
+  scattered, casually-placed feel rather than a perfectly level grid —
+  keep that restrained (a few degrees, not a dramatic skew) rather than
+  literally drawing a notebook page, per Jasmine's general preference for
+  restraint over a maximalist copy of a reference. Each photo is still
+  placeholder line-art (`images/orbit-*.svg`, unchanged from Project
+  Orbit — see the `images/` entry above), not a real screenshot, since
+  none of the 4 projects have a real hero image yet (rule 6); swap the
+  file for a real photo later, `object-fit: cover` on `.project-visual
+  img` handles any aspect ratio into the 3:4 portrait crop. Plain `<a>`
+  links throughout, so the sitewide cross-document View Transition (top
+  of `css/style.css`) still applies automatically — no JS needed, unlike
+  Project Orbit's bespoke `dragMoved`-guarded click-through.
+- **Contact form** (`#contactForm` in `index.html`, `initContactForm()` in
+  `js/main.js`) — submits to Jasmine's own Formspree endpoint
+  (`https://formspree.io/f/xrpgwbwo`) via `fetch` rather than a plain HTML
+  POST, so a visitor sees an inline success/error message
+  (`#contactFormStatus`) and stays on the page instead of being bounced to
+  Formspree's default "thanks" page. No daily-limit counter here (unlike
+  the old Doodle Mail) — Formspree's own free-tier submission cap is the
+  real abuse guard for this form.
 - `css/style.css` — the entire design system and every component's styles.
 - `js/main.js` — nav toggle/scrollspy active-link logic, the comet trail,
-  starfield generation, Project Orbit, the Playground tabs, and Doodle
-  Mail.
+  starfield generation, the Playground tabs, Free Draw, and the contact
+  form.
 - `README.md` — one-line project description.
 - Remaining placeholder content: the About section's sketchbook doodle art
   (each should become a drawing of a personal object) and fun-fact
-  captions (each a fun fact about Jasmine tied to that object), the
-  Experiments tab of Playground, Doodle Mail's EmailJS keys (see above),
-  and the contact form's backend wiring — see rule 6.
+  captions (each a fun fact about Jasmine tied to that object — some
+  already filled in, see the markup), and the Experiments tab of
+  Playground — see rule 6.
 
 ## Available skills
 

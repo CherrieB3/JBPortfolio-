@@ -57,21 +57,11 @@
     <div class="stars"></div>
     <div class="grain" aria-hidden="true"></div>
 
-    <!-- Fixed background planets/moons — stay put in the viewport while the
-         page scrolls, the same way .stars does, so the cosmic backdrop reads
-         as one consistent scene behind the whole site rather than one hero
-         image that ends after the first section. -->
-    <div class="bg-planets" aria-hidden="true">
-        <span class="bg-planet bg-planet-ringed" style="width:130px; height:130px; top:9%; left:5%; background: radial-gradient(circle at 35% 30%, #6b5aa8, #2a2050); animation-delay:-2s;">
-            <span class="bg-planet-ring"></span>
-        </span>
-        <span class="bg-planet" style="width:56px; height:56px; top:16%; left:88%; background: radial-gradient(circle at 35% 30%, #fff6e0, #d9c9a3); animation-delay:-5s;"></span>
-        <span class="bg-planet" style="width:30px; height:30px; top:42%; left:94%; background: radial-gradient(circle at 35% 30%, #eddb9c, #b2860b); animation-delay:-3.5s;"></span>
-        <span class="bg-planet" style="width:24px; height:24px; top:60%; left:3%; background: radial-gradient(circle at 35% 30%, #f0a8c9, #a8455f); animation-delay:-1s;"></span>
-        <span class="bg-planet" style="width:16px; height:16px; top:30%; left:14%; background: radial-gradient(circle at 35% 30%, #f7d4ab, #9c5620); animation-delay:-4.2s;"></span>
-
-        <!-- Occasional shooting stars — long idle cycle, brief streak, so it
-             happens every so often rather than as a constant repeating effect. -->
+    <!-- Occasional shooting stars — long idle cycle, brief streak, so it
+         happens every so often rather than as a constant repeating effect.
+         Fixed in the viewport like .stars, so it stays put while the page
+         scrolls. -->
+    <div class="shooting-stars" aria-hidden="true">
         <span class="shooting-star shooting-star-a"></span>
         <span class="shooting-star shooting-star-b"></span>
     </div>
@@ -234,7 +224,7 @@
                 </button>
                 <div class="planet-card" style="top:2%; left:13%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
-                    <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
+                    <p><span class="tbd">[TBD: I've been learning to sew!]</span></p>
                 </div>
 
                 <button class="doodle doodle-2" aria-label="Object drawing placeholder two — hover for a fun fact">
@@ -242,7 +232,7 @@
                 </button>
                 <div class="planet-card" style="top:64%; left:8%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
-                    <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
+                    <p><span class="tbd">[I'm mixed! I'm Tibetan and Indian!]</span></p>
                 </div>
 
                 <button class="doodle doodle-3" aria-label="Object drawing placeholder three — hover for a fun fact">
@@ -250,7 +240,7 @@
                 </button>
                 <div class="planet-card" style="top:2%; left:56%;">
                     <h4><span class="tbd">[TBD: object]</span></h4>
-                    <p><span class="tbd">[TBD: fun fact about me, tied to this object]</span></p>
+                    <p><span class="tbd">[I love to read horror novels and watch scary things!]</span></p>
                 </div>
 
                 <button class="doodle doodle-4" aria-label="Object drawing placeholder four — hover for a fun fact">
@@ -296,87 +286,70 @@
 
         <section id="projects" class="page-hero" style="min-height:auto; padding-bottom:0;">
             <span class="section-mark" aria-hidden="true">№ 02 — Projects</span>
-            <svg class="hero-orbit" viewBox="0 0 240 240" aria-hidden="true">
-                <circle class="orbit-ring" cx="120" cy="120" r="95" stroke="#b3dcf0" />
-                <circle class="orbit-ring" cx="120" cy="120" r="62" stroke="#d6c6f0" />
-                <g class="orbit-spin"><circle cx="215" cy="120" r="6" fill="#f7d4ab" /></g>
-                <g class="orbit-spin orbit-spin--rev"><circle cx="120" cy="58" r="4" fill="#bfe8d4" /></g>
-            </svg>
             <h2 class="reveal">Projects</h2>
-            <p class="eyebrow" style="margin-top:14px;">ORBITING THE WORK ✦</p>
+            <p class="eyebrow" style="margin-top:14px;">SELECTED WORK ✦</p>
         </section>
 
-        <section aria-label="Projects" class="orbit-section reveal-fade">
-            <p class="eyebrow" style="text-align:center;">EXPLORE THE WORK AS A SYSTEM ✦ — drag, scroll, or use the arrows</p>
-            <div class="orbit-deck" id="orbitDeck">
-                <div class="orbit-glow" aria-hidden="true"></div>
-                <button type="button" class="orbit-nav orbit-nav--prev" aria-label="Previous project">
-                    <span class="arrow">←</span>
-                </button>
-                <div class="orbit-track" id="orbitTrack" role="listbox" tabindex="0" aria-label="Projects">
-                    <a class="orbit-planet" role="option" aria-selected="true"
-                        href="case-studies/comet-commute.html"
-                        data-title="Comet Commute"
-                        data-type="UX Research &amp; Interaction Design"
-                        data-role="UX Researcher &amp; Interaction Designer"
-                        data-summary="A concept for reducing parking stress at UT Dallas by bringing real-time availability and predictive suggestions into the campus app students already use."
-                        data-tags="Team Project, UX Research, May 2025"
-                        data-accent="#f7d4ab" data-accent-deep="#9c5620" data-cta="View Case Study">
-                        <span class="orbit-ring" aria-hidden="true"></span>
-                        <img src="images/orbit-comet.svg" alt="Comet Commute">
-                    </a>
-                    <a class="orbit-planet" role="option" aria-selected="false"
-                        href="case-studies/elevator-accessibility.html"
-                        data-title="Elevator Accessibility"
-                        data-type="Accessibility &amp; Inclusive Design"
-                        data-role="Accessibility &amp; Interaction Designer"
-                        data-summary="A concept for making elevators easier and safer for visually impaired users to navigate independently, combining audio guidance, haptic feedback, and personalized RFID access."
-                        data-tags="Team Project, Accessibility, March 2025"
-                        data-accent="#b3dcf0" data-accent-deep="#2f6488" data-cta="View Case Study">
-                        <span class="orbit-ring" aria-hidden="true"></span>
-                        <img src="images/orbit-elevator.svg" alt="Elevator Accessibility">
-                    </a>
-                    <a class="orbit-planet" role="option" aria-selected="false"
-                        href="case-studies/dreamscape.html"
-                        data-title="DreamScape"
-                        data-type="24-Hour Designathon Concept"
-                        data-role="UX &amp; Interaction Designer"
-                        data-summary="A speculative app for visualizing and reflecting on dreams, designed around the prompt: what might people use in the future?"
-                        data-tags="Designathon, Speculative Design, Oct 2025"
-                        data-accent="#d6c6f0" data-accent-deep="#6f5498" data-cta="View Case Study">
-                        <span class="orbit-ring" aria-hidden="true"></span>
-                        <img src="images/orbit-dreamscape.svg" alt="DreamScape">
-                    </a>
-                    <a class="orbit-planet" role="option" aria-selected="false"
-                        href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener"
-                        data-title="Lucky's First Day"
-                        data-type="Illustrated Narrative"
-                        data-role="Illustrator"
-                        data-summary="A non-linear visual narrative confronting autism stereotypes and the discomfort of new situations."
-                        data-tags="Illustration, Visual Storytelling"
-                        data-accent="#f0a8c9" data-accent-deep="#a8455f" data-cta="View Project">
-                        <span class="orbit-ring" aria-hidden="true"></span>
-                        <img src="images/orbit-lucky.svg" alt="Lucky's First Day">
-                    </a>
+        <section aria-label="Projects" class="projects-list">
+            <article class="project-spread reveal-fade" style="--accent:#f7d4ab; --accent-deep:#9c5620;">
+                <div class="project-card">
+                    <h3>Comet Commute</h3>
+                    <p>A concept for reducing parking stress at UT Dallas by bringing real-time availability and
+                        predictive suggestions into the campus app students already use.</p>
+                    <div class="project-tags">
+                        <span>Team Project</span><span>UX Research</span><span>May 2025</span>
+                    </div>
+                    <a class="btn" href="case-studies/comet-commute.html">View Case Study <span class="arrow">→</span></a>
                 </div>
-                <button type="button" class="orbit-nav orbit-nav--next" aria-label="Next project">
-                    <span class="arrow">→</span>
-                </button>
-            </div>
+                <a class="project-visual" href="case-studies/comet-commute.html" aria-label="View Comet Commute case study">
+                    <img src="images/orbit-comet.svg" alt="Comet Commute">
+                </a>
+            </article>
 
-            <div class="orbit-info">
-                <p class="eyebrow" id="orbitType">UX Research &amp; Interaction Design</p>
-                <h3 id="orbitTitle">Comet Commute</h3>
-                <p class="orbit-role" id="orbitRole">UX Researcher &amp; Interaction Designer</p>
-                <p id="orbitSummary">A concept for reducing parking stress at UT Dallas by bringing real-time
-                    availability and predictive suggestions into the campus app students already use.</p>
-                <div class="orbit-tags" id="orbitTags">
-                    <span>Team Project</span><span>UX Research</span><span>May 2025</span>
+            <article class="project-spread reveal-fade" style="--accent:#b3dcf0; --accent-deep:#2f6488;">
+                <div class="project-card">
+                    <h3>Elevator Accessibility</h3>
+                    <p>A concept for making elevators easier and safer for visually impaired users to navigate
+                        independently, combining audio guidance, haptic feedback, and personalized RFID access.</p>
+                    <div class="project-tags">
+                        <span>Team Project</span><span>Accessibility</span><span>March 2025</span>
+                    </div>
+                    <a class="btn" href="case-studies/elevator-accessibility.html">View Case Study <span class="arrow">→</span></a>
                 </div>
-                <a class="btn" id="orbitCta" href="case-studies/comet-commute.html">View Case Study <span class="arrow">→</span></a>
-            </div>
+                <a class="project-visual" href="case-studies/elevator-accessibility.html" aria-label="View Elevator Accessibility case study">
+                    <img src="images/orbit-elevator.svg" alt="Elevator Accessibility">
+                </a>
+            </article>
 
-            <div class="orbit-dots" id="orbitDots" role="tablist" aria-label="Jump to project"></div>
+            <article class="project-spread reveal-fade" style="--accent:#d6c6f0; --accent-deep:#6f5498;">
+                <div class="project-card">
+                    <h3>DreamScape</h3>
+                    <p>A speculative app for visualizing and reflecting on dreams, designed around the prompt: what
+                        might people use in the future?</p>
+                    <div class="project-tags">
+                        <span>Designathon</span><span>Speculative Design</span><span>Oct 2025</span>
+                    </div>
+                    <a class="btn" href="case-studies/dreamscape.html">View Case Study <span class="arrow">→</span></a>
+                </div>
+                <a class="project-visual" href="case-studies/dreamscape.html" aria-label="View DreamScape case study">
+                    <img src="images/orbit-dreamscape.svg" alt="DreamScape">
+                </a>
+            </article>
+
+            <article class="project-spread reveal-fade" style="--accent:#f0a8c9; --accent-deep:#a8455f;">
+                <div class="project-card">
+                    <h3>Lucky's First Day</h3>
+                    <p>A non-linear visual narrative confronting autism stereotypes and the discomfort of new
+                        situations.</p>
+                    <div class="project-tags">
+                        <span>Illustration</span><span>Visual Storytelling</span>
+                    </div>
+                    <a class="btn" href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener">View Project <span class="arrow">→</span></a>
+                </div>
+                <a class="project-visual" href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener" aria-label="View Lucky's First Day project">
+                    <img src="images/orbit-lucky.svg" alt="Lucky's First Day">
+                </a>
+            </article>
         </section>
 
         <section id="playground" class="page-hero" style="min-height:auto; padding-bottom:0;">
@@ -418,8 +391,8 @@
             <div class="playground-tabs" role="tablist" aria-label="Playground views">
                 <button type="button" class="playground-tab is-active" role="tab" id="tab-experiments"
                     aria-selected="true" aria-controls="panel-experiments">Experiments</button>
-                <button type="button" class="playground-tab" role="tab" id="tab-doodlemail" aria-selected="false"
-                    aria-controls="panel-doodlemail" tabindex="-1">Doodle Mail</button>
+                <button type="button" class="playground-tab" role="tab" id="tab-freedraw" aria-selected="false"
+                    aria-controls="panel-freedraw" tabindex="-1">Free Draw</button>
             </div>
 
             <div id="panel-experiments" class="playground-panel" role="tabpanel" aria-labelledby="tab-experiments">
@@ -440,8 +413,8 @@
                 </div>
             </div>
 
-            <div id="panel-doodlemail" class="playground-panel doodlemail" role="tabpanel"
-                aria-labelledby="tab-doodlemail" hidden>
+            <div id="panel-freedraw" class="playground-panel freedraw" role="tabpanel"
+                aria-labelledby="tab-freedraw" hidden>
 
                 <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#eddb9c" />
@@ -449,33 +422,20 @@
                 <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#a8e0cf" />
                 </svg>
-                <svg class="hero-orbit doodlemail-orbit" viewBox="0 0 240 240" aria-hidden="true">
-                    <circle class="orbit-ring" cx="120" cy="120" r="95" stroke="#f0a8c9" />
-                    <g class="orbit-spin"><circle cx="215" cy="120" r="6" fill="#d6c6f0" /></g>
-                </svg>
 
-                <!-- A little envelope, floating and gently spinning — "a magical
-                     mailbox floating in space" is the whole idea of this feature,
-                     so it gets its own small illustration rather than just an icon. -->
-                <svg class="mail-envelope" viewBox="0 0 64 48" fill="none" aria-hidden="true">
-                    <rect x="2" y="2" width="60" height="44" rx="8" fill="#fffbf4" stroke="#d6c6f0" stroke-width="3" />
-                    <path d="M4,8 L32,30 L60,8" stroke="#f0a8c9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#eddb9c" transform="translate(44,-10) scale(.5)" />
-                </svg>
-
-                <p class="eyebrow">LEAVE ME A DOODLE IN MY COSMIC GUESTBOOK ✦</p>
+                <p class="eyebrow">JUST A LITTLE SPACE TO DOODLE ✦</p>
                 <p style="color:var(--text-dim); max-width:56ch;">
-                    Grab a color, draw whatever's on your mind, and beam it straight to my
-                    inbox — a little note for the guestbook, sketched instead of typed.
+                    Grab a color and draw whatever's on your mind — no pressure,
+                    nothing saved, just a little canvas to play on.
                 </p>
 
                 <div class="doodle-paper">
                     <span class="tape tape-a" aria-hidden="true"></span>
                     <span class="tape tape-b" aria-hidden="true"></span>
                     <canvas id="doodleCanvas" class="doodle-canvas"
-                        aria-label="Doodle drawing canvas — draw with your mouse, trackpad, or finger"
+                        aria-label="Drawing canvas — draw with your mouse, trackpad, or finger"
                         role="img">Your browser doesn't support the drawing canvas — try a more
-                        recent browser to use Doodle Mail.</canvas>
+                        recent browser to draw here.</canvas>
                 </div>
 
                 <div class="doodle-toolbar" role="group" aria-label="Drawing tools">
@@ -491,36 +451,6 @@
                     <button type="button" id="doodleUndo" class="doodle-tool-btn" disabled>↩ Undo</button>
                     <button type="button" id="doodleClear" class="doodle-tool-btn">Clear</button>
                 </div>
-
-                <form class="contact-form doodlemail-form" id="doodlemailForm">
-                    <p class="eyebrow" style="margin-top:0;">OPTIONAL — SO I KNOW WHO SAID HI</p>
-                    <div class="doodlemail-row">
-                        <div>
-                            <label for="doodleName">Name <span class="tbd">(optional)</span></label>
-                            <input type="text" id="doodleName" name="name" autocomplete="name">
-                        </div>
-                        <div>
-                            <label for="doodleEmail">Email <span class="tbd">(optional)</span></label>
-                            <input type="email" id="doodleEmail" name="email" autocomplete="email">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="doodleMessage">Message <span class="tbd">(optional)</span></label>
-                        <textarea id="doodleMessage" name="message" rows="3"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn doodle-send-btn" id="doodleSendBtn">
-                        <span class="doodle-send-label">Send Me Your Doodle</span>
-                    </button>
-
-                    <p class="doodlemail-status" id="doodlemailStatus" role="status" aria-live="polite"></p>
-
-                    <p class="tbd doodlemail-note">
-                        [Doodle sending uses EmailJS and needs Jasmine's own account keys —
-                        see EMAILJS_CONFIG in js/main.js — before this can actually deliver
-                        doodles to an inbox.]
-                    </p>
-                </form>
             </div>
         </section>
 
@@ -553,7 +483,7 @@
                 </div>
 
                 <div>
-                    <form class="contact-form" aria-label="Contact form">
+                    <form class="contact-form" id="contactForm" action="https://formspree.io/f/xrpgwbwo" method="POST" aria-label="Contact form">
                         <div>
                             <label for="name">Name</label>
                             <input type="text" id="name" name="name" autocomplete="name" required>
@@ -566,11 +496,8 @@
                             <label for="message">Message</label>
                             <textarea id="message" name="message" rows="5" required></textarea>
                         </div>
-                        <button class="btn" type="submit">Send it ✦</button>
-                        <p class="tbd" style="font-size:.85rem;">
-                            [This form isn't wired to anything yet — connect it to a form
-                            service (e.g. Formspree) or backend endpoint before launch.]
-                        </p>
+                        <button class="btn" type="submit" id="contactSendBtn">Send it ✦</button>
+                        <p class="contact-form-status" id="contactFormStatus" role="status" aria-live="polite"></p>
                     </form>
                 </div>
             </div>
