@@ -339,7 +339,25 @@ stacked on top of the rest of the site's existing motion/decoration.
   along its bottom edge. Nav links read About / Projects / **logo** /
   Playground / Contact — the logo sits in the middle slot as one evenly
   spaced row (a specific storyboard detail — don't move the logo back to
-  the left without checking with Jasmine).
+  the left without checking with Jasmine). The logo itself
+  (`images/logo-jasmine.png`, `.logo-mark` in `css/style.css`) is
+  Jasmine's own hand-drawn signature wordmark — a rainbow-gradient
+  cursive "Jasmine" with a comet swoosh and the site's spark glyph above
+  it — real art, not a system-font rendering of her name. It replaced the
+  original plain-text `Jasmine` + inline spark-SVG logo (which is why the
+  old `.spark`/`.logo .spark` CSS rules and `class="spark"` SVG markup
+  were removed sitewide once nothing referenced them anymore — don't
+  reintroduce that pattern for the nav logo specifically without
+  checking; the general spark *glyph* itself is still very much in use
+  elsewhere under other class names like `.hero-spark`/`.mini-spark`/
+  `.ribbon-spark`). `.logo-mark` is sized by `height` (currently `44px`),
+  not `width`, so the source art's own proportions (a wide signature with
+  a swoosh well above the letterforms) stay intact rather than being
+  stretched into a fixed box — if this ever needs to be bigger/smaller,
+  adjust that one `height` value rather than adding a `width`. The same
+  `<img>` markup is repeated in `index.html` and all 4 `case-studies/*.html`
+  pages (each with its own relative `../images/` path) — update every
+  copy if the logo file or its markup ever changes.
 - **Nav color**: `var(--nav-bg)` (`#161233`, a smidge darker than
   `var(--bg)`) with light text (`var(--text)`, and the per-link accents
   use the `--c-*` soft/pastel tier) — **not** the light `--paper` surface
@@ -457,7 +475,7 @@ drifting out of sync.
   static list; both the art and the fun-fact captions are still
   placeholder, see `images/` below) → `#projects`
   (a stacked list of the 4 projects — Comet Commute, Elevator
-  Accessibility, DreamScape, Lucky's First Day — each a "project spread":
+  Accessibility, DreamScape, EcoLink* — each a "project spread":
   a bordered info card (title, one-line summary, tag pills, CTA) paired
   with a tilted photo, every project fully visible without an
   interaction, each linking out to a full write-up; see `case-studies/`
@@ -497,15 +515,102 @@ drifting out of sync.
   About section's `.doodle` tooltips (see below) — don't delete them when
   touching Projects, even though Projects itself doesn't use them.
 - `case-studies/` — one HTML page per case study (`comet-commute.html`,
-  `elevator-accessibility.html`, `dreamscape.html`), real UT Dallas
-  coursework/designathon projects with real research, decisions, and
-  outcomes. Each sets `--case-accent` on `<body>` (a rainbow token matching
-  its project's accent color on the Projects list) that themes its
-  back-link, chapter numerals, quote
-  marks, and list bullets. Reuses `.page-hero`, `.card`, `.btn`, and the
-  shared nav/footer rather than introducing new page chrome. Lucky's First
-  Day has no page here — it's an existing standalone site, linked to
-  directly.
+  `elevator-accessibility.html`, `dreamscape.html`, `ecolink.html`), real
+  UT Dallas coursework/designathon/solo-research projects with real
+  research, decisions, and outcomes. Each sets `--case-accent` on `<body>`
+  (a rainbow token matching its project's accent color on the Projects
+  list) that themes its back-link, chapter numerals, quote marks, and
+  list bullets. Reuses `.page-hero`, `.card`, `.btn`, and the shared
+  nav/footer rather than introducing new page chrome. The prev/next
+  footer nav (`.case-prevnext`) cycles through all 4 in Projects-list
+  order (Comet Commute → Elevator Accessibility → DreamScape → EcoLink* →
+  back to Comet Commute) — update all the affected `.case-prevnext` links
+  in both neighboring pages if this order ever changes, not just the
+  page(s) being added/removed.
+
+  **EcoLink*** (`ecolink.html`) replaced **Lucky's First Day** in the
+  Projects list at Jasmine's request — Lucky's First Day had no case-study
+  page here (it was an existing standalone illustration site, linked to
+  directly), while EcoLink* is a full UX case study built from a real
+  slide deck Jasmine provided (`Bontha_Jasmine_Final.pptx`) covering
+  mission, problem framing, research/evidence, competitive analysis, user
+  segments, a user narrative, and real designed app screens. Unlike the
+  other 3 case studies (which use abstract placeholder line-art
+  throughout, since none of those projects have real screens yet), most
+  of EcoLink*'s imagery is real: the three app screens she actually
+  designed (dashboard, Climate Monitor, Drone Fleet — extracted from the
+  deck and cropped into `images/case-ecolink-gallery-*.jpg`, and combined
+  into `images/case-ecolink-wide.jpg` for the Hero/Final Solution mockup
+  and `images/orbit-ecolink.jpg` for the Projects-list thumbnail). The
+  Research/Process chapters use stock photography from the same deck
+  (a camera-trap-style wildlife photo, a researcher-with-tablet photo, a
+  park-ranger photo) captioned honestly as "representative imagery," not
+  implied to be Jasmine's own field photography.
+
+  **DreamScape** later got the same treatment once Jasmine sent its own
+  slide deck (`DreamScape.pptx`) — Comet Commute and Elevator Accessibility
+  are still the only 2 case studies using abstract placeholder line-art
+  throughout, since neither of those has a real deck/screens yet.
+  DreamScape's deck's screens (`image-7-1`/`image-7-2`/`image-9-1` in the
+  deck's media) already came pre-rendered as phone-mockup exports from her
+  design tool (a real bezel/notch baked into the PNG on a solid black
+  canvas) rather than flat rectangular UI crops like EcoLink*'s — see the
+  "polishing pre-framed screenshots" note below for how those differ from
+  EcoLink*'s raw-crop pipeline. `images/case-dreamscape-wide.jpg` (hero +
+  Final Solution) composites 3 of those screens (sleep dashboard,
+  emotions/dream-story, Security & Privacy); the two Process split-visuals
+  and the 3 Design Iterations gallery tiles use the same screens
+  individually, captioned by what they actually show (e.g. "The Security
+  & Privacy screen — two-factor authentication and biometric lock"), not
+  the old placeholder captions ("Snoozy concept sketch," "early wireframe")
+  which described content that was never actually provided — don't
+  reintroduce those specific captions if this page changes again unless
+  that specific content (e.g. an actual Snoozy sketch) actually exists.
+  `images/case-dreamscape-research.svg` is the one slot still on
+  placeholder art — no real research-board image exists for it.
+  `images/orbit-dreamscape.svg` (the Projects-list thumbnail) is
+  *also* still placeholder — swapping the case-study page's internal
+  images doesn't update that separate thumbnail slot, which would need
+  its own real square/circular crop if Jasmine wants that updated too.
+
+  **Polishing pre-framed vs. raw-crop screenshots** — both EcoLink* and
+  DreamScape's real screens went through a Pillow-based "make it look
+  like a real device mockup" pass (done once, offline, output files
+  committed as static JPGs — not a build step, nothing runs this at
+  request time) rather than being used as flat screenshot crops, since
+  flat crops read as noticeably less polished than the rest of the site's
+  crafted-not-generic aesthetic. The two decks needed different handling:
+  - **EcoLink*'s** screens were flat rectangular UI exports with no
+    device chrome at all, so the phone bezel/notch/shadow had to be drawn
+    from scratch around each one (rounded-rect bezel, a notch pill,
+    `ImageFilter.GaussianBlur` drop shadow), then composited onto a solid
+    indigo background (`(36, 31, 71)`, close to `--bg`) matching the
+    site's own dark theme.
+  - **DreamScape's** screens already came bezel-framed from Jasmine's own
+    design tool, but on an opaque solid-black square canvas — pasting
+    those directly next to each other would show visible black
+    rectangles. Instead: threshold the image to find the actual phone
+    silhouette's bounding box (anything above a low luminance cutoff),
+    crop tight to it, then apply a rounded-rect alpha mask at roughly the
+    phone's own visible corner radius so the remaining black corner
+    triangles (from the original square canvas) become transparent — only
+    *then* add the same drop-shadow/indigo-background treatment as
+    EcoLink*. Don't skip the corner-masking step for pre-framed exports
+    like this — without it, faint black corner triangles show through
+    against the site's non-black background.
+  - In both cases, `object-fit: cover` inside `.case-visual-box` (a 4:3,
+    landscape-ish box) will center-crop a tall portrait phone image and
+    cut off its header/title — add `style="object-position: top"` on
+    that `<img>` (or `left` for a wide, landscape flow image like
+    DreamScape's BCI setup screens) rather than accepting the default
+    center crop, the same fix already needed for EcoLink*'s gallery.
+
+  As with the other case
+  studies, Results/Impact stayed `[TBD]` (rule 6) since this was a
+  research/design project, never a shipped product — don't invent
+  metrics for it either. `--case-accent: var(--c-green)` — the one
+  rainbow slot none of the other 3 projects used, and thematically fits
+  an environmental/conservation project.
 
   The layout is a wide "presentation deck" (redesigned per a reference
   Jasmine shared, laurenlangdesign.com/supplierone) rather than a narrow
@@ -571,30 +676,44 @@ drifting out of sync.
   or fabricating content to fill it.
 - `images/` — the one exception to "no raster/external image assets": 5
   small swappable placeholder SVGs (`doodle-1.svg`…`doodle-5.svg`) used in
-  the About section; 9 more for the case studies —
-  `case-<project>-research.svg`, `case-<project>-solution.svg` (or
-  `-prototype.svg` for DreamScape), and `case-<project>-wide.svg`, for
-  `comet`/`elevator`/`dreamscape`; and 4 more (`orbit-comet.svg`,
-  `orbit-elevator.svg`, `orbit-dreamscape.svg`, `orbit-lucky.svg`) for
-  the Projects list's `.project-visual` photos — these reuse the exact
-  motif from each project's original thumbnail (circle, elevator shaft,
-  crescent moon, zigzag path), a full-bleed circular composition filling
-  the square viewBox edge-to-edge, so it still crops cleanly into the
-  list's portrait (3:4) photo slot, rather than a generic placeholder
-  shared across all 4. All are meant to be directly overwritten with
-  Jasmine's own art or real screenshots — no HTML/CSS edits needed, just
-  replace the file, the same swap-the-file pattern as the About page's
-  doodle slots. `object-fit: cover` on `.case-mockup img`/
-  `.case-visual-box img`/`.project-visual img` crops any real image
-  cleanly regardless of its actual aspect ratio, so the same placeholder
-  file can be (and currently is) reused across more than one slot on a
-  page. Follow this same "real file in `images/`, referenced by `<img src>`"
-  pattern for any future image slot rather than an inline-SVG placeholder
-  or a text-only callout. `mascot-astronaut.png` (hero section) is the one
-  file in this directory that isn't a placeholder — it's Jasmine's real,
-  final character art, resized/compressed on intake (from a 2048px/1.3MB
-  source down to 1024px/~390KB, since the mascot never displays wider than
-  ~380px) rather than served at its original resolution.
+  the About section; 3 more for Comet Commute/Elevator Accessibility
+  (still fully placeholder-only — no deck/screens exist for either yet):
+  `case-<project>-research.svg`, `case-<project>-solution.svg`, and
+  `case-<project>-wide.svg`, for `comet`/`elevator`; 1 more
+  (`case-dreamscape-research.svg`) for DreamScape's one remaining
+  placeholder slot (see its entry above — every other DreamScape case-study
+  image is real now); and 3 more (`orbit-comet.svg`, `orbit-elevator.svg`,
+  `orbit-dreamscape.svg`) for those same 3 projects' Projects-list
+  `.project-visual` photos — these reuse the exact motif from each
+  project's original thumbnail (circle, elevator shaft, crescent moon), a
+  full-bleed circular composition filling the square viewBox edge-to-edge,
+  so it still crops cleanly into the list's portrait (3:4) photo slot,
+  rather than a generic placeholder shared across all of them. All are
+  meant to be directly overwritten with Jasmine's own art or real
+  screenshots — no HTML/CSS edits needed, just replace the file, the same
+  swap-the-file pattern as the About page's doodle slots. `object-fit:
+  cover` on `.case-mockup img`/`.case-visual-box img`/`.project-visual
+  img` crops any real image cleanly regardless of its actual aspect
+  ratio, so the same placeholder file can be (and currently is) reused
+  across more than one slot on a page. Follow this same "real file in
+  `images/`, referenced by `<img src>`" pattern for any future image slot
+  rather than an inline-SVG placeholder or a text-only callout.
+
+  Three sets are real, final assets rather than placeholders:
+  `mascot-astronaut.png` (hero section) — Jasmine's own character art,
+  resized/compressed on intake (from a 2048px/1.3MB source down to
+  1024px/~390KB, since the mascot never displays wider than ~380px)
+  rather than served at its original resolution — and the `case-ecolink-*`
+  /`orbit-ecolink.jpg` and `case-dreamscape-*` sets (see their entries
+  above), both extracted from Jasmine's own slide decks, resized, and
+  (for the real UI screens specifically) run through the phone-mockup
+  polishing pass described above. If a tall portrait screenshot needs to
+  sit inside a landscape-ish box like `.case-visual-box` (4:3), add
+  `style="object-position: top"` on that `<img>` (or `left` for a wide
+  landscape flow image) rather than leaving the default center crop,
+  which cuts off the screen's header/title — center-crop is fine for
+  ordinary photography, not for UI screenshots where the top/leading edge
+  matters.
 - **Free Draw** (`#panel-freedraw` in `index.html`, `initFreeDraw()` in
   `js/main.js`) — a simple, no-strings-attached drawing space on
   Playground's second tab: color picker, brush size, eraser, undo, clear,
@@ -649,15 +768,25 @@ drifting out of sync.
   scattered, casually-placed feel rather than a perfectly level grid —
   keep that restrained (a few degrees, not a dramatic skew) rather than
   literally drawing a notebook page, per Jasmine's general preference for
-  restraint over a maximalist copy of a reference. Each photo is still
-  placeholder line-art (`images/orbit-*.svg`, unchanged from Project
-  Orbit — see the `images/` entry above), not a real screenshot, since
-  none of the 4 projects have a real hero image yet (rule 6); swap the
-  file for a real photo later, `object-fit: cover` on `.project-visual
-  img` handles any aspect ratio into the 3:4 portrait crop. Plain `<a>`
-  links throughout, so the sitewide cross-document View Transition (top
-  of `css/style.css`) still applies automatically — no JS needed, unlike
-  Project Orbit's bespoke `dragMoved`-guarded click-through.
+  restraint over a maximalist copy of a reference. Comet Commute, Elevator
+  Accessibility, and DreamScape still use placeholder line-art
+  (`images/orbit-*.svg`, unchanged from Project Orbit — see the `images/`
+  entry above), not a real screenshot, since none of those 3 projects
+  have a real hero image yet (rule 6); EcoLink*'s photo is real (see its
+  entry above) — swap the remaining 3 placeholder files for real photos
+  the same way whenever they're available. `object-fit: cover` on
+  `.project-visual img` handles any aspect ratio into the 3:4 portrait
+  crop regardless of which kind of file is behind it. Plain `<a>` links
+  throughout, so the sitewide cross-document View Transition (top of
+  `css/style.css`) still applies automatically — no JS needed, unlike
+  Project Orbit's bespoke `dragMoved`-guarded click-through. **Watch the
+  section's own `padding`**: `.projects-list` sets it explicitly
+  (`50px 8% 30px`) rather than inheriting the base `section` rule's `8%`
+  horizontal padding — a version of this that set the horizontal value to
+  `0` shipped briefly and pinned every card flush against the viewport
+  edge with no margin at all ("getting cut off on the sides"). If you
+  touch this rule again, keep a real horizontal value, don't drop it to
+  `0`.
 - **Contact form** (`#contactForm` in `index.html`, `initContactForm()` in
   `js/main.js`) — submits to Jasmine's own Formspree endpoint
   (`https://formspree.io/f/xrpgwbwo`) via `fetch` rather than a plain HTML

@@ -571,15 +571,22 @@ a { color: inherit; }
 }
 
 .logo {
-  font-size: 1.9rem;
-  color: var(--c-blue);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
 }
 
-.logo .spark { width: 20px; height: 20px; }
+/* Jasmine's own hand-drawn signature wordmark (real art, not a system
+   font rendering of her name) — replaces what used to be the spark glyph
+   + "Jasmine" as plain text. Sized by height, not width, since the
+   source art's own proportions (a wide signature with a comet swoosh
+   above it) should stay intact rather than being stretched to a fixed
+   box. */
+.logo-mark {
+  display: block;
+  height: 44px;
+  width: auto;
+}
 
 .nav-links a {
   text-decoration: none;
@@ -749,8 +756,6 @@ a { color: inherit; }
 .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(179, 220, 240, .28); }
 .btn:active { transform: translateY(-1px) scale(1.01); }
 .btn:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid var(--c-yellow); outline-offset: 3px; }
-
-.spark { display: inline-block; }
 
 .card {
   /* A more solid, clearly-bordered panel — less "invisible glass," more
@@ -1636,7 +1641,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   display: flex;
   flex-direction: column;
   gap: 80px;
-  padding: 50px 0 30px;
+  padding: 50px 8% 30px;
 }
 
 .project-spread {
