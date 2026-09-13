@@ -143,27 +143,35 @@
      never as a fill under white text (see note above). Red and teal
      nudged toward coral-salmon and a more vivid glowing cyan respectively
      — closer to a moodboard reference Jasmine shared (coral-pink stars,
-     glowing teal clouds, deep indigo night). */
-  --c-red: #f0a89a;
-  --c-orange: #f7d4ab;
-  --c-yellow: #eddb9c;
-  --c-green: #bfe8d4;
-  --c-blue: #b3dcf0;
-  --c-purple: #d6c6f0;
-  --c-pink: #f0a8c9;
+     glowing teal clouds, deep indigo night). Saturation raised a notch
+     sitewide (both tiers, ~+16% HSL saturation here / ~+8% on the deep
+     tier below) at Jasmine's request for a bit more punch than the very
+     dusty original pastel pass — still a soft palette, not a return to
+     neon. The deep tier's boost was capped smaller and re-checked against
+     white and #fffbf4 (the paper/nav surface) so every AA text-contrast
+     pairing documented in CLAUDE.md still holds; --d-green has the
+     tightest margin (~4.6:1) — don't push its saturation any further
+     without re-checking contrast. */
+  --c-red: #f9a291;
+  --c-orange: #fed5a4;
+  --c-yellow: #f6e093;
+  --c-green: #b8efd4;
+  --c-blue: #acdff7;
+  --c-purple: #d5c0f6;
+  --c-pink: #f8a0c8;
   /* Added from Jasmine's cosmic-creature moodboard reference — a mint/teal
      that the original 6-hue rainbow didn't have. Accent-only, like pink:
      no --d-teal counterpart, since it isn't used as nav/text-on-white. */
-  --c-teal: #7fd9e6;
+  --c-teal: #73e2f2;
 
   /* deep tier — saturated enough for AA-safe text-on-cream AND for white
      text sitting on top of it as a button/badge fill */
-  --d-red: #a8455f;
-  --d-orange: #9c5620;
-  --d-gold: #7a611e;
-  --d-green: #357a5a;
-  --d-blue: #2f6488;
-  --d-purple: #6f5498;
+  --d-red: #b13c5a;
+  --d-orange: #a45518;
+  --d-gold: #806418;
+  --d-green: #2e815b;
+  --d-blue: #28658f;
+  --d-purple: #6d4ba1;
 
   --gradient-rainbow: linear-gradient(90deg, var(--c-red), var(--c-orange), var(--c-yellow), var(--c-green), var(--c-blue), var(--c-purple));
 
@@ -272,7 +280,7 @@ body::after {
   /* Warm gold by default — set per-star in JS (initStarfield()) to one of
      a few soft pastel hues for variety, rather than plain white, to match
      the site's pastel Bee-and-PuppyCat palette. */
-  background: var(--star-color, #e0bd5a);
+  background: var(--star-color, #f0c44a);
   border-radius: 50%;
   animation: star-twinkle var(--dur, 3.4s) ease-in-out infinite;
   animation-delay: var(--delay, 0s);
@@ -311,7 +319,7 @@ body::after {
      the left end is the leading edge. Bright-at-left/fade-at-right is
      what makes the head lead the direction of travel instead of trailing
      behind it. */
-  background: linear-gradient(90deg, #fffbf4, #e0bd5a 40%, transparent);
+  background: linear-gradient(90deg, #fffbf4, #f0c44a 40%, transparent);
   opacity: 0;
   transform-origin: right center;
   rotate: -22deg;
@@ -1209,7 +1217,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   /* A real pastel gradient fill, not just a faint glow — reads as a
      small glowing moon/planet face floating in the dark, and gives the
      placeholder's white line-art face something to actually sit on. */
-  background: radial-gradient(circle at 35% 25%, #d6c6f0, #b3dcf0 60%, #a8e0cf);
+  background: radial-gradient(circle at 35% 25%, #d5c0f6, #acdff7 60%, #9fe9d3);
   box-shadow: 0 20px 60px -20px rgba(111, 84, 152, .45);
   transition: box-shadow .5s ease, rotate .5s cubic-bezier(.2,.7,.3,1.2);
 }
@@ -1623,11 +1631,17 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 
 /* =========================================================
    Projects — a stacked list of "project spreads" (a bordered info card
-   paired with a tilted photo), replacing Project Orbit's carousel at
-   Jasmine's explicit request, styled after a reference she shared
+   paired with a photo), replacing Project Orbit's carousel at Jasmine's
+   explicit request, styled after a reference she shared
    (wallofportfolios.in's "selected works" list: a page-like card next to
-   a tilted photo, repeated down the page). Adapted to this site's own
-   dark/pastel system rather than copied literally (rule 4) — the
+   a photo, repeated down the page). Cards/photos originally alternated a
+   slight scattered-page tilt per spread; Jasmine asked for that removed
+   in favor of a level, straight layout, and for the vertical gap between
+   spreads tightened so more of the list is visible at once without
+   scrolling through one project at a time — don't reintroduce the tilt
+   or widen the gap back toward the original 80px without checking with
+   her first. Adapted to this site's own dark/pastel system rather than
+   copied literally (rule 4) — the
    reference's cream paper + hot-pink pills became this site's existing
    translucent `.card`-style panel + the same per-project accent/
    accent-deep color pair the old orbit rings and CTAs already used
@@ -1640,8 +1654,8 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 .projects-list {
   display: flex;
   flex-direction: column;
-  gap: 80px;
-  padding: 50px 8% 30px;
+  gap: 28px;
+  padding: 36px 8% 24px;
 }
 
 .project-spread {
@@ -1657,18 +1671,12 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   background: rgba(255, 255, 255, .07);
   border: 1.5px solid var(--panel-border);
   border-radius: 26px;
-  padding: 28px;
+  padding: 22px;
   font-size: .92rem;
   transition: transform .3s ease, border-color .3s ease;
 }
 
-/* A slight scattered-page tilt per spread, alternating direction, rather
-   than every card/photo sitting perfectly level — echoes the reference's
-   casually-placed notebook-page-plus-photo feel without literally
-   drawing a notebook. */
-.project-spread:nth-child(odd) .project-card { transform: rotate(-1.4deg); }
-.project-spread:nth-child(even) .project-card { transform: rotate(1.4deg); }
-.project-card:hover { transform: rotate(0deg) translateY(-4px); border-color: var(--accent); }
+.project-card:hover { transform: translateY(-4px); border-color: var(--accent); }
 
 .project-card h3 { font-size: 1.4rem; color: var(--accent); margin-bottom: 10px; }
 .project-card > p { color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; }
@@ -1695,8 +1703,8 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 .project-visual {
-  flex: 1 1 220px;
-  max-width: 260px;
+  flex: 1 1 180px;
+  max-width: 200px;
   aspect-ratio: 3 / 4;
   border-radius: 20px;
   overflow: hidden;
@@ -1705,9 +1713,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   transition: transform .3s ease;
 }
 
-.project-spread:nth-child(odd) .project-visual { transform: rotate(1.6deg); }
-.project-spread:nth-child(even) .project-visual { transform: rotate(-1.6deg); }
-.project-visual:hover { transform: rotate(0deg) scale(1.02); }
+.project-visual:hover { transform: scale(1.02); }
 
 .project-visual img {
   width: 100%;
@@ -1717,12 +1723,8 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 @media (max-width: 760px) {
-  .projects-list { gap: 60px; }
+  .projects-list { gap: 32px; }
   .project-spread { flex-direction: column; }
-  .project-spread .project-card,
-  .project-spread .project-visual {
-    transform: none;
-  }
   .project-card { max-width: 100%; }
   .project-visual { max-width: 100%; }
 }

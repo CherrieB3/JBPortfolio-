@@ -160,18 +160,18 @@ function initRabbitEgg() {
 }
 
 function hopRabbit() {
-  const colors = ['#f0a8c9', '#b3dcf0', '#eddb9c', '#bfe8d4', '#d6c6f0', '#f7d4ab', '#a8e0cf'];
+  const colors = ['#f8a0c8', '#acdff7', '#f6e093', '#b8efd4', '#d5c0f6', '#fed5a4', '#9fe9d3'];
   const hop = document.createElement('div');
   hop.className = 'rabbit-hop';
   hop.setAttribute('aria-hidden', 'true');
   // Same line-art rabbit silhouette used elsewhere on the site — no emoji.
   hop.innerHTML = `
     <svg class="rabbit-hop-glyph" viewBox="0 0 60 60" fill="none">
-      <path d="M20,25 C15,10 8,0 15,2 C24,5 26,18 24,28" stroke="#d6c6f0" stroke-width="3" fill="none" stroke-linecap="round" />
-      <path d="M32,25 C30,8 26,-2 34,2 C41,6 40,18 36,28" stroke="#d6c6f0" stroke-width="3" fill="none" stroke-linecap="round" />
-      <ellipse cx="30" cy="45" rx="24" ry="18" stroke="#d6c6f0" stroke-width="3" fill="none" />
-      <circle cx="22" cy="42" r="2.5" fill="#d6c6f0" />
-      <circle cx="34" cy="42" r="2.5" fill="#d6c6f0" />
+      <path d="M20,25 C15,10 8,0 15,2 C24,5 26,18 24,28" stroke="#d5c0f6" stroke-width="3" fill="none" stroke-linecap="round" />
+      <path d="M32,25 C30,8 26,-2 34,2 C41,6 40,18 36,28" stroke="#d5c0f6" stroke-width="3" fill="none" stroke-linecap="round" />
+      <ellipse cx="30" cy="45" rx="24" ry="18" stroke="#d5c0f6" stroke-width="3" fill="none" />
+      <circle cx="22" cy="42" r="2.5" fill="#d5c0f6" />
+      <circle cx="34" cy="42" r="2.5" fill="#d5c0f6" />
     </svg>`;
   document.body.appendChild(hop);
 
@@ -241,7 +241,7 @@ function initStarfield() {
   // lavender, weighted toward coral, matching a moodboard reference
   // Jasmine shared (coral-pink stars, glowing teal clouds, deep indigo
   // night) more than the earlier gold-heavy mix.
-  const STAR_COLORS = ['#f0a89a', '#f0a89a', '#7fd9e6', '#d6c6f0', '#f0a8c9', '#e0bd5a'];
+  const STAR_COLORS = ['#f9a291', '#f9a291', '#73e2f2', '#d5c0f6', '#f8a0c8', '#f0c44a'];
 
   const frag = document.createDocumentFragment();
   for (let i = 0; i < count; i++) {
@@ -322,7 +322,7 @@ function initCustomCursor() {
   });
   document.addEventListener('mouseover', () => { cursor.style.opacity = '1'; });
 
-  const BURST_COLORS = ['#f0a8c9', '#b3dcf0', '#eddb9c', '#bfe8d4', '#d6c6f0', '#f7d4ab', '#a8e0cf'];
+  const BURST_COLORS = ['#f8a0c8', '#acdff7', '#f6e093', '#b8efd4', '#d5c0f6', '#fed5a4', '#9fe9d3'];
   const BURST_COUNT = 7;
 
   function spawnBurst(x, y) {

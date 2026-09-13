@@ -109,18 +109,24 @@ sit on** (that's what broke during the brief light-mode attempt: `.btn`,
 failed contrast; always reach for the deep tier for that). Every pair
 below was checked against both white and `#fdf3e7` (the paper/nav color)
 at build time — if you introduce a new slot, verify it the same way
-rather than eyeballing it.
+rather than eyeballing it. Jasmine later asked for the palette "a bit
+more saturated" — every value below was bumped (~+16% HSL saturation on
+the soft tier, ~+8% on the deep tier, hue/lightness held constant) and
+rechecked against the same two backgrounds; the deep tier's smaller boost
+was deliberate to keep every pairing at or above the 4.5:1 AA minimum
+(`--d-green` has the tightest margin, ~4.6:1 — don't push it further
+without rechecking contrast).
 
 | Slot | Soft (`--c-*`, decorative on dark) | Deep (`--d-*`, AA text-on-nav / white-on-fill) |
 |---|---|---|
-| Coral (was red) | `#f0a89a` | `#a8455f` |
-| Peach (was orange) | `#f7d4ab` | `#9c5620` |
-| Muted gold (was yellow) | `#eddb9c` | `#7a611e` |
-| Pale mint (was green) | `#bfe8d4` | `#357a5a` |
-| Sky blue (was blue) | `#b3dcf0` | `#2f6488` |
-| Soft lavender (was purple) | `#d6c6f0` | `#6f5498` |
-| Rose pink (accent only) | `#f0a8c9` | — (reuse `--d-red` if a deep pink is needed) |
-| Glowing teal/cyan (accent only) | `#7fd9e6` | — |
+| Coral (was red) | `#f9a291` | `#b13c5a` |
+| Peach (was orange) | `#fed5a4` | `#a45518` |
+| Muted gold (was yellow) | `#f6e093` | `#806418` |
+| Pale mint (was green) | `#b8efd4` | `#2e815b` |
+| Sky blue (was blue) | `#acdff7` | `#28658f` |
+| Soft lavender (was purple) | `#d5c0f6` | `#6d4ba1` |
+| Rose pink (accent only) | `#f8a0c8` | — (reuse `--d-red` if a deep pink is needed) |
+| Glowing teal/cyan (accent only) | `#73e2f2` | — |
 
 Background `#1c1840` — a deep indigo-violet "moonlit" night, not a flat
 near-black void (nudged there from `#050314` per a moodboard reference
@@ -134,8 +140,10 @@ mint-teal) specifically to match that reference — both the ambient
 (`STAR_COLORS` in `js/main.js`, weighted toward coral) were rebalanced to
 feature them more, alongside lavender, with gold/peach as a secondary
 warm accent rather than the dominant note. Star/spark glyphs that used to
-be a flat `fill="white"` are now warm gold (`#e0bd5a`) — kept deliberately
-as that secondary warm accent; don't "fix" them back to white.
+be a flat `fill="white"` are now warm gold (`#f0c44a`, bumped from an
+original `#e0bd5a` in the same later "more saturated" pass as the rainbow
+table below) — kept deliberately as that secondary warm accent; don't
+"fix" them back to white.
 
 `--gradient-rainbow` (rose→peach→gold→mint→sky→lavender) is the site's
 signature: nav underline, comet trail, hero ribbon, `.gradient` text
@@ -763,12 +771,12 @@ drifting out of sync.
   don't reintroduce Project Orbit's carousel or the constellation grid
   without being asked. This also restores "every project visible without
   an interaction," undoing Project Orbit's tradeoff in the other
-  direction. `.project-spread:nth-child(odd)`/`(even)` alternate the tilt
-  direction on the card and photo (a few degrees each way) for a
-  scattered, casually-placed feel rather than a perfectly level grid —
-  keep that restrained (a few degrees, not a dramatic skew) rather than
-  literally drawing a notebook page, per Jasmine's general preference for
-  restraint over a maximalist copy of a reference. Comet Commute, Elevator
+  direction. Cards and photos originally alternated a slight scattered-page
+  tilt per spread (`.project-spread:nth-child(odd)`/`(even)`, a few degrees
+  each way) for a casually-placed feel rather than a perfectly level grid;
+  Jasmine later asked for that removed in favor of a straight, level
+  layout — don't reintroduce the alternating tilt without checking with
+  her first. Comet Commute, Elevator
   Accessibility, and DreamScape still use placeholder line-art
   (`images/orbit-*.svg`, unchanged from Project Orbit — see the `images/`
   entry above), not a real screenshot, since none of those 3 projects
@@ -781,12 +789,18 @@ drifting out of sync.
   `css/style.css`) still applies automatically — no JS needed, unlike
   Project Orbit's bespoke `dragMoved`-guarded click-through. **Watch the
   section's own `padding`**: `.projects-list` sets it explicitly
-  (`50px 8% 30px`) rather than inheriting the base `section` rule's `8%`
+  (`36px 8% 24px`) rather than inheriting the base `section` rule's `8%`
   horizontal padding — a version of this that set the horizontal value to
   `0` shipped briefly and pinned every card flush against the viewport
   edge with no margin at all ("getting cut off on the sides"). If you
   touch this rule again, keep a real horizontal value, don't drop it to
-  `0`.
+  `0`. The vertical gap between spreads (`.projects-list`'s `gap`) was
+  originally `80px`; Jasmine asked for it tightened (now `28px`, `32px` on
+  mobile) so more of the list stays visible at once while scrolling
+  instead of one project filling the whole viewport — `.project-visual`'s
+  `max-width` was also reduced (`260px` → `200px`) and `.project-card`'s
+  padding trimmed (`28px` → `22px`) to make that compactness hold
+  together rather than just shrinking the gap around still-large cards.
 - **Contact form** (`#contactForm` in `index.html`, `initContactForm()` in
   `js/main.js`) — submits to Jasmine's own Formspree endpoint
   (`https://formspree.io/f/xrpgwbwo`) via `fetch` rather than a plain HTML
