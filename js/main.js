@@ -198,14 +198,14 @@ function hopRabbit() {
   hop.addEventListener('animationend', () => hop.remove());
 }
 
-// Fades/rises .reveal and .reveal-fade elements in as they enter the
-// viewport. The "hidden" state is applied here, in JS, rather than as a
+// Fades/rises .reveal, .reveal-fade, and .reveal-right elements in as they
+// enter the viewport. The "hidden" state is applied here, in JS, rather than as a
 // CSS default — so a visitor whose JS fails to load (or who has it
 // disabled) sees every element in its normal, fully visible resting
 // state instead of content that never appears. Fires once per element,
 // then stops observing it.
 function initScrollReveal() {
-  const els = document.querySelectorAll('.reveal, .reveal-fade');
+  const els = document.querySelectorAll('.reveal, .reveal-fade, .reveal-right');
   if (!els.length) return;
 
   if (!('IntersectionObserver' in window)) return; // leave everything visible

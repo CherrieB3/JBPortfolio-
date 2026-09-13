@@ -365,9 +365,27 @@ h3 { font-family: 'Baloo 2', cursive; font-weight: 600; line-height: 1.15; }
   color: transparent;
 }
 
-/* Jasmine's own name in the hero — solid periwinkle, not the rainbow
-   gradient treatment .gradient uses elsewhere (footer's "amazing"). */
-.name-solid { color: #a3aef2; }
+/* Jasmine's own name in the hero — the same hand-drawn signature wordmark
+   used as the nav logo (images/logo-jasmine.png), swapped in for a plain
+   text rendering of her name. On its own line below "Hi! I'm" (display:
+   block does that on its own; no <br> needed alongside it — a trailing
+   <br> immediately before a block box is redundant and risks an extra
+   blank line in some browsers) and sized noticeably larger than the
+   surrounding text so it reads as the focal point of the greeting.
+   The source art's own canvas is ~36% dead space above the actual
+   letterforms (the comet swoosh arcs well above "Jasmine" before the
+   letters begin, measured directly off the PNG's alpha channel), so
+   sizing/positioning by the image's own box alone leaves a visually large
+   gap under "Hi! I'm" — the negative margin-top pulls the art up so the
+   *letters* sit close under "Hi! I'm" instead of the empty swoosh space
+   doing that job. Sized in em so both stay proportional as the hero
+   heading's own responsive clamp() scales. */
+.hero-name-mark {
+  display: block;
+  height: 2.2em;
+  width: auto;
+  margin-top: -.55em;
+}
 
 /* Single-hue accents for small emphasis words — an alternative to reaching
    for the full rainbow gradient every time a word needs a highlight. */
@@ -399,6 +417,16 @@ a { color: inherit; }
 .reveal-fade { transition: opacity .9s ease; }
 .reveal-fade.is-hidden { opacity: 0; }
 .reveal-fade.is-visible { opacity: 1; }
+
+/* Slides in from the right + fades, for a one-off hero-ish moment like
+   the About avatar (which already sits on the right side of its grid
+   column, so entering from that side reads as arriving into place rather
+   than crossing the whole layout) — safe to use transform here since
+   that element carries no hover transform of its own to compete with
+   (see the note on .reveal-fade above). */
+.reveal-right { transition: opacity .8s cubic-bezier(.16,.8,.3,1), transform .8s cubic-bezier(.16,.8,.3,1); }
+.reveal-right.is-hidden { opacity: 0; transform: translateX(70px); }
+.reveal-right.is-visible { opacity: 1; transform: translateX(0); }
 
 /* reduced motion: calm every decorative animation down */
 @media (prefers-reduced-motion: reduce) {
@@ -592,7 +620,7 @@ a { color: inherit; }
    box. */
 .logo-mark {
   display: block;
-  height: 44px;
+  height: 52px;
   width: auto;
 }
 
@@ -1203,46 +1231,22 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 
 .avatar-frame {
   position: relative;
-  width: min(70vw, 340px);
+  width: min(78vw, 400px);
   aspect-ratio: 1 / 1;
-  /* Off-center in its column, slightly tilted — a perfectly centered,
-     perfectly upright circle is exactly the "generated template" look
-     this page is trying not to have. Straightens up on hover, like it's
-     paying attention. */
+  /* Off-center in its column — a perfectly centered circle is exactly the
+     "generated template" look this page is trying not to have. Static on
+     purpose (no tilt, no hover motion): this version of the art is a
+     transparent PNG (photo + hand-illustrated ring, no background square
+     to frame), so it's displayed at natural size with no crop/rotation/
+     hover effect, the same treatment as the hero mascot art. */
   margin: 0 auto 0 8%;
-  rotate: -2.5deg;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  /* A real pastel gradient fill, not just a faint glow — reads as a
-     small glowing moon/planet face floating in the dark, and gives the
-     placeholder's white line-art face something to actually sit on. */
-  background: radial-gradient(circle at 35% 25%, #d5c0f6, #acdff7 60%, #9fe9d3);
-  box-shadow: 0 20px 60px -20px rgba(111, 84, 152, .45);
-  transition: box-shadow .5s ease, rotate .5s cubic-bezier(.2,.7,.3,1.2);
 }
 
-.avatar-frame:hover { box-shadow: 0 26px 70px -16px rgba(111, 84, 152, .6); rotate: 0deg; }
-
-.avatar-frame .ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, .5);
-  transition: transform .5s ease, border-color .5s ease;
-}
-
-.avatar-frame .ring.outer { inset: -14px; border-color: rgba(255, 255, 255, .25); }
-
-.avatar-frame:hover .ring { transform: scale(1.05); border-color: var(--c-blue); }
-
-.avatar-face { width: 62%; }
-
-.avatar-hint {
-  margin-top: 16px;
-  text-align: center;
-  color: var(--text-mute);
-  font-family: 'Baloo 2', cursive;
+.avatar-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 @media (max-width: 900px) {

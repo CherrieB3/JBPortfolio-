@@ -358,14 +358,43 @@ stacked on top of the rest of the site's existing motion/decoration.
   reintroduce that pattern for the nav logo specifically without
   checking; the general spark *glyph* itself is still very much in use
   elsewhere under other class names like `.hero-spark`/`.mini-spark`/
-  `.ribbon-spark`). `.logo-mark` is sized by `height` (currently `44px`),
-  not `width`, so the source art's own proportions (a wide signature with
-  a swoosh well above the letterforms) stay intact rather than being
-  stretched into a fixed box — if this ever needs to be bigger/smaller,
-  adjust that one `height` value rather than adding a `width`. The same
-  `<img>` markup is repeated in `index.html` and all 4 `case-studies/*.html`
+  `.ribbon-spark`). `.logo-mark` is sized by `height` (currently `52px`,
+  bumped up from an original `44px` at Jasmine's request so her name reads
+  a bit more prominently against the rest of the nav text), not `width`,
+  so the source art's own proportions (a wide signature with a swoosh
+  well above the letterforms) stay intact rather than being stretched
+  into a fixed box — if this ever needs to be bigger/smaller, adjust that
+  one `height` value rather than adding a `width`. The same `<img>`
+  markup is repeated in `index.html` and all 4 `case-studies/*.html`
   pages (each with its own relative `../images/` path) — update every
-  copy if the logo file or its markup ever changes.
+  copy if the logo file or its markup ever changes. The hero's `<h1>`
+  ("Hi! I'm" + the name) swaps in this same wordmark image
+  (`.hero-name-mark`) in place of what used to be a plain-text `Jasmine`
+  styled solid periwinkle (`.name-solid`, now removed as dead CSS since
+  nothing else used it) — keep both nav and hero pointed at the same
+  `images/logo-jasmine.png` file rather than exporting a separate crop
+  for the hero. The name sits on its own line below "Hi! I'm" — `display:
+  block` alone forces that break (no `<br>` in the markup; a trailing
+  `<br>` immediately before a block box is redundant and risks an extra
+  blank line in some browsers) — and noticeably larger than the
+  surrounding text (`height: 2.2em`, sized off the heading's own
+  responsive `clamp()` font-size rather than a fixed pixel height) so it
+  reads as the focal point of the greeting. `margin-top: -.55em` pulls it
+  up toward "Hi! I'm": the source PNG's own canvas is roughly 36% dead
+  space above the actual letterforms (the comet swoosh arcs well above
+  "Jasmine" before the letters begin — measured directly off the file's
+  alpha channel, not eyeballed), so without that negative margin the
+  image's *box* sits close but the visible *letters* end up floating well
+  below "Hi! I'm" with an oversized gap; the negative margin compensates
+  for that dead space so the letters — not the empty swoosh area — are
+  what visually aligns with the line above. Re-measure that ratio before
+  changing `.hero-name-mark`'s height again, rather than reusing this
+  exact margin value at a different size. This whole treatment (own line,
+  sized up, pulled up to align) came out of a few rounds of Jasmine's
+  direct feedback — earlier versions kept the name inline with "Hi! I'm"
+  at a smaller size with a trailing spark glyph (`✦`) after it, both of
+  which she asked removed; don't reintroduce either without checking with
+  her first.
 - **Nav color**: `var(--nav-bg)` (`#161233`, a smidge darker than
   `var(--bg)`) with light text (`var(--text)`, and the per-link accents
   use the `--c-*` soft/pastel tier) — **not** the light `--paper` surface
@@ -476,7 +505,10 @@ drifting out of sync.
 
 - `index.html` — the entire site as one page. In scroll order: hero (comet
   trail, mascot) → `#about` (real bio pulled from Jasmine's
-  previous Framer portfolio, hover avatar frame, a
+  previous Framer portfolio, a real photo of Jasmine (`images/
+  avatar-jasmine.png`, see the `images/` entry below) displayed static in
+  `.avatar-frame` — no tilt, no hover motion, at Jasmine's explicit
+  request — a
   "sketchbook" of 5 doodles floating around the bio/avatar content — each
   one will be a drawing of a personal object, with its hover/focus tooltip
   a fun fact about Jasmine tied to that object; below 700px it becomes a
@@ -707,12 +739,42 @@ drifting out of sync.
   `images/`, referenced by `<img src>`" pattern for any future image slot
   rather than an inline-SVG placeholder or a text-only callout.
 
-  Three sets are real, final assets rather than placeholders:
+  Four sets are real, final assets rather than placeholders:
   `mascot-astronaut.png` (hero section) — Jasmine's own character art,
   resized/compressed on intake (from a 2048px/1.3MB source down to
   1024px/~390KB, since the mascot never displays wider than ~380px)
-  rather than served at its original resolution — and the `case-ecolink-*`
-  /`orbit-ecolink.jpg` and `case-dreamscape-*` sets (see their entries
+  rather than served at its original resolution; `avatar-jasmine.png`
+  (About section) — a real photo of Jasmine, already composited (by her)
+  inside a hand-illustrated rainbow shooting-star ring, on a *transparent*
+  background (an earlier version she sent had this same composite on an
+  opaque dark square, which was used briefly before she sent this
+  transparent version instead — don't go back to compositing it onto a
+  solid card/box). Because it's transparent, `.avatar-frame` displays it
+  at natural size with no crop, no border-radius, and — at Jasmine's
+  explicit request — no tilt or hover motion at all, the same static,
+  frame-free treatment as the hero mascot art; don't reintroduce the
+  tilt-and-straighten-on-hover interaction the placeholder version had
+  without checking with her first. `.avatar-frame`'s size
+  (`width: min(78vw, 400px)`, up from an initial `min(70vw, 340px)` — bump
+  the source resolution to match if this grows again, see below) is the
+  one thing that does still stay in Jasmine's control; it also gets its
+  own scroll-triggered entrance, `.reveal-right` (fade + slide in from the
+  right, `translateX(70px)` → `0`, at Jasmine's explicit request — an
+  earlier fade+scale+rise variant, `.reveal-pop`, was tried first and
+  replaced by this one; don't reintroduce the scale/rise version without
+  checking with her first). Defined next to `.reveal`/`.reveal-fade` in
+  `css/style.css`, wired into the same `initScrollReveal()` observer in
+  `js/main.js` — just another class name added to its selector, not a
+  separate mechanism. Safe to use a transform-based reveal here (unlike
+  the plain-fade `.reveal-fade` other elements use) since this element
+  carries no hover transform of its own to compete with (unlike the cards
+  `.reveal-fade` was written for). Resized/
+  compressed on intake the same way as the mascot (from a 1254px/2.5MB PNG
+  source down to an 800px/~980KB PNG — kept as PNG rather than converted
+  to JPEG, since the transparency has to survive — sized for roughly 2x
+  its current 400px display cap so it still reads crisp on retina
+  screens) — and the `case-ecolink-*`/`orbit-ecolink.jpg` and
+  `case-dreamscape-*` sets (see their entries
   above), both extracted from Jasmine's own slide decks, resized, and
   (for the real UI screens specifically) run through the phone-mockup
   polishing pass described above. If a tall portrait screenshot needs to
