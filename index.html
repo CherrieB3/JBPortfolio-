@@ -42,9 +42,8 @@
                 <mask id="trailFadeMask" maskUnits="userSpaceOnUse">
                     <rect id="trailFadeRect" x="0" y="0" width="0" height="0" fill="url(#trailFadeGradient)" />
                 </mask>
-            </defs>
-        </svg>
-    </div>
+        </defs>
+    </svg>
     <button class="comet-star" type="button" aria-label="Scroll to top">
         <span class="star-glyph">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -95,49 +94,7 @@
                 <span class="hero-cloud hero-cloud-b"></span>
                 <span class="hero-cloud hero-cloud-c"></span>
             </div>
-            <!-- Decorative only (aria-hidden) — a slim hand-drawn comet living in the
-                 hero's left margin gutter, entirely left of .hero-text's own padding, so
-                 it never crosses the heading/tagline/button regardless of how much they
-                 wrap. Purple tail (bottom) to red head (top), both tips faded out via the
-                 gradient's own alpha, with the thicker mid-stroke's dasharray-cut ends
-                 tapering it to a point rather than a flat-cut bar. Sits behind .hero-text
-                 (z-index 0 vs 1) so copy stays readable on top of it either way. -->
-            <svg class="hero-ribbon" viewBox="0 0 90 480" fill="none" aria-hidden="true">
-                <defs>
-                    <!-- Full rainbow again, purple tail to red head, still fading out
-                         at both true tips via stop-opacity. -->
-                    <linearGradient id="heroRibbon" x1="30" y1="440" x2="55" y2="50" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#d5c0f6" stop-opacity="0" />
-                        <stop offset="12%" stop-color="#d5c0f6" stop-opacity="1" />
-                        <stop offset="32%" stop-color="#acdff7" />
-                        <stop offset="50%" stop-color="#b8efd4" />
-                        <stop offset="68%" stop-color="#f6e093" />
-                        <stop offset="85%" stop-color="#fed5a4" stop-opacity="1" />
-                        <stop offset="100%" stop-color="#f3c4cf" stop-opacity="0" />
-                    </linearGradient>
-                </defs>
-                <!-- Thin full-length wisp — the faded tips read as a comet trailing off
-                     into nothing, past where the thicker body below stops. -->
-                <path d="M 30 440 C 55 400, 10 350, 45 300 C 75 255, 15 210, 45 160 C 70 120, 20 90, 55 50"
-                    stroke="url(#heroRibbon)" stroke-width="5" stroke-linecap="round" opacity=".55" />
-                <!-- Thicker body, shown only over its middle stretch (pathLength +
-                     dasharray) so both ends taper to the round linecap instead of a flat
-                     cut — a "slight taper" without needing a hand-built variable-width
-                     outline. -->
-                <path d="M 30 440 C 55 400, 10 350, 45 300 C 75 255, 15 210, 45 160 C 70 120, 20 90, 55 50"
-                    stroke="url(#heroRibbon)" stroke-width="13" stroke-linecap="round"
-                    pathLength="100" stroke-dasharray="58 100" stroke-dashoffset="-21" />
-                <path d="M12 30 L14.5 39.5 L24 42 L14.5 44.5 L12 54 L9.5 44.5 L0 42 L9.5 39.5 Z"
-                    transform="translate(46,40) scale(.6)" fill="#f0c44a" />
-
-                <!-- Particle sparkle riding the comet's curve — small twinkling
-                     stars, staggered so they don't all pulse in unison. -->
-                <circle class="ribbon-spark" cx="38" cy="380" r="2.6" fill="#9fe9d3" style="animation-delay:0s;" />
-                <circle class="ribbon-spark" cx="52" cy="230" r="2" fill="#f6e093" style="animation-delay:.8s;" />
-                <circle class="ribbon-spark" cx="40" cy="120" r="2.4" fill="#f8a0c8" style="animation-delay:1.5s;" />
-                <circle class="ribbon-spark" cx="60" cy="75" r="1.8" fill="#d5c0f6" style="animation-delay:.4s;" />
-            </svg>
-
+            </div>
             <div class="hero-text">
                 <p class="eyebrow">UX DESIGNER ✦ GRAPHIC ARTIST ✦ LOVER</p>
                 <h1>Hi! I'm <img class="hero-name-mark" src="images/logo-jasmine.png" alt="Jasmine"></h1>
