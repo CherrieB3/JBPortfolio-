@@ -224,7 +224,17 @@ alone. Tiles originally alternated a slight scattered-sticker tilt
 the "sticker" name) before Jasmine asked for that removed in favor of a
 straight, level deck — the same call she'd already made for the Projects
 list (see its entry further down) — don't reintroduce the alternating
-tilt without checking with her first. Each `playground/*.html` page
+tilt without checking with her first. The hover interaction itself was
+then simplified too: `.sticker-card:hover` used to also carry the
+sitewide magnetic cursor-tilt (`perspective`/`rotateX`/`rotateY` off
+`--tilt-x`/`--tilt-y`) plus a `scale(1.02)`, layered on top of its lift;
+Jasmine asked for that pared back further, so it's now just the lift
+(`translateY(-7px)`) with the existing border/shadow color change —
+`initTiltCards()` in `js/main.js` no longer includes `.sticker-card` in
+its selector (`.card` only now), so no unused tilt math runs for tiles
+that don't render it. Don't re-add the magnetic tilt/scale to
+`.sticker-card` without checking with her first; `.card` elsewhere is
+unaffected and keeps the full effect. Each `playground/*.html` page
 reuses the same nav/
 footer/view-transition boilerplate as `case-studies/*.html` (`data-page=
 "playground"` so the nav highlights correctly, `--case-accent` set to a
@@ -962,6 +972,21 @@ drifting out of sync.
   `max-width` was also reduced (`260px` → `200px`) and `.project-card`'s
   padding trimmed (`28px` → `22px`) to make that compactness hold
   together rather than just shrinking the gap around still-large cards.
+  **`.project-spread`'s `justify-content`**: `space-between` (each
+  spread's two children, both flex-grow but capped by their own
+  `max-width`) read fine on the ~760px mobile layout it was checked at,
+  but on a wide desktop viewport it stretched the *leftover* row space
+  — space neither child could grow into — into a large dead gap between
+  the card and the photo, splitting a "spread" pairing that's meant to
+  sit together (Jasmine flagged this as the section "looking odd").
+  Changed to `flex-start`: the two children now sit the declared `44px`
+  `gap` apart regardless of viewport width, with any leftover space
+  landing as trailing whitespace after the photo instead of prying the
+  pairing apart. Verified this doesn't affect the mobile stacked layout
+  (`flex-direction: column` there, sized to content height, so there's no
+  leftover main-axis space for `justify-content` to distribute either
+  way) — if `.project-spread` ever gets an explicit height or the mobile
+  layout changes, recheck this.
 - **Contact form** (`#contactForm` in `index.html`, `initContactForm()` in
   `js/main.js`) — submits to Jasmine's own Formspree endpoint
   (`https://formspree.io/f/xrpgwbwo`) via `fetch` rather than a plain HTML

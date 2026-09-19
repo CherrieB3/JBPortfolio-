@@ -107,18 +107,20 @@ function initContactForm() {
   });
 }
 
-// A magnetic tilt toward the cursor on .card/.sticker-card — the card
-// leans as if it were a rigid plate pivoting under your pointer, on top
-// of (not instead of) each one's existing lift/scale hover. Only on real
-// mouse pointers — touch has no continuous hover position to tilt
-// against. Sets --tilt-x/--tilt-y (consumed inside the .card:hover /
-// .sticker-card:hover transform in CSS) rather than transform directly,
-// so this never fights the CSS transition already driving the lift.
+// A magnetic tilt toward the cursor on .card — the card leans as if it
+// were a rigid plate pivoting under your pointer, on top of (not instead
+// of) its existing lift hover. Only on real mouse pointers — touch has no
+// continuous hover position to tilt against. Sets --tilt-x/--tilt-y
+// (consumed inside the .card:hover transform in CSS) rather than
+// transform directly, so this never fights the CSS transition already
+// driving the lift. .sticker-card used to share this (removed at
+// Jasmine's request in favor of a plain lift — see its :hover rule in
+// css/style.css) so it's no longer in the selector below.
 function initTiltCards() {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   const MAX_TILT = 8; // degrees at the card's edge; halved near its center
 
-  document.querySelectorAll('.card, .sticker-card').forEach(card => {
+  document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const px = (e.clientX - rect.left) / rect.width - 0.5;
