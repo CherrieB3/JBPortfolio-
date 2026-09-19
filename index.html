@@ -95,7 +95,28 @@
                 <span class="hero-cloud hero-cloud-b"></span>
                 <span class="hero-cloud hero-cloud-c"></span>
             </div>
-            </div>
+
+            <!-- Decorative only (aria-hidden) — a slim hand-drawn comet living in the
+                 hero's left margin gutter, entirely left of .hero-text's own padding, so
+                 it never crosses the heading/tagline/button regardless of how much they
+                 wrap. Purple tail (bottom) to red head (top), both tips faded out via the
+                 gradient's own alpha, with the thicker mid-stroke's dasharray-cut ends
+                 tapering it to a point rather than a flat-cut bar. Sits behind .hero-text
+                 (z-index 0 vs 1) so copy stays readable on top of it either way. -->
+            <svg class="hero-ribbon" viewBox="0 0 90 480" fill="none" aria-hidden="true">
+                <defs>
+                    <!-- Full rainbow again, purple tail to red head, still fading out
+                         at both true tips via stop-opacity. -->
+                    <linearGradient id="heroRibbon" x1="30" y1="440" x2="55" y2="50" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#d5c0f6" stop-opacity="0" />
+                        <stop offset="12%" stop-color="#d5c0f6" stop-opacity="1" />
+                        <stop offset="32%" stop-color="#acdff7" />
+                        <stop offset="50%" stop-color="#b8efd4" />
+                        <stop offset="68%" stop-color="#f6e093" />
+                        <stop offset="85%" stop-color="#fed5a4" stop-opacity="1" />
+                        <stop offset="100%" stop-color="#f3c4cf" stop-opacity="0" />
+                    </linearGradient>
+                </defs>
                 <!-- Thin full-length wisp — the faded tips read as a comet trailing off
                      into nothing, past where the thicker body below stops. -->
                 <path d="M 30 440 C 55 400, 10 350, 45 300 C 75 255, 15 210, 45 160 C 70 120, 20 90, 55 50"
