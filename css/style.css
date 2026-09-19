@@ -1093,61 +1093,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   .hero-clouds { display: none; }
 }
 
-.hero-ribbon {
-  position: absolute;
-  top: 50%;
-  /* .hero-text starts at .hero's own 8% padding (absolutely positioned
-     children are placed relative to that same padding-box edge, so this
-     percentage is directly comparable) — kept narrow and inset from that
-     so the comet lives entirely in the margin gutter to its left and
-     never crosses the heading/tagline/button, at any hero height. */
-  left: 1.5%;
-  width: min(6vw, 68px);
-  height: auto;
-  transform: translateY(-50%);
-  pointer-events: none;
-  z-index: 0;
-  /* Soft glow, not a hard-edged vector line — cool tones matching the
-     tail end of the gradient, since the glow reads most naturally as
-     ambient light around the comet rather than tied to one hue. Scaled
-     down to match the now much slimmer ribbon. Two animations layered
-     on independent properties (transform / filter) so a gentle organic
-     drift and a slow magical glow-breathe can run at their own pace
-     without fighting each other. */
-  filter:
-    drop-shadow(0 0 8px rgba(214, 198, 240, .4))
-    drop-shadow(0 0 16px rgba(179, 220, 240, .25));
-  animation: ribbon-drift 8s ease-in-out infinite, ribbon-glow-pulse 4.5s ease-in-out infinite;
-  transform-origin: 50% 50%;
-}
-
-/* Small stars riding the hero comet's curve — the "particle sparkle" the
-   ribbon alone can't convey. transform-box:fill-box so each twinkles
-   around its own center instead of the whole SVG's origin corner. */
-.ribbon-spark {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: mini-pulse 3.4s ease-in-out infinite;
-}
-
-@keyframes ribbon-drift {
-  0%, 100% { transform: translateY(-50%) translate(0, 0) rotate(0deg); }
-  50% { transform: translateY(-50%) translate(2px, -14px) rotate(1.4deg); }
-}
-
-@keyframes ribbon-glow-pulse {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 8px rgba(214, 198, 240, .4))
-      drop-shadow(0 0 16px rgba(179, 220, 240, .25));
-  }
-  50% {
-    filter:
-      drop-shadow(0 0 15px rgba(214, 198, 240, .7))
-      drop-shadow(0 0 28px rgba(179, 220, 240, .45));
-  }
-}
-
 .hero-text { max-width: 620px; position: relative; z-index: 1; }
 /* text-indent only touches the h1's first line ("Hi! I'm") — the name
    wordmark below it is its own block box, on its own line, so this
@@ -1249,11 +1194,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 
 @media (max-width: 900px) {
   .hero { padding-top: 20px; }
-  /* Decorative-only (aria-hidden) — the redesigned comet is tall/narrow and
-     tuned to sit beside the hero text on wide screens; on a stacked mobile
-     layout there's no equivalent spot for it without crowding the text or
-     mascot, so it's dropped here rather than distorted to fit. */
-  .hero-ribbon { display: none; }
   .mascot-wrap { flex: 0 1 auto; max-width: none; width: 78vw; margin: 0 auto; }
 }
 
