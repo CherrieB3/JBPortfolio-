@@ -1093,7 +1093,43 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   .hero-clouds { display: none; }
 }
 
+/* Soft blurred nebula blob sitting behind the hero text — fills the left/
+   background area with color now that the comet ribbon is gone, reusing
+   the rainbow palette + blur technique already used for body::before/
+   ::after rather than introducing a new motif. z-index 0, so it stays
+   behind .hero-text/.mascot-wrap (both z-index 1). */
+.hero-glow {
+  position: absolute;
+  top: 12%;
+  left: -8%;
+  width: clamp(280px, 46vw, 560px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(213, 192, 246, .38), transparent 62%),
+    radial-gradient(circle at 68% 55%, rgba(115, 226, 242, .24), transparent 64%),
+    radial-gradient(circle at 48% 78%, rgba(248, 160, 200, .22), transparent 62%);
+  filter: blur(70px);
+  z-index: 0;
+  pointer-events: none;
+  animation: hero-glow-pulse 9s ease-in-out infinite;
+}
+
+@keyframes hero-glow-pulse {
+  0%, 100% { opacity: .85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.07); }
+}
+
 .hero-text { max-width: 620px; position: relative; z-index: 1; }
+@media (min-width: 901px) {
+  /* Nudges the text a touch left of its flex-default position, closer to
+     the hero's left inset — a "smidge," not a layout restructure; the
+     mascot lane (flex-grow) is unaffected since this is a relative-
+     position offset, not a flex/margin change. Scoped above the 900px
+     breakpoint where .hero-text and .mascot-wrap sit side by side; below
+     it they stack, where this offset would just crowd the left edge. */
+  .hero-text { left: -24px; }
+}
 /* text-indent only touches the h1's first line ("Hi! I'm") — the name
    wordmark below it is its own block box, on its own line, so this
    doesn't shift it too. Nudges "Hi! I'm" right so the wordmark's
