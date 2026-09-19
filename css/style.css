@@ -1586,9 +1586,14 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
    this file) still applies with no extra JS.
    ========================================================= */
 
+/* 2x2 grid, not a stacked single-column list — Jasmine asked for the
+   cards sized down after the unified split-card redesign read as too
+   big at full row width; a 2-column grid halves each card's width
+   (height follows from that, since .project-spread has no fixed
+   height) without shrinking any single value by feel. */
 .projects-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 28px;
   padding: 36px 8% 24px;
 }
@@ -1677,7 +1682,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 .project-spread:hover .project-visual img { transform: scale(1.05); }
 
 @media (max-width: 760px) {
-  .projects-list { gap: 32px; }
+  .projects-list { grid-template-columns: 1fr; gap: 32px; }
   .project-spread { flex-direction: column; }
   /* No row to stretch against once stacked — .project-visual needs its
      own sizing instead of matching the text panel's height. */
