@@ -1435,6 +1435,8 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   text-align: center;
   box-shadow: 0 14px 26px -18px rgba(61, 51, 79, .6);
   transition: transform .3s cubic-bezier(.2,.7,.3,1.1), box-shadow .3s ease, border-color .3s ease;
+  /* Clips .sticker-thumb's bled top corners to the card's own radius. */
+  overflow: hidden;
   /* Magnetic tilt toward the cursor (initTiltCards() in js/main.js). */
   --tilt-x: 0deg;
   --tilt-y: 0deg;
@@ -1445,6 +1447,19 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   display: block;
   text-decoration: none;
   color: inherit;
+}
+
+/* Full-bleed thumbnail at the top of each tile — pulled out to the card's
+   own edges via negative margin (matching .sticker-card's own padding, so
+   it bleeds flush) rather than sitting inset like a regular image. Each
+   src is a small placeholder line-art SVG in images/ (same "real file,
+   swap the file" pattern as the Projects orbit thumbnails), one per tile. */
+.sticker-thumb {
+  display: block;
+  width: calc(100% + 48px);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: -30px -24px 18px;
 }
 
 .sticker-view {

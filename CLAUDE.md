@@ -191,29 +191,39 @@ are a horizontal scroll-snap "slide deck" rather than a static grid —
 wider `flex-basis`, not a column span), so you scroll/swipe sideways
 through them like flipping through a stack. Native CSS scroll-snap, no
 carousel library (rule 3) — trackpad, wheel, touch, and keyboard (the
-deck is `tabindex="0"`) all just work without JS. Limited to 3 placeholder
-tiles by request; extend by adding more `.sticker-card`s to the deck
-rather than reverting to a fixed grid. Each of those original 3
-`.sticker-card`s is a plain `<a>` to its own placeholder page under
-`playground/` (`animations.html`, `sketch-dump.html`, `color-studies.html`)
-— same "plain link, sitewide cross-document view transition just works"
-pattern as `.project-visual` in Projects, at Jasmine's request. A 4th
-tile, **Lucky's First Day**, is the deck's one exception to that
-placeholder pattern: real, finished illustration work moved here from the
-Projects list (see the EcoLink*/Lucky's First Day entry above) rather
-than a `[TBD]` experiment — it links straight out to its existing
-standalone site (`target="_blank" rel="noopener"`, the same real title
-and summary it had in Projects) since there's no page for it in this
-repo, instead of to a `playground/*.html` placeholder. `.sticker-card`
-picked up `display:block; text-decoration:none; color:inherit;` to still
-read as a card rather than a link, plus a small `.sticker-view` "View →"
-line so the tile's clickability is legible at a glance rather than
-relying on the hover-lift alone. Each `playground/*.html` page reuses the
-same nav/
+deck is `tabindex="0"`) all just work without JS. Originally 3 placeholder
+tiles by request; a "Color Studies" tile/page was later removed at
+Jasmine's request, leaving 2 placeholder tiles (Animations, Sketch Dump)
+plus Lucky's First Day (see below) — extend by adding more
+`.sticker-card`s to the deck rather than reverting to a fixed grid. Each
+of the 2 remaining placeholder `.sticker-card`s is a plain `<a>` to its
+own placeholder page under `playground/` (`animations.html`,
+`sketch-dump.html`) — same "plain link, sitewide cross-document view
+transition just works" pattern as `.project-visual` in Projects, at
+Jasmine's request. A 3rd tile, **Lucky's First Day**, is the deck's one
+exception to that placeholder pattern: real, finished illustration work
+moved here from the Projects list (see the EcoLink*/Lucky's First Day
+entry above) rather than a `[TBD]` experiment — it links straight out to
+its existing standalone site (`target="_blank" rel="noopener"`, the same
+real title and summary it had in Projects) since there's no page for it
+in this repo, instead of to a `playground/*.html` placeholder. Every tile
+now also carries a `.sticker-thumb` — a small full-bleed placeholder
+line-art SVG (`images/playground-animations.svg`,
+`-sketch-dump.svg`, `-lucky.svg`; the last recolors/reuses the real motif
+`orbit-lucky.svg` had before it was removed, rather than a generic
+placeholder) pulled flush to the card's top edge via negative margin,
+`object-fit: cover` at a 16:9 aspect ratio, `.sticker-card` given
+`overflow: hidden` so the bleed clips to the card's own radius — same
+"real file in `images/`, swap the file" pattern used everywhere else on
+the site (rule 4). `.sticker-card` picked up `display:block;
+text-decoration:none; color:inherit;` to still read as a card rather than
+a link, plus a small `.sticker-view` "View →" line so the tile's
+clickability is legible at a glance rather than relying on the hover-lift
+alone. Each `playground/*.html` page reuses the same nav/
 footer/view-transition boilerplate as `case-studies/*.html` (`data-page=
 "playground"` so the nav highlights correctly, `--case-accent` set to a
-rainbow token per page — teal for Animations, purple for Sketch Dump,
-gold for Color Studies) but deliberately skips the full 7-chapter
+rainbow token per page — teal for Animations, purple for Sketch Dump)
+but deliberately skips the full 7-chapter
 case-study structure (Role/Timeline/Team/Tools etc. would be fabricated
 for a loose experiments category that isn't a project) — just a
 `.page-hero` title/hook and a single `.card` marked `[TBD]`/"Coming soon"
@@ -954,11 +964,13 @@ drifting out of sync.
   Formspree's default "thanks" page. No daily-limit counter here (unlike
   the old Doodle Mail) — Formspree's own free-tier submission cap is the
   real abuse guard for this form.
-- `playground/` — one placeholder page per Experiments tile
-  (`animations.html`, `sketch-dump.html`, `color-studies.html`), linked
-  from `.sticker-card` in `index.html`'s Experiments deck. See the
+- `playground/` — one placeholder page per placeholder Experiments tile
+  (`animations.html`, `sketch-dump.html` — `color-studies.html` was
+  removed along with its tile at Jasmine's request), linked from
+  `.sticker-card` in `index.html`'s Experiments deck. See the
   Experiments-tiles entry above for the template these follow (shared
-  nav/footer, no full case-study chapter structure).
+  nav/footer, no full case-study chapter structure) and for Lucky's First
+  Day, the deck's 3rd tile that isn't one of these placeholder pages.
 - `css/style.css` — the entire design system and every component's styles.
 - `js/main.js` — nav toggle/scrollspy active-link logic, the comet trail,
   starfield generation, and the contact form.
