@@ -209,13 +209,22 @@ from the Projects list (see the EcoLink*/Lucky's First Day entry above)
 rather than a `[TBD]` experiment — it links straight out to its existing
 standalone site (`target="_blank" rel="noopener"`, the same real title
 and summary it had in Projects) since there's no page for it in this
-repo, instead of to a `playground/*.html` placeholder. A `.sticker-thumb`
-treatment (a small full-bleed placeholder line-art SVG per tile —
-`images/playground-animations.svg`, `-sketch-dump.svg`, `-lucky.svg` —
-pulled flush to the card's top edge) was tried and is no longer on any
-tile; the SVG files are still in `images/` unused if this gets revisited,
-but don't assume the markup for it is still wired up. `.sticker-card`
-picked up `display:block;
+repo, instead of to a `playground/*.html` placeholder. Every tile carries
+a `.sticker-thumb` — a small full-bleed placeholder line-art SVG per
+tile, in each tile's own accent color (`images/playground-animations.svg`
+teal, `-color-studies.svg` gold — overlapping color-swatch circles,
+replacing the old `-sketch-dump.svg` purple-pencil motif once Sketch
+Dump's tile/page were removed, since that motif no longer matched
+anything — `-lucky.svg` rose pink), pulled flush to the card's top edge
+via negative margin, `object-fit: cover` at a 16:9 aspect ratio,
+`.sticker-card` given `overflow: hidden` so the bleed clips to the card's
+own radius — same "real file in `images/`, swap the file" pattern used
+everywhere else on the site (rule 4). This was briefly removed by a
+round of hand-edits mid-session and re-added — if it goes missing again,
+re-add the `<img class="sticker-thumb" src="images/playground-*.svg"
+alt="...">` as the first child of each `.sticker-card` rather than
+assuming it was intentionally dropped. `.sticker-card` picked up
+`display:block;
 text-decoration:none; color:inherit;` to still read as a card rather than
 a link, plus a small `.sticker-view` "View →" line so the tile's
 clickability is legible at a glance rather than relying on the hover-lift
