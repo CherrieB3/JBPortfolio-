@@ -910,6 +910,7 @@ section { padding: 60px 8% 100px; position: relative; }
    feeling to avoid; an editorial page never gives every block the same
    air around it. */
 section[aria-label="Project galaxy"] { padding: 10px 8% 170px; }
+section[aria-label="Experience content"] { padding: 30px 8% 56px; }
 /* Top padding bumped from an original 4px — that tiny value only worked
    because the now-removed .playground-tabs (a 46px-tall pill row with its
    own 8px/36px top/bottom margin) supplied the real gap under the
@@ -944,7 +945,7 @@ section[aria-label="Playground content"] { padding: 48px 8% 70px; }
 /* One-page navigation: clicking a nav link jumps to #about/#projects/
    #playground/#contact. Offset the landing spot by the fixed nav's height
    so the section heading doesn't end up hidden underneath it. */
-#about, #projects, #playground, #contact { scroll-margin-top: var(--nav-h); }
+#about, #experience, #projects, #playground, #contact { scroll-margin-top: var(--nav-h); }
 
 footer {
   position: relative;
@@ -1536,6 +1537,32 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   .rabbit-hop { display: none; }
 }
 
+/* =========================================================
+   Experience — a compact "My experience" strip (intro line + a row of
+   past roles) adapted from a reference Jasmine shared
+   (mkilgoredesign.com): company name, role, and date range per entry,
+   in a few plain columns rather than a boxed timeline graphic. All
+   content is [TBD] (rule 6) until Jasmine supplies her real work
+   history — don't fill these in with invented companies/roles/dates.
+   ========================================================= */
+
+.experience-list > .tbd { max-width: 62ch; margin-bottom: 8px; }
+
+.experience-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 28px;
+  margin-top: 28px;
+}
+
+.experience-entry h3 { font-size: 1.15rem; margin-bottom: 6px; }
+.experience-entry p { color: var(--text-dim); margin-bottom: 4px; }
+.experience-entry span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  letter-spacing: .3px;
+}
 
 /* =========================================================
    Projects — a stacked list of "project spreads" (a bordered info card
@@ -1566,34 +1593,47 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   padding: 36px 8% 24px;
 }
 
-/* justify-content: flex-start (not space-between) — .project-card and
-   .project-visual both cap out at their own max-width well short of a
-   wide viewport's full content area; space-between stretched the leftover
-   room into a large dead gap between the two instead of leaving it as
-   trailing whitespace after them. flex-start keeps the pair adjacent,
-   just the declared gap apart, with any leftover space landing after the
-   photo instead of splitting the pairing apart. */
+/* One unified bordered/rounded card per project (the "shape" from
+   Jasmine's mkilgoredesign.com reference — a split color text-panel +
+   image sharing one card outline) rather than the text card and photo
+   as two separate floating siblings. The border/background/radius/
+   shadow that used to live on .project-card alone now live here, on the
+   shared container, and .project-card/.project-visual are just its two
+   flex halves — .project-visual's own border-radius/shadow/max-width are
+   gone since the parent's overflow:hidden clips both halves to one
+   outline. Still the stacked single-column list, not the reference's
+   2-column grid (Jasmine asked to borrow just the card shape). */
 .project-spread {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 44px;
-}
-
-.project-card {
-  flex: 1 1 340px;
-  max-width: 480px;
+  align-items: stretch;
   background: rgba(255, 255, 255, .07);
   border: 1.5px solid var(--panel-border);
   border-radius: 26px;
-  padding: 22px;
-  font-size: .92rem;
-  transition: transform .3s ease, border-color .3s ease;
+  overflow: hidden;
+  box-shadow: 0 14px 26px -18px rgba(61, 51, 79, .6);
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
 }
 
-.project-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+.project-spread:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 18px 30px -16px rgba(61, 51, 79, .55);
+}
 
-.project-card h3 { font-size: 1.4rem; color: var(--accent); margin-bottom: 10px; }
+.project-card {
+  flex: 1.15 1 320px;
+  padding: 32px;
+  font-size: .92rem;
+  /* A soft accent tint over the shared dark card bg, not the reference's
+     solid saturated panel fill — the soft/pastel tier is too light for
+     white text to sit on directly (see the color table above), so this
+     stays a low-opacity wash over the existing dark card background
+     instead of an opaque fill. color-mix() reads the same --accent
+     already set inline per spread, no new color token. */
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 15%, transparent), transparent 75%);
+}
+
+.project-card h3 { font-size: 1.5rem; color: var(--accent); margin-bottom: 10px; }
 .project-card > p { color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; }
 
 .project-tags {
@@ -1618,30 +1658,30 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 .project-visual {
-  flex: 1 1 180px;
-  max-width: 200px;
-  aspect-ratio: 3 / 4;
-  border-radius: 20px;
-  overflow: hidden;
+  flex: 1 1 260px;
   display: block;
-  box-shadow: 0 24px 50px -20px rgba(61, 51, 79, .5);
-  transition: transform .3s ease;
+  min-height: 220px;
 }
-
-.project-visual:hover { transform: scale(1.02); }
 
 .project-visual img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform .4s ease;
 }
+
+/* The photo gets a subtle zoom off the whole card's hover, not its own —
+   one unified hover state for the merged card, matching the reference,
+   rather than the text and photo halves reacting independently. */
+.project-spread:hover .project-visual img { transform: scale(1.05); }
 
 @media (max-width: 760px) {
   .projects-list { gap: 32px; }
   .project-spread { flex-direction: column; }
-  .project-card { max-width: 100%; }
-  .project-visual { max-width: 100%; }
+  /* No row to stretch against once stacked — .project-visual needs its
+     own sizing instead of matching the text panel's height. */
+  .project-visual { aspect-ratio: 16 / 10; min-height: 180px; }
 }
 
 /* =========================================================

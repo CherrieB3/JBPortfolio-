@@ -380,7 +380,7 @@ function initNav() {
 // that don't have these section ids (the case-study pages), where the
 // static match in initNav() above already highlights "Projects".
 function initScrollSpy() {
-  const sections = ['about', 'projects', 'playground', 'contact']
+  const sections = ['about', 'experience', 'projects', 'playground', 'contact']
     .map(id => document.getElementById(id))
     .filter(Boolean);
   if (!sections.length) return;

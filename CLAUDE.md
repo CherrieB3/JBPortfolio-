@@ -178,7 +178,7 @@ section, symmetric everything): section padding is intentionally uneven
 the base `section` rule in `css/style.css`, rather than one flat value
 everywhere), and `.section-mark` prints a small sideways running-head
 label (`№ 01 — About`, etc., `writing-mode: vertical-rl`) in the left
-margin of About/Projects/Playground/Contact — a magazine gutter-number
+margin of About/Experience/Projects/Playground/Contact — a magazine gutter-number
 device, opposite the comet trail's right-edge rail, so the page reads as
 having two considered margins instead of one centered column. Extend this
 pattern (uneven rhythm, a numbered mark) for any new top-level section
@@ -398,10 +398,14 @@ stacked on top of the rest of the site's existing motion/decoration.
 **Spacing & layout**
 - Horizontal page padding: `8%`–`10%` (`6%` on mobile).
 - Nav is fixed, `76px` tall, with the rainbow gradient as a 4px strip
-  along its bottom edge. Nav links read About / Projects / **logo** /
-  Playground / Contact — the logo sits in the middle slot as one evenly
-  spaced row (a specific storyboard detail — don't move the logo back to
-  the left without checking with Jasmine). The logo itself
+  along its bottom edge. Nav links read About / Experience / Projects /
+  **logo** / Playground / Contact — the logo sits in the middle slot,
+  which was originally an evenly-spaced 2-before/2-after row (a specific
+  storyboard detail) until the Experience link was added between About
+  and Projects, making it 3-before/2-after; that's an accepted, expected
+  consequence of an odd number of links around a fixed-position logo, not
+  something to "fix" back to even by moving the logo. Don't move the logo
+  out of the middle slot without checking with Jasmine. The logo itself
   (`images/logo-jasmine.png`, `.logo-mark` in `css/style.css`) is
   Jasmine's own hand-drawn signature wordmark — a rainbow-gradient
   cursive "Jasmine" with a comet swoosh and the site's spark glyph above
@@ -470,12 +474,12 @@ stacked on top of the rest of the site's existing motion/decoration.
 
 ## Single-page navigation
 
-`index.html` is one continuous page — About/Projects/Playground/Contact are
-`<section id="about|projects|playground|contact">` anchors, not separate
-URLs, and nav/footer links point at `#about` etc. (the logo points at
-`#top`, an id on `<body>`). Two mechanics make this work and matter if you
-touch nav or section markup:
-- `#about, #projects, #playground, #contact { scroll-margin-top: var(--nav-h); }`
+`index.html` is one continuous page — About/Experience/Projects/Playground/
+Contact are `<section id="about|experience|projects|playground|contact">`
+anchors, not separate URLs, and nav/footer links point at `#about` etc.
+(the logo points at `#top`, an id on `<body>`). Two mechanics make this
+work and matter if you touch nav or section markup:
+- `#about, #experience, #projects, #playground, #contact { scroll-margin-top: var(--nav-h); }`
   in `css/style.css` — without it, a clicked anchor lands with its heading
   hidden under the fixed nav.
 - `initScrollSpy()` in `js/main.js` (IntersectionObserver-based) toggles
@@ -502,7 +506,7 @@ one filled ribbon (`.comet-trail` markup, driven by `initCometTrail()` in
 `js/main.js`, guarded so it's a no-op if that markup isn't present — which
 is why it's absent from `case-studies/*.html`). Because the whole site is
 now one page, the trail runs the full length of it — hero through footer,
-including the About/Projects/Playground/Contact sections — not just a short
+including the About/Experience/Projects/Playground/Contact sections — not just a short
 home-page hero anymore. It's a single straight vertical line hugging the
 right edge of the page, one constant width its whole length — no sway,
 no obstacle-dodging (an earlier version steered around headings/cards/
@@ -606,13 +610,19 @@ drifting out of sync.
   one will be a drawing of a personal object, with its hover/focus tooltip
   a fun fact about Jasmine tied to that object; below 700px it becomes a
   static list; both the art and the fun-fact captions are still
-  placeholder, see `images/` below) → `#projects`
+  placeholder, see `images/` below) → `#experience` (a compact "My
+  experience" strip — intro line + a row of past roles, company/role/date
+  range each — adapted from a reference Jasmine shared
+  (mkilgoredesign.com); every entry is `[TBD]` since this is real
+  biographical content Jasmine hasn't supplied yet, not something to
+  invent, see rule 6 and the entry further down) → `#projects`
   (a stacked list of the 4 projects — Comet Commute, Elevator
-  Accessibility, DreamScape, EcoLink* — each a "project spread":
-  a bordered info card (title, one-line summary, tag pills, CTA) paired
-  with a tilted photo, every project fully visible without an
-  interaction, each linking out to a full write-up; see `case-studies/`
-  below and the entry further down for how it works) → `#playground` (a
+  Accessibility, DreamScape, EcoLink* — each a "project spread": one
+  unified bordered card split into a text half (title, one-line summary,
+  tag pills, CTA) and a photo half sharing the same outline, every
+  project fully visible without an interaction, each linking out to a
+  full write-up; see `case-studies/` below and the entry further down for
+  how it works) → `#playground` (a
   single horizontal scroll-snap deck of loose-experiment tiles,
   "Experiments" — explicitly allowed to feel rougher than the rest of the
   site, see rule 4; content is placeholder, each tile linking to its own
@@ -922,71 +932,105 @@ drifting out of sync.
   to reach Jasmine again, don't restart from EmailJS** — re-read this
   note first, since the constraint is the free tier landscape itself, not
   a bug in any one attempt.
+- **Experience** (`#experience` + `class="experience-list"` in
+  `index.html`, between About and Projects) — a compact "My experience"
+  strip added at Jasmine's request after she shared a reference
+  (mkilgoredesign.com's "My experience" section: an intro line, then a
+  plain multi-column row of past roles — company, role, date range —
+  rather than a boxed timeline graphic). Reuses the site's existing
+  `.page-hero` + `.section-mark` header pattern (own `№ 02 —` numeral,
+  `<h2>`, eyebrow) then a separate content section, same two-section
+  split as Projects/Playground. `.experience-row` is a
+  `grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))` grid —
+  collapses to one column on mobile automatically, no dedicated media
+  query needed. Every entry (`.experience-entry`: company `<h3>`, role
+  `<p>`, date-range `<span>`) is wrapped in `.tbd` and reads `[TBD:
+  Company]`/`[TBD: Role]`/`[TBD: Month Year — Month Year]`, and the intro
+  line above the row is `[TBD: a short intro...]` too — this is real
+  biographical content (employers, titles, dates) that only Jasmine can
+  supply, so per rule 6 it's scaffolded as explicit placeholders rather
+  than invented. Don't fill these in with plausible-sounding companies or
+  dates; wait for Jasmine's real work history. Adding this section meant:
+  renumbering every `.section-mark` after it (Projects/Playground/Contact
+  each bumped up one); adding `#experience` to the `scroll-margin-top`
+  selector in `css/style.css` and to `initScrollSpy()`'s `sections` array
+  in `js/main.js`; adding an `Experience` link to both the nav (`data-page
+  ="experience"`) and the footer `.socials` list; and the nav-balance
+  consequence noted in "Spacing & layout" above (3 links before the logo
+  now, not 2).
 - **Projects list** (`class="projects-list"` in `index.html`'s
   `#projects`, pure HTML/CSS — no JS driving it) — the Projects section's
-  content: all 4 projects stacked vertically as `.project-spread`s, each
-  a `.project-card` (title, one-line summary, `.project-tags` pills, CTA
-  button) paired with a tilted `.project-visual` photo. Replaced **Project
-  Orbit** (a drag/swipe/wheel/arrow-key/button carousel of circular
-  "planet" cards) at Jasmine's explicit request, after she shared a
-  reference (wallofportfolios.in's "selected works" layout — a
-  notebook-page-style info card next to a tilted photo, repeated down the
-  page) and asked for something similar. Adapted to this site's own
-  system rather than copied literally (rule 4): the reference's cream
-  paper + hot-pink pills became this site's existing translucent
-  `.card`-style panel + pills filled with each project's own
-  `--accent-deep` (the same per-project color pair the old orbit rings
-  and CTAs already used, set inline per `.project-spread` — reuse this
-  pattern rather than introducing a new palette per project). **If asked
-  to redo Projects again, this list is the current, intended state** —
-  don't reintroduce Project Orbit's carousel or the constellation grid
-  without being asked. This also restores "every project visible without
-  an interaction," undoing Project Orbit's tradeoff in the other
-  direction. Cards and photos originally alternated a slight scattered-page
-  tilt per spread (`.project-spread:nth-child(odd)`/`(even)`, a few degrees
-  each way) for a casually-placed feel rather than a perfectly level grid;
-  Jasmine later asked for that removed in favor of a straight, level
-  layout — don't reintroduce the alternating tilt without checking with
-  her first. Comet Commute, Elevator
-  Accessibility, and DreamScape still use placeholder line-art
-  (`images/orbit-*.svg`, unchanged from Project Orbit — see the `images/`
-  entry above), not a real screenshot, since none of those 3 projects
-  have a real hero image yet (rule 6); EcoLink*'s photo is real (see its
-  entry above) — swap the remaining 3 placeholder files for real photos
-  the same way whenever they're available. `object-fit: cover` on
-  `.project-visual img` handles any aspect ratio into the 3:4 portrait
-  crop regardless of which kind of file is behind it. Plain `<a>` links
-  throughout, so the sitewide cross-document View Transition (top of
-  `css/style.css`) still applies automatically — no JS needed, unlike
-  Project Orbit's bespoke `dragMoved`-guarded click-through. **Watch the
-  section's own `padding`**: `.projects-list` sets it explicitly
-  (`36px 8% 24px`) rather than inheriting the base `section` rule's `8%`
-  horizontal padding — a version of this that set the horizontal value to
-  `0` shipped briefly and pinned every card flush against the viewport
-  edge with no margin at all ("getting cut off on the sides"). If you
-  touch this rule again, keep a real horizontal value, don't drop it to
-  `0`. The vertical gap between spreads (`.projects-list`'s `gap`) was
-  originally `80px`; Jasmine asked for it tightened (now `28px`, `32px` on
-  mobile) so more of the list stays visible at once while scrolling
-  instead of one project filling the whole viewport — `.project-visual`'s
-  `max-width` was also reduced (`260px` → `200px`) and `.project-card`'s
-  padding trimmed (`28px` → `22px`) to make that compactness hold
-  together rather than just shrinking the gap around still-large cards.
-  **`.project-spread`'s `justify-content`**: `space-between` (each
-  spread's two children, both flex-grow but capped by their own
-  `max-width`) read fine on the ~760px mobile layout it was checked at,
-  but on a wide desktop viewport it stretched the *leftover* row space
-  — space neither child could grow into — into a large dead gap between
-  the card and the photo, splitting a "spread" pairing that's meant to
-  sit together (Jasmine flagged this as the section "looking odd").
-  Changed to `flex-start`: the two children now sit the declared `44px`
-  `gap` apart regardless of viewport width, with any leftover space
-  landing as trailing whitespace after the photo instead of prying the
-  pairing apart. Verified this doesn't affect the mobile stacked layout
-  (`flex-direction: column` there, sized to content height, so there's no
-  leftover main-axis space for `justify-content` to distribute either
-  way) — if `.project-spread` ever gets an explicit height or the mobile
-  layout changes, recheck this.
+  content: all 4 projects stacked vertically as `.project-spread`s.
+  Replaced **Project Orbit** (a drag/swipe/wheel/arrow-key/button
+  carousel of circular "planet" cards) at Jasmine's explicit request,
+  after she shared a reference (wallofportfolios.in's "selected works"
+  layout) and asked for something similar; restores "every project
+  visible without an interaction," undoing Project Orbit's tradeoff in
+  the other direction. **If asked to redo Projects again, this stacked
+  list is the current, intended state** — don't reintroduce Project
+  Orbit's carousel or the constellation grid without being asked. Cards
+  and photos originally alternated a slight scattered-page tilt per
+  spread; Jasmine asked for that removed in favor of a straight, level
+  layout — don't reintroduce it without checking with her first.
+
+  **Card shape**: each `.project-spread` is now one unified bordered/
+  rounded card (border, translucent dark fill, `overflow:hidden` so both
+  halves clip to one outline) split into a `.project-card` text half
+  (title, one-line summary, `.project-tags` pills, CTA button) and a
+  `.project-visual` photo half filling the rest — adapted from a
+  reference Jasmine shared (mkilgoredesign.com's project cards: a solid-
+  color text panel + photo sharing one card outline), at her explicit
+  request to "borrow the card shape" while keeping this stacked
+  single-column list rather than adopting that reference's 2-column
+  grid. The card's border/background/radius/shadow used to live on
+  `.project-card` alone, with `.project-visual` a separate smaller
+  photo floating beside it (`max-width:200px`, its own shadow/radius,
+  `gap: 44px` between the two) — all of that moved up to `.project-spread`
+  itself; `.project-card`/`.project-visual` are now just its two flex
+  halves (`flex: 1.15 1 320px` / `flex: 1 1 260px`, `align-items:
+  stretch` so the photo matches the text panel's content-driven height,
+  `object-fit: cover` on the `<img>` handling whatever height results).
+  Adapted rather than copied literally (rule 4): the reference's solid
+  saturated panel fill would put white text directly on the soft/pastel
+  accent tier, which fails contrast (see the color table above) — instead
+  `.project-card`'s background is a low-opacity `color-mix(in srgb,
+  var(--accent) 15%, transparent)` wash layered over the existing dark
+  card background, reading as a colored tint rather than an opaque fill.
+  Hover is now one state on `.project-spread` (lift + border/shadow
+  color change), with the photo getting its own subtle zoom
+  (`.project-spread:hover .project-visual img { transform: scale(1.05)
+  }`) off that same hover rather than each half reacting independently.
+  Comet Commute, Elevator Accessibility, and DreamScape still use
+  placeholder line-art (`images/orbit-*.svg`, unchanged from Project
+  Orbit — see the `images/` entry above), not a real screenshot, since
+  none of those 3 projects have a real hero image yet (rule 6); EcoLink*'s
+  photo is real (see its entry above). On mobile (`flex-direction:
+  column`, `max-width: 760px`) there's no row to stretch the photo
+  against, so it gets its own `aspect-ratio: 16/10; min-height: 180px`
+  there instead.
+
+  **Watch the section's own `padding`**: `.projects-list` sets it
+  explicitly (`36px 8% 24px`) rather than inheriting the base `section`
+  rule's `8%` horizontal padding — a version of this that set the
+  horizontal value to `0` shipped briefly and pinned every card flush
+  against the viewport edge with no margin at all ("getting cut off on
+  the sides"). If you touch this rule again, keep a real horizontal
+  value, don't drop it to `0`. The vertical gap between spreads
+  (`.projects-list`'s `gap`) was originally `80px`; Jasmine asked for it
+  tightened (now `28px`, `32px` on mobile) so more of the list stays
+  visible at once while scrolling instead of one project filling the
+  whole viewport.
+
+  **`.project-spread`'s `justify-content`** (from when the card and photo
+  were still two separate elements): `space-between` read fine on the
+  ~760px mobile layout it was checked at, but on a wide desktop viewport
+  it stretched the *leftover* row space into a large dead gap between the
+  card and the photo, splitting the pairing apart (Jasmine flagged this
+  as the section "looking odd"). This whole concern is now moot — the
+  unified-card redesign above removed the `justify-content`/`gap` model
+  entirely (the two halves are flex children of one bordered container
+  with no gap between them) — kept here as history in case a future
+  redesign reintroduces two separate elements and the same trap.
 - **Contact form** (`#contactForm` in `index.html`, `initContactForm()` in
   `js/main.js`) — submits to Jasmine's own Formspree endpoint
   (`https://formspree.io/f/xrpgwbwo`) via `fetch` rather than a plain HTML
