@@ -95,20 +95,36 @@
                 <span class="hero-cloud hero-cloud-b"></span>
                 <span class="hero-cloud hero-cloud-c"></span>
             </div>
+            </div>
+                <!-- Thin full-length wisp — the faded tips read as a comet trailing off
+                     into nothing, past where the thicker body below stops. -->
+                <path d="M 30 440 C 55 400, 10 350, 45 300 C 75 255, 15 210, 45 160 C 70 120, 20 90, 55 50"
+                    stroke="url(#heroRibbon)" stroke-width="5" stroke-linecap="round" opacity=".55" />
+                <!-- Thicker body, shown only over its middle stretch (pathLength +
+                     dasharray) so both ends taper to the round linecap instead of a flat
+                     cut — a "slight taper" without needing a hand-built variable-width
+                     outline. -->
+                <path d="M 30 440 C 55 400, 10 350, 45 300 C 75 255, 15 210, 45 160 C 70 120, 20 90, 55 50"
+                    stroke="url(#heroRibbon)" stroke-width="13" stroke-linecap="round"
+                    pathLength="100" stroke-dasharray="58 100" stroke-dashoffset="-21" />
+                <path d="M12 30 L14.5 39.5 L24 42 L14.5 44.5 L12 54 L9.5 44.5 L0 42 L9.5 39.5 Z"
+                    transform="translate(46,40) scale(.6)" fill="#f0c44a" />
 
-            <!-- Soft rainbow nebula glow, filling the space behind the hero
-                 text now that the comet ribbon is gone — a blurred radial-
-                 gradient blob (the same procedural technique as body::before/
-                 ::after), not a new illustration or motif. -->
-            <div class="hero-glow" aria-hidden="true"></div>
+                <!-- Particle sparkle riding the comet's curve — small twinkling
+                     stars, staggered so they don't all pulse in unison. -->
+                <circle class="ribbon-spark" cx="38" cy="380" r="2.6" fill="#9fe9d3" style="animation-delay:0s;" />
+                <circle class="ribbon-spark" cx="52" cy="230" r="2" fill="#f6e093" style="animation-delay:.8s;" />
+                <circle class="ribbon-spark" cx="40" cy="120" r="2.4" fill="#f8a0c8" style="animation-delay:1.5s;" />
+                <circle class="ribbon-spark" cx="60" cy="75" r="1.8" fill="#d5c0f6" style="animation-delay:.4s;" />
+            </svg>
 
             <div class="hero-text">
-                <p class="eyebrow">UX DESIGNER ✦ GRAPHIC ARTIST ✦ LOVER</p>
+                <p class="eyebrow">UX DESIGNER ✦ ILLUSTRATOR </p>
                 <h1>Hi! I'm <img class="hero-name-mark" src="images/logo-jasmine.png" alt="Jasmine"></h1>
                 <h2>I create people first designs that prioritize accessibility, genuine connection, and kindness. </h2>
                 <a class="btn" href="#projects">View Projects</a>
             </div>
-
+`
             <div class="mascot-wrap">
                 <button type="button" class="mascot-btn" aria-label="Boop her">
                     <img class="mascot" src="images/mascot-astronaut.png"
@@ -147,7 +163,7 @@
                 <div class="about-copy reveal">
                     <h2>About</h2>
                     <p>
-                        Hey! I'm Jasmine! A UX designer and digital artist from McKinney, Texas, studying at UT Dallas. I
+                        Hey! I'm Jasmine! A UX designer and digital artist from McKinney, Texas, studying at UT Dallas. I've
                         been interested in design all my life, and have been working on it professionally for a few years now.
                     </p>
                     <p>
@@ -343,6 +359,15 @@
                 <a class="sticker-card" href="playground/color-studies.html">
                     <h3>Color studies</h3>
                     <p class="tbd">[TBD]</p>
+                    <span class="sticker-view">View →</span>
+                </a>
+                <!-- Real, finished work (not a placeholder) — moved here from the
+                     Projects list at Jasmine's request. It has no case-study page in
+                     this repo (it's an existing standalone illustration site), so it
+                     links straight out to it, same as it did from Projects. -->
+                <a class="sticker-card" href="https://cherrieb3.github.io/Luckys-First-Day/" target="_blank" rel="noopener">
+                    <h3>Lucky's First Day</h3>
+                    <p>A non-linear visual narrative confronting autism stereotypes and the discomfort of new situations.</p>
                     <span class="sticker-view">View →</span>
                 </a>
             </div>

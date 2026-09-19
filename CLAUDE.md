@@ -193,15 +193,23 @@ through them like flipping through a stack. Native CSS scroll-snap, no
 carousel library (rule 3) — trackpad, wheel, touch, and keyboard (the
 deck is `tabindex="0"`) all just work without JS. Limited to 3 placeholder
 tiles by request; extend by adding more `.sticker-card`s to the deck
-rather than reverting to a fixed grid. Each `.sticker-card` is a plain
-`<a>` to its own placeholder page under `playground/` (`animations.html`,
-`sketch-dump.html`, `color-studies.html`) — same "plain link, sitewide
-cross-document view transition just works" pattern as `.project-visual`
-in Projects, at Jasmine's request. `.sticker-card` picked up
-`display:block; text-decoration:none; color:inherit;` to still read as a
-card rather than a link, plus a small `.sticker-view` "View →" line so
-the tile's clickability is legible at a glance rather than relying on the
-hover-lift alone. Each `playground/*.html` page reuses the same nav/
+rather than reverting to a fixed grid. Each of those original 3
+`.sticker-card`s is a plain `<a>` to its own placeholder page under
+`playground/` (`animations.html`, `sketch-dump.html`, `color-studies.html`)
+— same "plain link, sitewide cross-document view transition just works"
+pattern as `.project-visual` in Projects, at Jasmine's request. A 4th
+tile, **Lucky's First Day**, is the deck's one exception to that
+placeholder pattern: real, finished illustration work moved here from the
+Projects list (see the EcoLink*/Lucky's First Day entry above) rather
+than a `[TBD]` experiment — it links straight out to its existing
+standalone site (`target="_blank" rel="noopener"`, the same real title
+and summary it had in Projects) since there's no page for it in this
+repo, instead of to a `playground/*.html` placeholder. `.sticker-card`
+picked up `display:block; text-decoration:none; color:inherit;` to still
+read as a card rather than a link, plus a small `.sticker-view` "View →"
+line so the tile's clickability is legible at a glance rather than
+relying on the hover-lift alone. Each `playground/*.html` page reuses the
+same nav/
 footer/view-transition boilerplate as `case-studies/*.html` (`data-page=
 "playground"` so the nav highlights correctly, `--case-accent` set to a
 rainbow token per page — teal for Animations, purple for Sketch Dump,
@@ -635,7 +643,15 @@ drifting out of sync.
   **EcoLink*** (`ecolink.html`) replaced **Lucky's First Day** in the
   Projects list at Jasmine's request — Lucky's First Day had no case-study
   page here (it was an existing standalone illustration site, linked to
-  directly), while EcoLink* is a full UX case study built from a real
+  directly). Lucky's First Day itself wasn't dropped from the site: at
+  Jasmine's later request it moved into the Playground Experiments deck
+  as a 4th `.sticker-card` (`https://cherrieb3.github.io/Luckys-First-Day/`,
+  the same external link and real one-line summary — "A non-linear visual
+  narrative confronting autism stereotypes and the discomfort of new
+  situations" — it had in Projects), `target="_blank" rel="noopener"`
+  since it still has no page in this repo. See the Experiments-tiles entry
+  below for how that tile differs from its 3 siblings. EcoLink* is a full
+  UX case study built from a real
   slide deck Jasmine provided (`Bontha_Jasmine_Final.pptx`) covering
   mission, problem framing, research/evidence, competitive analysis, user
   segments, a user narrative, and real designed app screens. Unlike the
