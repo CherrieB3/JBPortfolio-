@@ -219,7 +219,13 @@ the site (rule 4). `.sticker-card` picked up `display:block;
 text-decoration:none; color:inherit;` to still read as a card rather than
 a link, plus a small `.sticker-view` "View →" line so the tile's
 clickability is legible at a glance rather than relying on the hover-lift
-alone. Each `playground/*.html` page reuses the same nav/
+alone. Tiles originally alternated a slight scattered-sticker tilt
+(`.sticker-card:nth-child(odd)`/`(even)`, a few degrees each way, echoing
+the "sticker" name) before Jasmine asked for that removed in favor of a
+straight, level deck — the same call she'd already made for the Projects
+list (see its entry further down) — don't reintroduce the alternating
+tilt without checking with her first. Each `playground/*.html` page
+reuses the same nav/
 footer/view-transition boilerplate as `case-studies/*.html` (`data-page=
 "playground"` so the nav highlights correctly, `--case-accent` set to a
 rainbow token per page — teal for Animations, purple for Sketch Dump)

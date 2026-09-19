@@ -1477,9 +1477,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   .sticker-card--wide { flex-basis: 300px; }
 }
 
-.sticker-card:nth-child(odd) { transform: rotate(-2deg); }
-.sticker-card:nth-child(even) { transform: rotate(2deg); }
-
 .sticker-card:hover {
   transform: perspective(700px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) translateY(-7px) scale(1.02);
   border-color: var(--c-pink);
