@@ -960,18 +960,27 @@ drifting out of sync.
   now, not 2).
 - **Projects list** (`class="projects-list"` in `index.html`'s
   `#projects`, pure HTML/CSS — no JS driving it) — the Projects section's
-  content: all 4 projects stacked vertically as `.project-spread`s.
-  Replaced **Project Orbit** (a drag/swipe/wheel/arrow-key/button
+  content: all 4 projects as `.project-spread`s in a 2x2 grid
+  (`display: grid; grid-template-columns: repeat(2, 1fr);`), collapsing
+  to a single column under 760px (same breakpoint where each
+  `.project-spread` card itself switches to a stacked internal layout —
+  see "Card shape" below). This was a stacked single-column list at full
+  row width before Jasmine asked for it sized down (the unified card
+  redesign just below read as "too big" at that width) — 2 columns halves
+  each card's width, and since `.project-spread` has no fixed height,
+  height follows from that automatically rather than needing separate
+  tuning. Replaced **Project Orbit** (a drag/swipe/wheel/arrow-key/button
   carousel of circular "planet" cards) at Jasmine's explicit request,
   after she shared a reference (wallofportfolios.in's "selected works"
   layout) and asked for something similar; restores "every project
   visible without an interaction," undoing Project Orbit's tradeoff in
-  the other direction. **If asked to redo Projects again, this stacked
-  list is the current, intended state** — don't reintroduce Project
-  Orbit's carousel or the constellation grid without being asked. Cards
-  and photos originally alternated a slight scattered-page tilt per
-  spread; Jasmine asked for that removed in favor of a straight, level
-  layout — don't reintroduce it without checking with her first.
+  the other direction. **If asked to redo Projects again, this 2x2 grid
+  of unified cards is the current, intended state** — don't reintroduce
+  Project Orbit's carousel, the constellation grid, or the single-column
+  stacked list without being asked. Cards and photos originally
+  alternated a slight scattered-page tilt per spread; Jasmine asked for
+  that removed in favor of a straight, level layout — don't reintroduce
+  it without checking with her first.
 
   **Card shape**: each `.project-spread` is now one unified bordered/
   rounded card (border, translucent dark fill, `overflow:hidden` so both
