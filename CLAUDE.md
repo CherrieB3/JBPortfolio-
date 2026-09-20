@@ -1090,11 +1090,28 @@ drifting out of sync.
   `animation-weight-test.mp4`, `animation-ball-bounce.gif`. The page's
   `.animation-gallery` (new component, see `css/style.css`) replaced the
   old single "Coming soon" `.card` with a grid of `.card animation-tile`
-  figures, each a full-bleed `<video controls preload="metadata"
-  poster="...">` (plain `<img>` for the one GIF, since GIFs already
-  autoplay/loop on their own with no separate controls needed) with a
-  `<figcaption>` below — same bordered/translucent `.card` look and
-  hover lift as everywhere else, not a new panel treatment. Captions
+  figures, each a full-bleed `<video controls muted loop playsinline
+  preload="metadata" poster="...">` (plain `<img>` for the one GIF,
+  since GIFs already autoplay/loop on their own with no separate
+  controls needed) with a `<figcaption>` below — same bordered/
+  translucent `.card` look and hover lift as everywhere else, not a new
+  panel treatment. Videos play on hover rather than needing a click on
+  native controls, at Jasmine's request for a "hover and it just plays"
+  GIF-like feel — `initAnimationHoverPlay()` in `js/main.js` removes
+  each video's `controls` attribute and wires `mouseenter`→`play()`/
+  `mouseleave`→`pause()` + reset to frame 0, but only when
+  `(hover: hover) and (pointer: fine)` matches and
+  `prefers-reduced-motion` doesn't — touch/no-hover pointers and
+  reduced-motion both keep the native `controls` already in the HTML, so
+  the video is never only playable one specific way. Real animated GIFs
+  weren't used for this (despite Jasmine asking for "gifs that play on
+  hover") since there's no video-compression tool in this environment to
+  keep GIF file sizes reasonable for clips this long, and GIF is a much
+  heavier format than compressed video for the same content anyway — a
+  muted/looping hover-`<video>` gets the identical visual effect at a
+  fraction of the size; if literal `.gif` files are ever truly required,
+  that needs real video-to-GIF tooling this environment doesn't have.
+  Captions
   describe only what's visually verifiable in each clip (rule 6) — e.g.
   "the flour sack test" and "a construction pass" name real, standard
   animation-fundamentals exercises identifiable from the frame itself,

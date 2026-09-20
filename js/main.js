@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initRabbitEgg();
   initMascotToggle();
   initContactForm();
+  initAnimationHoverPlay();
 });
 
 // Clicking (or tapping/keyboard-activating) the hero mascot swaps its
@@ -104,6 +105,38 @@ function initContactForm() {
     } finally {
       sendBtn.disabled = false;
     }
+  });
+}
+
+// playground/animations.html's gallery: videos play on hover rather than
+// needing a click on native controls — the "hover and it just plays"
+// feel of a GIF, without actually being one. A real animated GIF of a
+// clip this long would be far heavier than the compressed .mp4 already
+// is (and there's no video tool in this environment to generate one
+// anyway), so a muted/looping <video> driven by JS gets the same visual
+// behavior at a fraction of the file size. No-ops if the gallery markup
+// isn't on the page. Each <video> keeps `controls` in the HTML itself
+// (works with JS disabled, or on touch/no-hover pointers, or under
+// prefers-reduced-motion — video starting to play on hover is a
+// stronger motion trigger than the site's usual subtle hover
+// transforms) — this only removes `controls` and wires up hover when
+// hover is actually available and motion isn't reduced, so it's a
+// progressive enhancement rather than the only way to play these.
+function initAnimationHoverPlay() {
+  const videos = document.querySelectorAll('.animation-tile video');
+  if (!videos.length) return;
+
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!canHover || reducedMotion) return;
+
+  videos.forEach(video => {
+    video.removeAttribute('controls');
+    video.addEventListener('mouseenter', () => { video.play(); });
+    video.addEventListener('mouseleave', () => {
+      video.pause();
+      video.currentTime = 0;
+    });
   });
 }
 
