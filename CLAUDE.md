@@ -71,6 +71,13 @@ just its content.
   in the same pose/crop, swapped in on click (see the mascot-click entry
   under "Texture & interaction" below). Same resize-on-intake treatment as
   the primary file (source was 2048px, saved at 1400px into `images/`).
+- Exception: `videos/` (new top-level folder, sibling to `images/`) holds
+  Jasmine's own real animation clips (`.mp4`/`.gif`) for the Playground
+  Animations page — the site's first video assets. Same "real file,
+  reference it directly, no build step" philosophy as the image
+  exceptions above, just a different media type; see the `playground/`
+  entry further down for the full detail (file list, poster-frame
+  generation, why `preload="metadata"` matters here).
 
 ## Design system
 
@@ -192,19 +199,21 @@ wider `flex-basis`, not a column span), so you scroll/swipe sideways
 through them like flipping through a stack. Native CSS scroll-snap, no
 carousel library (rule 3) — trackpad, wheel, touch, and keyboard (the
 deck is `tabindex="0"`) all just work without JS. 3 tiles currently:
-**Animations** (`playground/animations.html`) is still a plain `[TBD]`
-placeholder — same "plain link, sitewide cross-document view transition
-just works" pattern as `.project-visual` in Projects, at Jasmine's
-request. **Color Studies** (`playground/color-studies.html`) has a real
-one-line summary on its tile ("Some studies I've done on color!") even
-though the page it links to is still the same `[TBD]`/"Coming soon"
-placeholder template — a tile's `<p>` can be real ahead of its page
-being real; don't assume the two stay in lockstep. It replaced an
-earlier **Sketch Dump** tile/page, which was itself removed once
-**Lucky's First Day** took its slot in the deck (see below) — the
+**Animations** (`playground/animations.html`) is real — a gallery of 6
+of Jasmine's own animation clips, real one-line tile summary too (see
+the `playground/` entry further down for the full detail); it's the
+deck's plain-link-to-a-`playground/*.html`-page pattern (same as
+`.project-visual` in Projects) but no longer a `[TBD]` placeholder
+behind that link. **Color Studies** (`playground/color-studies.html`)
+has a real one-line summary on its tile ("Some studies I've done on
+color!") even though the page it links to is still the same
+`[TBD]`/"Coming soon" placeholder template — a tile's `<p>` can be real
+ahead of its page being real; don't assume the two stay in lockstep. It
+replaced an earlier **Sketch Dump** tile/page, which was itself removed
+once **Lucky's First Day** took its slot in the deck (see below) — the
 `sketch-dump.html` file and its tile no longer exist; don't re-add a
-dangling link to it. **Lucky's First Day** is the deck's one exception to
-the placeholder pattern: real, finished illustration work moved here
+dangling link to it. **Lucky's First Day** is the deck's other exception
+to the placeholder pattern: real, finished illustration work moved here
 from the Projects list (see the EcoLink*/Lucky's First Day entry above)
 rather than a `[TBD]` experiment — it links straight out to its existing
 standalone site (`target="_blank" rel="noopener"`, the same real title
@@ -1059,14 +1068,58 @@ drifting out of sync.
   Formspree's default "thanks" page. No daily-limit counter here (unlike
   the old Doodle Mail) — Formspree's own free-tier submission cap is the
   real abuse guard for this form.
-- `playground/` — one placeholder page per placeholder Experiments tile:
-  `animations.html` and `color-studies.html` (`sketch-dump.html` was
-  removed along with its tile once Lucky's First Day took that slot in
-  the deck; don't recreate it without a tile linking to it), linked from
-  `.sticker-card` in `index.html`'s Experiments deck. See the
-  Experiments-tiles entry above for the template these follow (shared
-  nav/footer, no full case-study chapter structure) and for Lucky's First
-  Day, the deck's 3rd tile that isn't one of these placeholder pages.
+- `playground/` — `color-studies.html` is still a placeholder page (see
+  above), `animations.html` is real (see below). Both linked from
+  `.sticker-card` in `index.html`'s Experiments deck.
+  `sketch-dump.html` was removed along with its tile once Lucky's First
+  Day took that slot in the deck; don't recreate it without a tile
+  linking to it. `color-studies.html` follows the shared nav/footer,
+  no-chapter-structure template described in the Experiments-tiles entry
+  above; `animations.html` (below) breaks from that template since it
+  has real content to show.
+
+  **Animations** (`playground/animations.html`) went from a `[TBD]`
+  placeholder to a real gallery of 6 clips Jasmine provided (originals in
+  `/Users/jasmine/Downloads/New Folder With Items` — not part of the
+  repo), at her request. Files copied into a new `videos/` directory at
+  the repo root (a new top-level folder, alongside `images/` — the first
+  real video assets on the site) under clean names rather than their
+  original `BonthaJasmine_*`/`assignment04`/`(1)` filenames:
+  `animation-flour-sack.mp4`, `animation-fox-character.mp4`,
+  `animation-road-trip.mp4`, `animation-construction-study.mp4`,
+  `animation-weight-test.mp4`, `animation-ball-bounce.gif`. The page's
+  `.animation-gallery` (new component, see `css/style.css`) replaced the
+  old single "Coming soon" `.card` with a grid of `.card animation-tile`
+  figures, each a full-bleed `<video controls preload="metadata"
+  poster="...">` (plain `<img>` for the one GIF, since GIFs already
+  autoplay/loop on their own with no separate controls needed) with a
+  `<figcaption>` below — same bordered/translucent `.card` look and
+  hover lift as everywhere else, not a new panel treatment. Captions
+  describe only what's visually verifiable in each clip (rule 6) — e.g.
+  "the flour sack test" and "a construction pass" name real, standard
+  animation-fundamentals exercises identifiable from the frame itself,
+  not an invented backstory. `preload="metadata"` (not `"auto"`, no
+  autoplay) keeps initial page load light despite the real file sizes —
+  totaling ~23MB, `animation-flour-sack.mp4` alone is 16.7MB, since no
+  video-compression tool (`ffmpeg`) is available in this environment to
+  re-encode them (unlike the Pillow-based one-time image-processing pass
+  used for EcoLink*/DreamScape's screenshots — there was no equivalent
+  option here); if that ever becomes a real problem, re-encoding these
+  down is the fix, not switching the loading strategy. Poster frames
+  (`images/poster-animation-*.jpg`, one per clip) were extracted with
+  `qlmanage -t` (macOS Quick Look, no `ffmpeg` needed) and compressed
+  with `sips`, so each video shows a real frame instead of a blank/black
+  box before playing. The Experiments deck's Animations tile
+  (`index.html`) got the same treatment as EcoLink*'s Projects
+  thumbnail once real content existed: its `[TBD]` paragraph became a
+  real one-liner, and its `.sticker-thumb` swapped from the old
+  `images/playground-animations.svg` line-art icon to
+  `images/playground-animations.jpg` — a real frame (the road-trip
+  clip's mountain scene, chosen for how cleanly a landscape composition
+  fills the tile's 16:9 crop) extracted and compressed the same way as
+  the poster frames — following the sitewide "real file in `images/`,
+  swap the file" pattern rather than keeping a placeholder icon next to
+  real content.
 - `css/style.css` — the entire design system and every component's styles.
 - `js/main.js` — nav toggle/scrollspy active-link logic, the comet trail,
   starfield generation, and the contact form.
@@ -1074,10 +1127,12 @@ drifting out of sync.
 - Remaining placeholder content: the About section's sketchbook doodle art
   (each should become a drawing of a personal object) and fun-fact
   captions (each a fun fact about Jasmine tied to that object — some
-  already filled in, see the markup), and the Experiments tab of
-  Playground — its 3 tiles now link out to real `playground/*.html`
-  pages (see above), but those pages' actual content is still `[TBD]` —
-  see rule 6.
+  already filled in, see the markup), and Color Studies
+  (`playground/color-studies.html`) — its tile has a real one-line
+  summary but the page itself is still the `[TBD]`/"Coming soon"
+  template, since no actual color-study images exist yet — see rule 6.
+  Animations (`playground/animations.html`) is no longer placeholder: see
+  its own entry below.
 
 ## Available skills
 

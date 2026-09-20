@@ -1485,6 +1485,38 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   box-shadow: 0 18px 30px -16px rgba(61, 51, 79, .55);
 }
 
+/* playground/animations.html's real gallery of animation clips — a grid
+   of .card tiles, each a full-bleed video/GIF (same negative-margin
+   bleed technique as .sticker-thumb) with a caption below. Reuses .card
+   for the bordered/translucent panel look and hover lift rather than
+   introducing a new card treatment. */
+.animation-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
+
+.animation-tile {
+  padding: 0 0 20px;
+  overflow: hidden;
+}
+
+.animation-tile video,
+.animation-tile img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #000;
+}
+
+.animation-tile figcaption {
+  padding: 16px 24px 0;
+  font-size: .92rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
 /* A hand-drawn squiggle under the Playground heading, in the site's
    rainbow gradient, that draws itself in on load — this page is the one
    explicitly licensed to feel rougher and more sketchbook (CLAUDE.md),
