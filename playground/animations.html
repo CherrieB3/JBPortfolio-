@@ -43,46 +43,68 @@
 
         <section class="case-chapter">
             <div class="animation-gallery">
-                <figure class="card animation-tile">
-                    <video controls muted loop playsinline preload="metadata" poster="../images/poster-animation-flour-sack.jpg">
+                <button type="button" class="card animation-tile" data-theater-src="../videos/animation-flour-sack.mp4"
+                    data-theater-poster="../images/poster-animation-flour-sack.jpg"
+                    aria-label="Open larger: the flour sack test, a classic animation fundamentals exercise for weight and squash-and-stretch, rendered in a painted bedroom scene">
+                    <video muted loop playsinline preload="metadata" poster="../images/poster-animation-flour-sack.jpg">
                         <source src="../videos/animation-flour-sack.mp4" type="video/mp4">
                     </video>
-                    <figcaption>The flour sack test — a classic animation fundamentals exercise for weight and
-                        squash-and-stretch — rendered in a painted bedroom scene.</figcaption>
-                </figure>
-                <figure class="card animation-tile">
-                    <video controls muted loop playsinline preload="metadata" poster="../images/poster-animation-fox-character.jpg">
+                </button>
+                <button type="button" class="card animation-tile" data-theater-src="../videos/animation-fox-character.mp4"
+                    data-theater-poster="../images/poster-animation-fox-character.jpg"
+                    aria-label="Open larger: a finished character animation of a fox in overalls">
+                    <video muted loop playsinline preload="metadata" poster="../images/poster-animation-fox-character.jpg">
                         <source src="../videos/animation-fox-character.mp4" type="video/mp4">
                     </video>
-                    <figcaption>A finished character animation — a fox in overalls.</figcaption>
-                </figure>
-                <figure class="card animation-tile">
-                    <video controls muted loop playsinline preload="metadata" poster="../images/poster-animation-road-trip.jpg">
+                </button>
+                <button type="button" class="card animation-tile" data-theater-src="../videos/animation-road-trip.mp4"
+                    data-theater-poster="../images/poster-animation-road-trip.jpg"
+                    aria-label="Open larger: a short scene animation of a car winding along a mountain road">
+                    <video muted loop playsinline preload="metadata" poster="../images/poster-animation-road-trip.jpg">
                         <source src="../videos/animation-road-trip.mp4" type="video/mp4">
                     </video>
-                    <figcaption>A short scene animation: a car winding along a mountain road.</figcaption>
-                </figure>
-                <figure class="card animation-tile">
-                    <video controls muted loop playsinline preload="metadata" poster="../images/poster-animation-construction-study.jpg">
+                </button>
+                <button type="button" class="card animation-tile" data-theater-src="../videos/animation-construction-study.mp4"
+                    data-theater-poster="../images/poster-animation-construction-study.jpg"
+                    aria-label="Open larger: a construction pass blocking out a character's basic shapes and pose">
+                    <video muted loop playsinline preload="metadata" poster="../images/poster-animation-construction-study.jpg">
                         <source src="../videos/animation-construction-study.mp4" type="video/mp4">
                     </video>
-                    <figcaption>A construction pass — blocking out a character's basic shapes and pose.</figcaption>
-                </figure>
-                <figure class="card animation-tile">
-                    <video controls muted loop playsinline preload="metadata" poster="../images/poster-animation-weight-test.jpg">
+                </button>
+                <button type="button" class="card animation-tile" data-theater-src="../videos/animation-weight-test.mp4"
+                    data-theater-poster="../images/poster-animation-weight-test.jpg"
+                    aria-label="Open larger: a rough pencil test exploring weight and timing">
+                    <video muted loop playsinline preload="metadata" poster="../images/poster-animation-weight-test.jpg">
                         <source src="../videos/animation-weight-test.mp4" type="video/mp4">
                     </video>
-                    <figcaption>A rough pencil test exploring weight and timing.</figcaption>
-                </figure>
-                <figure class="card animation-tile">
+                </button>
+                <button type="button" class="card animation-tile" data-theater-src="../videos/animation-ball-bounce.gif"
+                    data-theater-type="image"
+                    aria-label="Open larger: a classic bouncing-ball exercise with cross-section guides for tracking rotation">
                     <img src="../videos/animation-ball-bounce.gif"
                         alt="A looping animation of a bouncing ball, drawn with cross-section guides for tracking its rotation.">
-                    <figcaption>A classic bouncing-ball exercise, with cross-section guides for tracking
-                        rotation.</figcaption>
-                </figure>
+                </button>
             </div>
         </section>
     </main>
+
+    <!-- Theater mode: clicking any tile above opens its clip full-size here
+         instead of playing inline in the small gallery tile. One shared
+         modal, populated by initAnimationTheater() in js/main.js rather
+         than duplicating a video/close-button per tile. Deliberately a
+         sibling of <main>, not nested inside it — <main> has its own
+         position:relative; z-index:1, which would trap this modal's
+         z-index:2000 inside that stacking context (capped at 1) and it
+         could never actually paint above .site-nav (z-index:200), the
+         same reason .skip-link sits outside <main> too. -->
+    <div class="theater-modal" id="theaterModal" role="dialog" aria-modal="true" aria-label="Animation player" hidden>
+        <button type="button" class="theater-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 5 L19 19 M19 5 L5 19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+            </svg>
+        </button>
+        <div class="theater-stage"></div>
+    </div>
 
     <footer>
         <div class="horizon-glow" aria-hidden="true"></div>

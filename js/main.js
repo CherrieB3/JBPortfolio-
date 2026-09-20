@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMascotToggle();
   initContactForm();
   initAnimationHoverPlay();
+  initAnimationTheater();
 });
 
 // Clicking (or tapping/keyboard-activating) the hero mascot swaps its
@@ -108,20 +109,18 @@ function initContactForm() {
   });
 }
 
-// playground/animations.html's gallery: videos play on hover rather than
-// needing a click on native controls — the "hover and it just plays"
-// feel of a GIF, without actually being one. A real animated GIF of a
-// clip this long would be far heavier than the compressed .mp4 already
-// is (and there's no video tool in this environment to generate one
-// anyway), so a muted/looping <video> driven by JS gets the same visual
-// behavior at a fraction of the file size. No-ops if the gallery markup
-// isn't on the page. Each <video> keeps `controls` in the HTML itself
-// (works with JS disabled, or on touch/no-hover pointers, or under
-// prefers-reduced-motion — video starting to play on hover is a
-// stronger motion trigger than the site's usual subtle hover
-// transforms) — this only removes `controls` and wires up hover when
-// hover is actually available and motion isn't reduced, so it's a
-// progressive enhancement rather than the only way to play these.
+// playground/animations.html's gallery: the small tile previews play on
+// hover — the "hover and it just plays" feel of a GIF, without actually
+// being one (a real animated GIF of a clip this long would be far
+// heavier than the compressed .mp4 already is, and there's no video
+// tool in this environment to generate one anyway). No-ops if the
+// gallery markup isn't on the page. Only on hover-capable, fine-pointer
+// devices with no prefers-reduced-motion — video starting to play on
+// hover is a stronger motion trigger than the site's usual subtle hover
+// transforms, and touch/no-hover pointers have no hover to trigger it
+// with anyway. Every device can still watch each clip full-size via
+// initAnimationTheater() below regardless of hover support, so this is
+// purely a bonus preview, never the only way to play one.
 function initAnimationHoverPlay() {
   const videos = document.querySelectorAll('.animation-tile video');
   if (!videos.length) return;
@@ -131,13 +130,88 @@ function initAnimationHoverPlay() {
   if (!canHover || reducedMotion) return;
 
   videos.forEach(video => {
-    video.removeAttribute('controls');
     video.addEventListener('mouseenter', () => { video.play(); });
     video.addEventListener('mouseleave', () => {
       video.pause();
       video.currentTime = 0;
     });
   });
+}
+
+// Theater mode: clicking any .animation-tile opens its clip full-size in
+// the shared #theaterModal overlay (a fresh <video>/<img> built into
+// .theater-stage per open, rather than moving the tile's own element —
+// so the small tile's own poster/hover-preview is untouched) instead of
+// playing inline in the small gallery tile. No-ops if the gallery/modal
+// markup isn't on the page.
+function initAnimationTheater() {
+  const modal = document.getElementById('theaterModal');
+  const tiles = document.querySelectorAll('.animation-tile');
+  if (!modal || !tiles.length) return;
+
+  const stage = modal.querySelector('.theater-stage');
+  const closeBtn = modal.querySelector('.theater-close');
+  let lastTrigger = null;
+
+  function onKeydown(e) {
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    // Focus trap: cycle between the close button and the theater
+    // video's own native controls (its only other focusable child) —
+    // the GIF case has just the close button, so the trap collapses to
+    // that one element rather than needing special-casing.
+    const media = stage.querySelector('video');
+    const focusables = media ? [closeBtn, media] : [closeBtn];
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  }
+
+  function open(tile) {
+    // Stop the small tile's own hover-preview so it isn't still playing
+    // (silently) behind the modal.
+    const tileVideo = tile.querySelector('video');
+    if (tileVideo) { tileVideo.pause(); tileVideo.currentTime = 0; }
+
+    stage.innerHTML = '';
+    if (tile.dataset.theaterType === 'image') {
+      const img = document.createElement('img');
+      img.src = tile.dataset.theaterSrc;
+      img.alt = tile.getAttribute('aria-label') || '';
+      stage.appendChild(img);
+    } else {
+      const video = document.createElement('video');
+      video.controls = true;
+      video.playsInline = true;
+      video.poster = tile.dataset.theaterPoster || '';
+      const source = document.createElement('source');
+      source.src = tile.dataset.theaterSrc;
+      source.type = 'video/mp4';
+      video.appendChild(source);
+      stage.appendChild(video);
+      video.play().catch(() => {}); // real user click, so autoplay-with-sound is allowed
+    }
+
+    lastTrigger = tile;
+    modal.hidden = false;
+    closeBtn.focus();
+    document.addEventListener('keydown', onKeydown);
+  }
+
+  function close() {
+    modal.hidden = true;
+    stage.innerHTML = ''; // stops playback/downloading rather than just hiding it
+    document.removeEventListener('keydown', onKeydown);
+    if (lastTrigger) lastTrigger.focus();
+  }
+
+  tiles.forEach(tile => tile.addEventListener('click', () => open(tile)));
+  closeBtn.addEventListener('click', close);
+  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
 }
 
 // A magnetic tilt toward the cursor on .card — the card leans as if it

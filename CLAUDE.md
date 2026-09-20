@@ -1090,33 +1090,60 @@ drifting out of sync.
   `animation-weight-test.mp4`, `animation-ball-bounce.gif`. The page's
   `.animation-gallery` (new component, see `css/style.css`) replaced the
   old single "Coming soon" `.card` with a grid of `.card animation-tile`
-  figures, each a full-bleed `<video controls muted loop playsinline
-  preload="metadata" poster="...">` (plain `<img>` for the one GIF,
-  since GIFs already autoplay/loop on their own with no separate
-  controls needed) with a `<figcaption>` below — same bordered/
-  translucent `.card` look and hover lift as everywhere else, not a new
-  panel treatment. Videos play on hover rather than needing a click on
-  native controls, at Jasmine's request for a "hover and it just plays"
-  GIF-like feel — `initAnimationHoverPlay()` in `js/main.js` removes
-  each video's `controls` attribute and wires `mouseenter`→`play()`/
-  `mouseleave`→`pause()` + reset to frame 0, but only when
-  `(hover: hover) and (pointer: fine)` matches and
-  `prefers-reduced-motion` doesn't — touch/no-hover pointers and
-  reduced-motion both keep the native `controls` already in the HTML, so
-  the video is never only playable one specific way. Real animated GIFs
-  weren't used for this (despite Jasmine asking for "gifs that play on
-  hover") since there's no video-compression tool in this environment to
-  keep GIF file sizes reasonable for clips this long, and GIF is a much
-  heavier format than compressed video for the same content anyway — a
-  muted/looping hover-`<video>` gets the identical visual effect at a
-  fraction of the size; if literal `.gif` files are ever truly required,
-  that needs real video-to-GIF tooling this environment doesn't have.
-  Captions
-  describe only what's visually verifiable in each clip (rule 6) — e.g.
-  "the flour sack test" and "a construction pass" name real, standard
-  animation-fundamentals exercises identifiable from the frame itself,
-  not an invented backstory. `preload="metadata"` (not `"auto"`, no
-  autoplay) keeps initial page load light despite the real file sizes —
+  elements — no per-clip captions (Jasmine asked for them removed); each
+  tile's `aria-label` carries the same descriptive text instead, so the
+  info survives for screen readers without a visible caption. Two
+  layered interactions, both at Jasmine's request:
+  - **Hover preview** — the small tile's `<video muted loop playsinline
+    preload="metadata" poster="...">` plays on hover, the "hover and it
+    just plays" feel of a GIF without actually being one.
+    `initAnimationHoverPlay()` in `js/main.js` wires
+    `mouseenter`→`play()`/`mouseleave`→`pause()` + reset to frame 0, only
+    when `(hover: hover) and (pointer: fine)` matches and
+    `prefers-reduced-motion` doesn't (video starting to play on hover is
+    a stronger motion trigger than the site's usual subtle hover
+    transforms). Purely a bonus on capable devices — see theater mode
+    below for how every device actually watches a clip.
+  - **Theater mode** — clicking (or Enter/Space-activating) any tile
+    opens that clip full-size in `#theaterModal`, a single shared
+    fixed-position overlay (dark backdrop, the clip centered with real
+    `controls` and sound) — the site's first true modal.
+    `initAnimationTheater()` in `js/main.js` builds a fresh `<video>` (or
+    `<img>` for the GIF tile) into `.theater-stage` per open rather than
+    moving the tile's own element, so the small tile's hover-preview is
+    untouched. Each `.animation-tile` is a `<button>` (not a `<figure>`
+    — the whole tile is now a click target, and there's no caption to
+    anchor a figure to), carrying `data-theater-src`/`data-theater-
+    poster`/`data-theater-type="image"` (GIF only) read by
+    `initAnimationTheater()`. Closes via the × button, clicking the
+    backdrop, or Escape — all three discard the theater video
+    (`stage.innerHTML = ''`, not just hiding it, so playback actually
+    stops) and return focus to the tile that opened it; a small focus
+    trap keeps Tab cycling within the modal (close button ↔ the video's
+    native controls, or just the close button alone for the GIF tile,
+    which has nothing else focusable).
+    **`.theater-modal` is a sibling of `<main>` in the HTML, not nested
+    inside it** — `<main>` has its own `position: relative; z-index: 1`,
+    which would trap the modal's `z-index: 2000` inside that stacking
+    context (capped at main's own level, 1) and it could never actually
+    paint above `.site-nav` (z-index 200) — the same reason `.skip-link`
+    sits outside `<main>` too. This is easy to get wrong silently (the
+    modal still *works* — opens, plays, closes — just renders under the
+    nav with an invisible close button), so if theater mode or any
+    future modal goes back to being nested inside `<main>`, re-check
+    this.
+
+  Real animated GIFs weren't used for either interaction (despite
+  Jasmine's initial ask for "gifs that play on hover") since there's no
+  video-compression tool in this environment to keep GIF file sizes
+  reasonable for clips this long, and GIF is a much heavier format than
+  compressed video for the same content anyway — a muted/looping
+  hover-`<video>` (small tile) plus a real `<video controls>` (theater
+  mode) together cover the same ground at a fraction of the size; if
+  literal `.gif` files are ever truly required, that needs real
+  video-to-GIF tooling this environment doesn't have.
+  `preload="metadata"` (not `"auto"`, no autoplay) on the small tile's
+  video keeps initial page load light despite the real file sizes —
   totaling ~23MB, `animation-flour-sack.mp4` alone is 16.7MB, since no
   video-compression tool (`ffmpeg`) is available in this environment to
   re-encode them (unlike the Pillow-based one-time image-processing pass
