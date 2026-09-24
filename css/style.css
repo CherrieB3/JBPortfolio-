@@ -458,7 +458,12 @@ a { color: inherit; }
     top: 0; left: 0;
     width: 28px; height: 28px;
     transform: translate(-50%, -50%);
-    z-index: 999;
+    /* Above .theater-modal (2000) too — otherwise the fake cursor
+       vanishes behind the Playground/Animations theater overlay while
+       it's open, since a fixed-position element with a lower z-index
+       renders underneath one with a higher z-index regardless of DOM
+       order. */
+    z-index: 2100;
     pointer-events: none;
     transition: opacity .15s ease, width .2s ease, height .2s ease;
     /* Blue glow outline around the default star — dropped entirely over
@@ -545,7 +550,7 @@ a { color: inherit; }
     width: 10px; height: 10px;
     margin: -5px 0 0 -5px;
     pointer-events: none;
-    z-index: 998;
+    z-index: 2099;
     animation: cursor-burst-fly .5s ease-out forwards;
   }
 
