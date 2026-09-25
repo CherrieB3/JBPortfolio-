@@ -215,9 +215,9 @@ body::before {
   background:
     radial-gradient(circle at 22% 14%, rgba(96, 219, 237, .12), transparent 30%),
     radial-gradient(circle at 78% 18%, rgba(183, 159, 244, .1), transparent 32%),
-    radial-gradient(circle at 18% 98%, rgba(241, 125, 137, .18), transparent 42%),
-    radial-gradient(circle at 50% 102%, rgba(96, 219, 237, .2), transparent 46%),
-    radial-gradient(circle at 82% 98%, rgba(183, 159, 244, .18), transparent 42%);
+    radial-gradient(circle at 18% 98%, rgba(241, 125, 137, .12), transparent 42%),
+    radial-gradient(circle at 50% 102%, rgba(96, 219, 237, .13), transparent 46%),
+    radial-gradient(circle at 82% 98%, rgba(183, 159, 244, .12), transparent 42%);
   z-index: -2;
   pointer-events: none;
 }
@@ -228,16 +228,19 @@ body::before {
    dark — it was briefly switched to multiply during a light-background
    version of this palette that didn't stick) so the pastel colors glow
    and layer over each other and the starfield instead of sitting as flat
-   tinted panels. */
+   tinted panels. Opacities were lowered ~40% in the accessibility pass:
+   at full strength the bottom of the viewport got light enough that
+   muted text scrolling over it fell below 4.5:1. Re-check contrast
+   before brightening any of these again. */
 body::after {
   content: '';
   position: fixed;
   inset: -15% -20%;
   background:
-    radial-gradient(ellipse 34% 125% at 12% 118%, rgba(96, 219, 237, .34), transparent 60%),
-    radial-gradient(ellipse 30% 115% at 38% 124%, rgba(241, 125, 137, .26), transparent 58%),
-    radial-gradient(ellipse 32% 125% at 65% 118%, rgba(183, 159, 244, .28), transparent 60%),
-    radial-gradient(ellipse 28% 110% at 90% 124%, rgba(96, 219, 237, .24), transparent 56%);
+    radial-gradient(ellipse 34% 125% at 12% 118%, rgba(96, 219, 237, .2), transparent 60%),
+    radial-gradient(ellipse 30% 115% at 38% 124%, rgba(241, 125, 137, .16), transparent 58%),
+    radial-gradient(ellipse 32% 125% at 65% 118%, rgba(183, 159, 244, .17), transparent 60%),
+    radial-gradient(ellipse 28% 110% at 90% 124%, rgba(96, 219, 237, .14), transparent 56%);
   filter: blur(55px);
   mix-blend-mode: screen;
   z-index: -2;
@@ -442,10 +445,60 @@ a { color: inherit; }
 .reveal-right.is-hidden { opacity: 0; transform: translateX(70px); }
 .reveal-right.is-visible { opacity: 1; transform: translateX(0); }
 
-/* reduced motion: calm every decorative animation down */
+/* Reduced motion: every animation and transition on the site (pseudo-
+   elements included) jumps straight to its end state. A near-zero
+   duration instead of `animation: none` so anything that animates in
+   from opacity 0 (hero entrance, scroll reveals) still lands visible. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* =========================================================
+   Calm mode (html.calm) — toggled from the nav (initCalmMode() in
+   js/main.js), on by default when the OS asks for reduced motion.
+   Goes further than reduced motion alone: stops all motion, removes or
+   dims the busy background layers (shooting stars, grain, glows, comet
+   trail, twinkling stars), brings back the normal mouse pointer, and
+   lifts secondary text closer to white for more contrast.
+   ========================================================= */
+html.calm {
+  scroll-behavior: auto;
+  --text-dim: #f1f2fe;
+  --text-mute: #d6d9f6;
+}
+html.calm *, html.calm *::before, html.calm *::after {
+  animation-duration: .001ms !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .001ms !important;
+  transition-delay: 0s !important;
+}
+html.calm .shooting-stars,
+html.calm .grain,
+html.calm .hero-glow,
+html.calm .comet-trail,
+html.calm .comet-star,
+html.calm .cursor,
+html.calm .cursor-burst,
+html.calm .doodle-burst,
+html.calm .rabbit-hop { display: none !important; }
+html.calm .stars { opacity: .4; }
+html.calm body::before,
+html.calm body::after { opacity: .35; }
+html.calm .bg-squiggle { opacity: .4; }
+html.calm::view-transition-old(root),
+html.calm::view-transition-new(root) { animation: none; }
+@media (hover: hover) and (pointer: fine) {
+  html.calm * { cursor: auto !important; }
+  html.calm :is(a[href], button, [role="button"], summary, label[for]) { cursor: pointer !important; }
+  html.calm :is(input, textarea) { cursor: text !important; }
 }
 
 /* =========================================================
@@ -645,38 +698,47 @@ a { color: inherit; }
 }
 
 .nav-inner {
+  position: relative;
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 8%;
 }
 
-/* single list: About, Projects, [logo], Playground, Contact — the
-   logo sits in the middle slot so nav reads as one evenly-spaced row */
-.nav-links {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  list-style: none;
-  font-family: 'Baloo 2', cursive;
-  font-weight: 700;
-  font-size: 1.05rem;
-}
-
+/* The logo comes first in the markup, outside the link list, so screen
+   readers announce "Jasmine Bontha, home" before the links instead of in
+   the middle of them. Visually it still sits in the center of the bar:
+   it's positioned over an empty middle column the link grid leaves for
+   it (2 links on the left, 3 on the right, each half the same total
+   width so the gap lands at the true center). */
 .logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
 }
 
+.nav-links {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 3fr) 150px repeat(3, 2fr);
+  align-items: center;
+  justify-items: center;
+  list-style: none;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.nav-links li:nth-child(3) { grid-column: 4; }
+
 /* Jasmine's own hand-drawn signature wordmark (real art, not a system
-   font rendering of her name) — replaces what used to be the spark glyph
-   + "Jasmine" as plain text. Sized by height, not width, since the
-   source art's own proportions (a wide signature with a comet swoosh
-   above it) should stay intact rather than being stretched to a fixed
-   box. */
+   font rendering of her name). Sized by height, not width, so the source
+   art's proportions (a wide signature with a comet swoosh above it) stay
+   intact. */
 .logo-mark {
   display: block;
   height: 52px;
@@ -690,15 +752,47 @@ a { color: inherit; }
   transition: border-color .25s, opacity .25s;
 }
 
-.nav-links a:hover,
-.nav-links a:focus-visible { opacity: .7; }
+.nav-links a:hover { opacity: .7; }
 
 .nav-links a.is-active { border-color: currentColor; }
 
-.nav-links li:nth-child(1) a { color: var(--c-red); }
-.nav-links li:nth-child(2) a { color: var(--c-orange); }
-.nav-links li:nth-child(4) a { color: var(--c-green); }
-.nav-links li:nth-child(5) a { color: var(--c-blue); }
+.nav-links a[data-page="projects"] { color: var(--c-orange); }
+.nav-links a[data-page="about"] { color: var(--c-red); }
+.nav-links a[data-page="playground"] { color: var(--c-green); }
+.nav-links a[data-page="contact"] { color: var(--c-blue); }
+.nav-links a[data-page="resume"] { color: var(--c-purple); }
+
+/* Calm mode switch (see initCalmMode() in js/main.js). Sits in the nav's
+   right-hand padding on desktop so it doesn't shift the centered logo. */
+.calm-toggle {
+  position: absolute;
+  right: 1.6%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 6px 9px;
+  border: 1.5px solid var(--c-purple);
+  border-radius: 50px;
+  background: transparent;
+  color: var(--text);
+  font: 600 .8rem/1 'Inter', sans-serif;
+  cursor: pointer;
+}
+.calm-toggle svg { width: 16px; height: 16px; flex: none; }
+.calm-toggle[aria-pressed="true"] { background: var(--d-purple); border-color: var(--d-purple); color: #fff; }
+.calm-toggle[aria-pressed="true"] svg path { fill: currentColor; }
+/* Too little room in the padding for the text label between the mobile
+   breakpoint and a wide desktop: show the icon alone (the label stays in
+   the accessibility tree via .sr-only, so the button keeps its name). */
+@media (max-width: 1280px) {
+  .calm-toggle { padding: 7px; }
+  .calm-toggle .calm-label {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+}
 
 .nav-underline {
   position: relative;
@@ -728,27 +822,37 @@ a { color: inherit; }
   background: none;
   border: none;
   font-size: 1.6rem;
+  line-height: 1;
+  padding: 6px 8px;
   color: var(--text);
   cursor: pointer;
 }
 
 @media (max-width: 760px) {
+  .nav-inner { padding: 0 6%; gap: 10px; }
+  .logo { position: static; transform: none; margin-right: auto; }
+  .logo-mark { height: 44px; }
   .nav-toggle { display: block; }
+  .calm-toggle { position: static; transform: none; }
   .nav-links {
     position: fixed;
     top: calc(var(--nav-h) + 4px);
     left: 0; right: 0;
     background: var(--nav-bg);
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
     padding: 10px 8% 22px;
     transform: translateY(-120%);
-    transition: transform .3s ease;
+    /* Hidden, not just moved off-screen, so a closed menu's links can't
+       be reached with Tab. Visibility flips after the slide finishes. */
+    visibility: hidden;
+    transition: transform .3s ease, visibility 0s linear .3s;
   }
-  .nav-links.is-open { transform: translateY(0); }
+  .nav-links.is-open { transform: translateY(0); visibility: visible; transition: transform .3s ease; }
   .nav-links li { padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, .1); }
-  .nav-links li.logo-slot { order: -1; border-top: none; padding-top: 2px; }
+  .nav-links li:first-child { border-top: none; }
 }
 
 /* =========================================================
@@ -1075,9 +1179,9 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   aspect-ratio: 1;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 35% 35%, rgba(183, 159, 244, .38), transparent 62%),
-    radial-gradient(circle at 68% 55%, rgba(96, 219, 237, .24), transparent 64%),
-    radial-gradient(circle at 48% 78%, rgba(220, 123, 240, .22), transparent 62%);
+    radial-gradient(circle at 35% 35%, rgba(183, 159, 244, .22), transparent 62%),
+    radial-gradient(circle at 68% 55%, rgba(96, 219, 237, .14), transparent 64%),
+    radial-gradient(circle at 48% 78%, rgba(220, 123, 240, .13), transparent 62%);
   filter: blur(70px);
   z-index: 0;
   pointer-events: none;
@@ -1397,36 +1501,19 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
    Playground
    ========================================================= */
 
-/* A horizontal "slide deck" of cards instead of a static grid — you
-   scroll/swipe sideways through the tiles like flipping through a stack.
-   Native CSS scroll-snap (no carousel library, no JS) so trackpad, mouse
-   wheel, touch, and keyboard (via tabindex + arrow-key scroll) all just
-   work — see rule 3, no dependency creep. */
+/* A simple responsive grid: every tile visible at once, no sideways
+   scrolling to discover what's there (it used to be a horizontal
+   scroll-snap deck with a "scroll for more" hint, replaced so nothing
+   is hidden off-screen). */
 .playground-deck {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 28px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  padding: 10px 10px 28px;
-  margin: -10px -10px 0;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--c-pink) transparent;
 }
-
-.playground-deck:focus-visible { outline: 3px solid var(--c-yellow); outline-offset: 3px; }
-
-.playground-deck::-webkit-scrollbar { height: 8px; }
-.playground-deck::-webkit-scrollbar-track { background: transparent; }
-.playground-deck::-webkit-scrollbar-thumb { background: var(--c-pink); border-radius: 10px; }
-
-.sticker-card--wide { flex: 0 0 380px; }
 
 .sticker-card {
   position: relative;
-  flex: 0 0 280px;
-  scroll-snap-align: start;
-  background: rgba(255, 255, 255, .07);
+  background: color-mix(in srgb, white 7%, var(--bg)); /* solid, see .project-spread */
   border: 1.5px solid rgba(255, 255, 255, .18);
   border-radius: var(--radius-md);
   padding: 30px 24px;
@@ -1465,11 +1552,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   letter-spacing: .5px;
   text-transform: uppercase;
   color: var(--c-pink);
-}
-
-@media (max-width: 560px) {
-  .sticker-card { flex-basis: 240px; }
-  .sticker-card--wide { flex-basis: 300px; }
 }
 
 /* Simplified to a plain lift — no magnetic cursor-tilt/scale — at
@@ -1702,7 +1784,11 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 .project-spread {
   display: flex;
   align-items: stretch;
-  background: rgba(255, 255, 255, .07);
+  /* Solid, not translucent: a see-through panel let the aurora glow
+     behind it wash the text out below AA as the page scrolled. Mixed
+     from existing tokens so it looks the same as the old 7% white wash
+     over plain --bg. */
+  background: color-mix(in srgb, white 7%, var(--bg));
   border: 1.5px solid var(--panel-border);
   border-radius: 26px;
   overflow: hidden;
@@ -1765,6 +1851,9 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
    hover the photo, and the button has its own hover. */
 .project-visual:hover img,
 .project-visual:focus-visible img { transform: scale(1.05); }
+/* The spread clips to its rounded outline (overflow: hidden), which would
+   cut off a normal outside focus ring, so draw this one inset. */
+.project-visual:focus-visible { outline-offset: -5px; }
 
 @media (max-width: 760px) {
   .projects-list { grid-template-columns: 1fr; gap: 32px; }
@@ -1827,7 +1916,7 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 .contact-form textarea {
   width: 100%;
   background: var(--panel);
-  border: 1px solid var(--panel-border);
+  border: 1px solid var(--text-mute); /* 3:1+ so the field outline is visible (WCAG 1.4.11) */
   border-radius: var(--radius-sm);
   padding: 14px 16px;
   color: var(--text);

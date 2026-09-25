@@ -3,6 +3,7 @@
 // the custom star/"click me" cursor.
 
 document.addEventListener('DOMContentLoaded', () => {
+  initCalmMode();
   initNav();
   initScrollSpy();
   initCometTrail();
@@ -16,6 +17,32 @@ document.addEventListener('DOMContentLoaded', () => {
   initAnimationHoverPlay();
   initAnimationTheater();
 });
+
+// Calm mode: one switch in the nav that stops animation, dims the busy
+// background layers, and raises text contrast (the CSS lives under
+// html.calm in css/style.css). The class itself is set by a tiny inline
+// script in each page's <head> before first paint, defaulting to on when
+// the OS asks for reduced motion; this wires up the button and remembers
+// the visitor's choice. localStorage can throw (private windows, blocked
+// storage), so every access is guarded and the page still works without it.
+function isCalm() {
+  return document.documentElement.classList.contains('calm') ||
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function initCalmMode() {
+  const root = document.documentElement;
+  const btn = document.querySelector('.calm-toggle');
+  if (!btn) return;
+  const sync = () => btn.setAttribute('aria-pressed', String(root.classList.contains('calm')));
+  sync();
+  btn.addEventListener('click', () => {
+    const on = !root.classList.contains('calm');
+    root.classList.toggle('calm', on);
+    try { localStorage.setItem('calm', on ? '1' : '0'); } catch (e) { /* choice just won't persist */ }
+    sync();
+  });
+}
 
 // Clicking (or tapping/keyboard-activating) the hero mascot swaps its
 // expression for MASCOT_ALT_DURATION_MS, then reverts on its own — a
@@ -126,11 +153,12 @@ function initAnimationHoverPlay() {
   if (!videos.length) return;
 
   const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!canHover || reducedMotion) return;
+  if (!canHover) return;
 
   videos.forEach(video => {
-    video.addEventListener('mouseenter', () => { video.play(); });
+    // Checked on each hover rather than once, so turning Calm mode on
+    // takes effect without a reload.
+    video.addEventListener('mouseenter', () => { if (!isCalm()) video.play(); });
     video.addEventListener('mouseleave', () => {
       video.pause();
       video.currentTime = 0;
@@ -230,6 +258,7 @@ function initTiltCards() {
   // Only cards that are links or buttons tilt; static cards stay still.
   document.querySelectorAll('a.card, button.card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
+      if (isCalm()) return;
       const rect = card.getBoundingClientRect();
       const px = (e.clientX - rect.left) / rect.width - 0.5;
       const py = (e.clientY - rect.top) / rect.height - 0.5;
@@ -269,6 +298,7 @@ function initRabbitEgg() {
 }
 
 function hopRabbit() {
+  if (isCalm()) return;
   const colors = ['#dc7bf0', '#6cbeef', '#efd96e', '#90e369', '#b79ff4', '#eea663', '#7ce3bd'];
   const hop = document.createElement('div');
   hop.className = 'rabbit-hop';
@@ -454,6 +484,7 @@ function initCustomCursor() {
   }
 
   document.addEventListener('click', (e) => {
+    if (isCalm()) return;
     // Remove-reflow-readd so back-to-back clicks always restart the
     // animation instead of a second click landing mid-animation doing
     // nothing (same trick as the comet star's scroll pulse).
@@ -468,14 +499,20 @@ function initNav() {
   const toggle = document.querySelector('.nav-toggle');
   const links = document.querySelector('.nav-links');
   if (toggle && links) {
-    toggle.addEventListener('click', () => {
-      const open = links.classList.toggle('is-open');
+    const setOpen = (open) => {
+      links.classList.toggle('is-open', open);
       toggle.setAttribute('aria-expanded', String(open));
+    };
+    toggle.addEventListener('click', () => setOpen(!links.classList.contains('is-open')));
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+    // Escape closes the open menu and hands focus back to the button that
+    // opened it, so keyboard users aren't left stranded inside it.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && links.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
     });
-    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      links.classList.remove('is-open');
-      toggle.setAttribute('aria-expanded', 'false');
-    }));
   }
 
   const here = document.body.dataset.page;
