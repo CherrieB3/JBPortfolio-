@@ -38,9 +38,17 @@ older entry below conflicts with this list, **this list wins**:
   Accessibility → back. DreamScape and EcoLink are flagships:
   `.project-spread--featured` spans both grid columns, uses the 16:9
   `case-*-wide.jpg` mockup instead of the square `orbit-*` crop, and has
-  a "Featured · role" kicker. Every card has a `.project-stats` row
-  (bold figure + label). Only put facts there that are on the case study
-  or resume.
+  a "Featured · …" kicker. Every card has the same `.project-meta` list
+  (Role / Team / Timeline / Research; 2x2, or one row of 4 on featured
+  cards) in place of the old tag pills. Only put facts there that are on
+  the case study or resume.
+- **Not live (homepage reverted by Jasmine in `db4ebf9`, then hand-edited
+  on top)**: the hero proof pills, the Experience list, the rewritten
+  About and the Contact statement below are NOT in `index.html` right
+  now. Their CSS (`.hero-proof`, `.experience*`, `.about-lead`,
+  `.contact-statement`/`.contact-pitch`) is still in `style.css`. Ask
+  Jasmine before re-adding any of it, and never overwrite her own hero or
+  About copy.
 - **Hero proof**: `.hero-proof` pills under the meta line surface resume
   highlights (PassionWorks 2026, 2 graphic design internships, freelance
   since 2021). "Product Design Intern" at PassionWorks is Jasmine's own
@@ -59,9 +67,12 @@ older entry below conflicts with this list, **this list wins**:
   03 Insights (`.case-insight` cards: finding + a "So" line saying what
   it changed) → 04 Design decisions (the old Process chapter) →
   05 Process (the old Design Iterations) → 06 Outcome (the old Final
-  Solution, plus `.case-deliverables` "What we/I delivered" and a
-  "What I'd test next" `.case-subhead`) → 07 Reflection. A `.case-stats`
-  row of big figures sits under the quick facts. Insights restate
+  Solution, plus a "What I'd test next" `.case-subhead`) →
+  07 Reflection. All scan metadata lives in one "At a glance"
+  `.case-quickfacts` block: Role / Team / Timeline / Tools-or-Research,
+  then `.qf-wide` Research + Deliverables (+ My contributions/Feedback).
+  A separate stat row and a bottom deliverables list were tried and
+  removed because they repeated this block; keep it to one place. Insights restate
   research already on the page. They never add new findings.
 - **Scroll reveal** uses `threshold: 0`. A fractional threshold left
   tall case-study chapters blank on phones (a 3,600px chapter can never
@@ -312,12 +323,10 @@ of Jasmine's own animation clips, real one-line tile summary too (see
 the `playground/` entry further down for the full detail); it's the
 deck's plain-link-to-a-`playground/*.html`-page pattern (same as
 `.project-visual` in Projects) but no longer a `[TBD]` placeholder
-behind that link. **Color Studies** (`playground/color-studies.html`)
-has a real one-line summary on its tile ("Some studies I've done on
-color!") even though the page it links to is still the same
-`[TBD]`/"Coming soon" placeholder template — a tile's `<p>` can be real
-ahead of its page being real; don't assume the two stay in lockstep. It
-replaced an earlier **Sketch Dump** tile/page, which was itself removed
+behind that link. **Illustrations** (`playground/illustrations.html`,
+Sept 2026) replaced a Color Studies placeholder page at Jasmine's
+request; see the `playground/` entry for its detail. Color Studies had
+itself replaced an earlier **Sketch Dump** tile/page, which was itself removed
 once **Lucky's First Day** took its slot in the deck (see below) — the
 `sketch-dump.html` file and its tile no longer exist; don't re-add a
 dangling link to it. **Lucky's First Day** is the deck's other exception
@@ -329,10 +338,8 @@ and summary it had in Projects) since there's no page for it in this
 repo, instead of to a `playground/*.html` placeholder. Every tile carries
 a `.sticker-thumb` — a small full-bleed placeholder line-art SVG per
 tile, in each tile's own accent color (`images/playground-animations.svg`
-teal, `-color-studies.svg` gold — overlapping color-swatch circles,
-replacing the old `-sketch-dump.svg` purple-pencil motif once Sketch
-Dump's tile/page were removed, since that motif no longer matched
-anything — `-lucky.svg` rose pink), pulled flush to the card's top edge
+teal, `-lucky.svg` rose pink; Illustrations uses a real 16:9
+`images/playground-illustrations.jpg` of the "Blending in" poster), pulled flush to the card's top edge
 via negative margin, `object-fit: cover` at a 16:9 aspect ratio,
 `.sticker-card` given `overflow: hidden` so the bleed clips to the card's
 own radius — same "real file in `images/`, swap the file" pattern used
@@ -364,7 +371,7 @@ unaffected and keeps the full effect. Each `playground/*.html` page
 reuses the same nav/
 footer/view-transition boilerplate as `case-studies/*.html` (`data-page=
 "playground"` so the nav highlights correctly, `--case-accent` set to a
-rainbow token per page — teal for Animations, gold for Color Studies)
+rainbow token per page — teal for Animations, pink for Illustrations)
 but deliberately skips the full 7-chapter
 case-study structure (Role/Timeline/Team/Tools etc. would be fabricated
 for a loose experiments category that isn't a project) — just a
@@ -432,7 +439,7 @@ stacked on top of the rest of the site's existing motion/decoration.
   `a.card, button.card`, the About fallback list's dot glow was removed,
   and `.project-spread` no longer lifts as a whole (see the Projects list
   entry). Static content cards (case-study Overview/Research/feature
-  cards, `playground/color-studies.html`'s placeholder card) stay still.
+  cards) stay still.
   Decide whether a new card is clickable before giving it any hover state.
 - Clickable `.card`s (links/buttons) get a magnetic cursor-tilt on hover
   (`initTiltCards()` in `js/main.js`, mouse-only) — they lean toward the
@@ -1236,15 +1243,46 @@ drifting out of sync.
   Formspree's default "thanks" page. No daily-limit counter here (unlike
   the old Doodle Mail) — Formspree's own free-tier submission cap is the
   real abuse guard for this form.
-- `playground/` — `color-studies.html` is still a placeholder page (see
-  above), `animations.html` is real (see below). Both linked from
-  `.sticker-card` in `index.html`'s Experiments deck.
+- `playground/` — `animations.html` and `illustrations.html`, both real,
+  both linked from `.sticker-card` in `index.html`'s Experiments deck.
+
+  **Illustrations** (`playground/illustrations.html`) holds 11 pieces
+  Jasmine chose on Sept 25, 2026, replacing an earlier set of 8
+  character drawings and sketches (she swapped those out, so don't bring
+  them back without asking). In page order: a painted origami-fox value
+  study (`Documents/Bontha-Jasmine-SHAPEVALUE2.psd`), a magenta symbolic
+  painting (`Documents/symbolicpainting-bontha-jasmine copy.jpg`), a
+  McKinney 2028 logo (`Downloads/McKinney 2028.png`), a round sunset
+  painting of a domed building (`Downloads/Untitled_Artwork 17.png`,
+  transparent, flattened onto `--paper`), the "Blending in should not
+  feel like survival" poster (`Documents/VisualCommunicationFinal.png`),
+  a fox-in-overalls turnaround sheet (`Downloads/IMG_0347.jpg`, a
+  screenshot with a 5px dark strip cropped off its left edge), a painted
+  post office background (`Downloads/bkg.png`), then four black-and-white
+  environment drawings from Downloads: the ant-and-toaster panel
+  (`Add a heading.png`), the rainy-alley cat panel (`Jasmine Bontha.png`),
+  the tower perspective drawing (`BonthaJasmine_Module3.png`) and the
+  Lovely Latte's cafe (`Jasmine Bontha (1).png`). She has also chosen NOT
+  to post her My Little Pony fan art or the UTD Student Union graphic.
+  Files are `images/illustration-<name>.jpg` (1800px long edge, for the
+  viewer) plus `-thumb.jpg` (1000px, for the grid), both at the art's own
+  aspect ratio. The pieces are mixed shapes, so the grid is justified
+  rows, not crops or CSS columns: each tile has an inline `--ar`
+  (width/height) that sets its flex-grow and a `200px * ar` base width,
+  and a `440px * ar` max-width keeps a lone tile from blowing up. The
+  order and the 200px base were picked so desktop splits 4 / 3 / 2 / 2
+  (color work first, then the black-and-white drawings).
+  Re-check the rows at 1440px if pieces are added or reordered. It
+  reuses Animations' `#theaterModal` (`body.illustration-page` keeps the
+  viewer image at its own ratio). As on Animations there are no visible
+  captions: each tile's `aria-label` ("Open larger: …") carries the
+  description, and the viewer strips the "Open larger:" prefix when it
+  builds the big image's alt. The deck tile
+  (`images/playground-illustrations.jpg`) is the poster at 16:9.
   `sketch-dump.html` was removed along with its tile once Lucky's First
   Day took that slot in the deck; don't recreate it without a tile
-  linking to it. `color-studies.html` follows the shared nav/footer,
-  no-chapter-structure template described in the Experiments-tiles entry
-  above; `animations.html` (below) breaks from that template since it
-  has real content to show.
+  linking to it. Both pages use the shared nav/footer and skip the
+  case-study chapter structure.
 
   **Animations** (`playground/animations.html`) went from a `[TBD]`
   placeholder to a real gallery of 6 clips Jasmine provided (originals in
@@ -1339,11 +1377,8 @@ drifting out of sync.
 - Remaining placeholder content: the About section's sketchbook doodle art
   (each should become a drawing of a personal object) and fun-fact
   captions (each a fun fact about Jasmine tied to that object — some
-  already filled in, see the markup), and Color Studies
-  (`playground/color-studies.html`) — its tile has a real one-line
-  summary but the page itself is still the `[TBD]`/"Coming soon"
-  template, since no actual color-study images exist yet — see rule 6.
-  Animations (`playground/animations.html`) is no longer placeholder: see
+  already filled in, see the markup). Color Studies was replaced by
+  the real Illustrations page. Animations (`playground/animations.html`) is no longer placeholder: see
   its own entry below.
 
 ## Available skills

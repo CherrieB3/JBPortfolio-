@@ -1658,6 +1658,19 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
   background: #000;
 }
 
+/* Illustrations reuse the animation gallery and viewer. The pieces are
+   finished compositions in mixed shapes (portrait paintings, wide
+   panels, a poster, a logo), so they aren't cropped into matching tiles.
+   Instead they sit in justified rows: each tile's --ar (width / height,
+   set inline) is its flex-grow and base width, so every piece in a row
+   ends up the same height and reading order stays left to right. The
+   max-width caps any tile at about 440px tall, so a row that ends up
+   holding a single piece doesn't blow it up to full width. */
+.illustration-gallery { display: flex; flex-wrap: wrap; gap: 24px; }
+.illustration-tile { flex: var(--ar) 1 calc(var(--ar) * 200px); max-width: calc(var(--ar) * 440px); }
+.illustration-tile img { aspect-ratio: auto; height: auto; }
+.illustration-page .theater-stage img { width: auto; max-width: 100%; }
+
 /* Theater mode — clicking any .animation-tile opens its clip full-size
    in this one shared overlay (populated by initAnimationTheater() in
    js/main.js) instead of playing inline in the small tile. The site's
@@ -1844,27 +1857,6 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
 .project-card h3 { font-size: 1.5rem; color: var(--accent); margin-bottom: 10px; }
 .project-card > p { color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; }
 
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 18px;
-}
-
-/* Filled pill, not just an outlined chip — reaches for the deep tier
-   (not the soft/vivid tier) since white text sits on top of it, same
-   contrast rule as .btn (see the design system's color table). */
-.project-tags span {
-  background: var(--accent-deep);
-  color: #fff;
-  font-family: var(--font-mono);
-  font-size: .62rem;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-  border-radius: 20px;
-  padding: 4px 10px;
-}
-
 .project-visual {
   flex: 1 1 260px;
   display: block;
@@ -1911,27 +1903,31 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
   margin-bottom: 8px;
 }
 
-/* Scannable project facts: a bold figure plus a short label, the small
-   cousin of the case-study stat cards. */
-.project-stats {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 22px;
-  margin: 0 0 16px;
-  padding: 0;
+/* The same four labeled fields on every card (role, team, timeline,
+   research), so projects compare at a glance. A hairline-topped 2x2
+   grid; the wider featured cards run it as one row of four. */
+.project-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 4px 0 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-border);
 }
-.project-stats li { color: var(--text-dim); font-size: .88rem; line-height: 1.3; }
-.project-stats strong {
-  display: block;
-  font-family: 'Baloo 2', cursive;
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--accent);
+.project-spread--featured .project-meta { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 640px; }
+.project-meta dt {
+  font-family: var(--font-mono);
+  font-size: .66rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 3px;
 }
+.project-meta dd { margin: 0; color: var(--text); font-size: .9rem; line-height: 1.35; }
 
 @media (max-width: 760px) {
   .projects-list { grid-template-columns: 1fr; gap: 32px; }
+  .project-spread--featured .project-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .project-spread--featured { min-height: 0; }
   .project-spread--featured .project-card { padding: 32px; }
   .project-spread { flex-direction: column; }
@@ -2175,6 +2171,12 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 /* On wide screens: four short facts across the top, then the longer
    "My contributions" / "Feedback" entries on a second row, wider so their
    sentences don't wrap into a narrow column. */
+/* Below that, the long sentence-length entries take a full row instead
+   of squeezing into a narrow half-width column. */
+@media (max-width: 899px) {
+  .case-quickfacts .qf-wide,
+  .case-quickfacts .qf-full { grid-column: 1 / -1; border-left: none; padding-left: 0; border-top: 1px solid var(--panel-border); }
+}
 @media (min-width: 900px) {
   .case-quickfacts { grid-template-columns: repeat(4, 1fr); }
   .case-quickfacts .qf-wide { grid-column: span 2; }
@@ -2431,28 +2433,6 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   max-width: 68ch;
 }
 
-/* "At a glance" stat row under the quick facts: a big figure plus a short
-   label, so team size, timeline, and scope scan in a couple of seconds.
-   Only real, countable facts from the page go here (rule 6). */
-.case-stats {
-  list-style: none;
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 34px 8% 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 28px;
-}
-.case-stats li { display: flex; flex-direction: column; gap: 4px; }
-.case-stat-num {
-  font-family: 'Baloo 2', cursive;
-  font-weight: 700;
-  font-size: clamp(2.2rem, 4vw, 3rem);
-  line-height: 1;
-  color: var(--case-accent, var(--c-blue));
-}
-.case-stat-label { color: var(--text-dim); font-size: .95rem; line-height: 1.4; max-width: 22ch; }
-
 /* Insights: what we learned (the card) and what it changed (the "So"
    line), so research visibly turns into decisions. Static cards, no
    hover (they aren't links). */
@@ -2488,29 +2468,8 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   margin-right: 4px;
 }
 
-/* Outcome sub-sections (deliverables, what I'd test next). */
+/* Outcome sub-section ("What I'd test next"). */
 .case-subhead { font-size: clamp(1.4rem, 2.4vw, 1.8rem); margin: 56px 0 18px; }
-.case-deliverables {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 14px 40px;
-  max-width: 900px;
-}
-.case-deliverables li {
-  position: relative;
-  padding: 0 0 0 26px;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
-.case-deliverables li::before {
-  content: '✦';
-  position: absolute;
-  left: 0; top: 0;
-  color: var(--case-accent, var(--c-blue));
-}
-
 /* Prev/next case-study nav, echoing the reference format's footer links. */
 .case-prevnext {
   max-width: 1320px;
@@ -2551,8 +2510,7 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 
 @media (max-width: 760px) {
   .case-chapter { padding: 60px 6% 60px; }
-  .case-quickfacts, .case-stats { padding-left: 6%; padding-right: 6%; }
-  .case-stats { grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  .case-quickfacts { padding-left: 6%; padding-right: 6%; }
   .case-prevnext { padding-left: 6%; padding-right: 6%; }
   .case-overview-grid { grid-template-columns: 1fr; }
 }

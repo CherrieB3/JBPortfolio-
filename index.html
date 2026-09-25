@@ -141,63 +141,85 @@
         </section>
 
         <section aria-label="Projects" class="projects-list">
-            <article class="project-spread reveal-fade" style="--accent:#6cbeef; --accent-deep:#3058c3;">
+            <!-- Flagships first and full width (DreamScape, EcoLink), then the
+                 two team projects side by side. Order matches the case-study
+                 prev/next loop. .project-meta only holds facts that are on the
+                 case-study page or the resume. -->
+            <article class="project-spread project-spread--featured reveal-fade" style="--accent:#b79ff4; --accent-deep:#7253d0;">
                 <div class="project-card">
-                    <h3>Elevator Accessibility</h3>
-                    <p>Helping people who are blind or have low vision ride the Empire State Building's elevators on
-                        their own, with sound, vibration, and personalized keycards.</p>
-                    <div class="project-tags">
-                        <span>Team Project</span><span>Accessibility</span><span>March 2025</span>
-                    </div>
-                    <a class="btn" href="case-studies/elevator-accessibility.html">View Case Study <span class="arrow">→</span></a>
-                </div>
-                <a class="project-visual" href="case-studies/elevator-accessibility.html" aria-label="View Elevator Accessibility case study">
-                    <img src="images/orbit-elevator.jpg" alt="">
-                </a>
-            </article>
-
-            <article class="project-spread reveal-fade" style="--accent:#b79ff4; --accent-deep:#7253d0;">
-                <div class="project-card">
+                    <p class="project-kicker">Featured · Designathon</p>
                     <h3>DreamScape</h3>
-                    <p>A speculative app that helps you hold on to your dreams and reflect on them, designed around
-                        one prompt: what might people use in the future?</p>
-                    <div class="project-tags">
-                        <span>Designathon</span><span>Speculative Design</span><span>Oct 2025</span>
-                    </div>
+                    <p>You wake up from a vivid dream, and minutes later it's gone. A speculative app that helps people
+                        hold on to their dreams and reflect on them safely, with privacy on by default and care
+                        around painful ones.</p>
+                    <dl class="project-meta">
+                        <div><dt>Role</dt><dd>Visual design lead</dd></div>
+                        <div><dt>Team</dt><dd>4 people</dd></div>
+                        <div><dt>Timeline</dt><dd>24 hrs, Oct 2025</dd></div>
+                        <div><dt>Research</dt><dd>Secondary research</dd></div>
+                    </dl>
                     <a class="btn" href="case-studies/dreamscape.html">View Case Study <span class="arrow">→</span></a>
                 </div>
                 <a class="project-visual" href="case-studies/dreamscape.html" aria-label="View DreamScape case study">
-                    <img src="images/orbit-dreamscape.jpg" alt="">
+                    <img src="images/case-dreamscape-wide.jpg" alt="">
                 </a>
             </article>
 
-            <article class="project-spread reveal-fade" style="--accent:#90e369; --accent-deep:#28713e;">
+            <article class="project-spread project-spread--featured reveal-fade" style="--accent:#90e369; --accent-deep:#28713e;">
                 <div class="project-card">
+                    <p class="project-kicker">Featured · Solo project</p>
                     <h3>EcoLink</h3>
-                    <p>An IoT platform that brings live climate and wildlife data together, so rangers, researchers,
-                        and citizen scientists can act while it still matters.</p>
-                    <div class="project-tags">
-                        <span>Solo Project</span><span>UX Research</span><span>2025</span>
-                    </div>
+                    <p>Rangers and researchers are trying to protect wildlife with tools that don't talk to each other.
+                        An IoT platform that brings live climate and wildlife data together, so the people on the
+                        ground can act while it still matters.</p>
+                    <dl class="project-meta">
+                        <div><dt>Role</dt><dd>UX research &amp; product design</dd></div>
+                        <div><dt>Team</dt><dd>Solo</dd></div>
+                        <div><dt>Timeline</dt><dd>Oct–Nov 2025</dd></div>
+                        <div><dt>Research</dt><dd>Competitive analysis, 7 user groups</dd></div>
+                    </dl>
                     <a class="btn" href="case-studies/ecolink.html">View Case Study <span class="arrow">→</span></a>
                 </div>
                 <a class="project-visual" href="case-studies/ecolink.html" aria-label="View EcoLink case study">
-                    <img src="images/orbit-ecolink.jpg" alt="">
+                    <img src="images/case-ecolink-wide.jpg" alt="">
                 </a>
             </article>
 
             <article class="project-spread reveal-fade" style="--accent:#eea663; --accent-deep:#98521c;">
                 <div class="project-card">
+                    <p class="project-kicker">Team project</p>
                     <h3>Comet Commute</h3>
                     <p>Parking at UT Dallas can quietly ruin a student's morning. A concept that shows you where the
                         open spots are, right inside the campus app you already have.</p>
-                    <div class="project-tags">
-                        <span>Team Project</span><span>UX Research</span><span>May 2025</span>
-                    </div>
+                    <dl class="project-meta">
+                        <div><dt>Role</dt><dd>UX research &amp; interaction</dd></div>
+                        <div><dt>Team</dt><dd>4 people</dd></div>
+                        <div><dt>Timeline</dt><dd>May 2025</dd></div>
+                        <div><dt>Research</dt><dd>Interviews, personas, journey maps</dd></div>
+                    </dl>
                     <a class="btn" href="case-studies/comet-commute.html">View Case Study <span class="arrow">→</span></a>
                 </div>
                 <a class="project-visual" href="case-studies/comet-commute.html" aria-label="View Comet Commute case study">
                     <img src="images/orbit-comet.jpg" alt="">
+                </a>
+            </article>
+
+            <article class="project-spread reveal-fade" style="--accent:#6cbeef; --accent-deep:#3058c3;">
+                <div class="project-card">
+                    <p class="project-kicker">Accessibility · Team project</p>
+                    <h3>Elevator Accessibility</h3>
+                    <p>Helping people who are blind or have low vision ride the Empire State Building's elevators on
+                        their own, with sound, vibration, and personalized keycards.</p>
+                    <dl class="project-meta">
+                        <div><dt>Role</dt><dd>Accessibility &amp; interaction</dd></div>
+                        <div><dt>Team</dt><dd>4 people</dd></div>
+                        <div><dt>Timeline</dt><dd>March 2025</dd></div>
+                        <div><dt>Research</dt><dd>Interview, secondary research</dd></div>
+                    </dl>
+                    <a class="btn" href="case-studies/elevator-accessibility.html">View Case Study <span class="arrow">→</span></a>
+                </div>
+                <a class="project-visual" href="case-studies/elevator-accessibility.html" aria-label="View Elevator Accessibility case study">
+                    <img src="images/orbit-elevator.jpg" alt="">
                 </a>
             </article>
         </section>
@@ -347,10 +369,10 @@
                     <p>A non-linear visual narrative confronting autism stereotypes and the discomfort of new situations.</p>
                     <span class="sticker-view">View →</span>
                 </a>
-                <a class="sticker-card" href="playground/color-studies.html">
-                    <img class="sticker-thumb" src="images/playground-color-studies.svg" alt="">
-                    <h3>Color Studies</h3>
-                    <p>Some studies I've done on color!</p>
+                <a class="sticker-card" href="playground/illustrations.html">
+                    <img class="sticker-thumb" src="images/playground-illustrations.jpg" alt="">
+                    <h3>Illustrations</h3>
+                    <p>Paintings, a poster, a logo, a character turnaround, and environment drawings.</p>
                     <span class="sticker-view">View →</span>
                 </a>
             </div>

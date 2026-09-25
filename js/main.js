@@ -219,7 +219,9 @@ function initAnimationTheater() {
     if (tile.dataset.theaterType === 'image') {
       const img = document.createElement('img');
       img.src = tile.dataset.theaterSrc;
-      img.alt = tile.getAttribute('aria-label') || '';
+      // The tile's label starts with "Open larger:", which describes the
+      // button, not the picture, so it's dropped from the image's alt.
+      img.alt = (tile.getAttribute('aria-label') || '').replace(/^Open larger:\s*/, '');
       stage.appendChild(img);
     } else {
       const video = document.createElement('video');
