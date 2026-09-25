@@ -13,6 +13,80 @@ Treat every change as portfolio work itself: a hiring manager or grad-school
 reviewer may judge Jasmine's design skill by the site's own execution, not
 just its content.
 
+## Current state (Sept 2026 overhaul): read this first
+
+A five-phase pass (placeholders, test plans, positioning, accessibility,
+cleanup) changed several decisions described further down. Where an
+older entry below conflicts with this list, **this list wins**:
+
+- **Positioning**: Jasmine is a senior (ATEC, UT Dallas) positioning as a
+  *product designer focused on accessibility and neuroinclusive design*,
+  seeking Summer 2027 UX/Product Design internships. Title everywhere is
+  "Product Designer ✦ Illustrator" (`<title>`, hero eyebrow, meta).
+- **Hero**: no "Hi! I'm". The `<h1>` is her hand-drawn wordmark
+  (`alt="Jasmine"`) plus "Bontha" in type, tucked into the empty space
+  under "asmine" (`.hero-surname`; see its CSS comment before resizing).
+  Then a lede, an ATEC/internship line, and "View my work" + "Resume"
+  (`.btn--ghost`) buttons.
+- **Page order**: hero → Projects → About → Playground → Contact →
+  footer. Project order (homepage and case-study prev/next):
+  Elevator Accessibility → DreamScape → EcoLink → Comet Commute → back.
+- **Nav**: the logo link comes *first* in the markup, outside the `<ul>`,
+  and is centered with CSS over an empty middle grid column (2 links left,
+  3 right). Links: Projects, About, Playground, Contact, Resume. The menu
+  button has `aria-controls="primary-links"`, closes on Escape, and a
+  closed mobile menu uses `visibility: hidden` so it can't be tabbed into.
+  Same markup on all 7 pages. On mobile the logo shows in the bar.
+- **Calm mode**: `.calm-toggle` in the nav (`aria-pressed`), class
+  `html.calm` set by an inline `<head>` script on every page before first
+  paint (localStorage key `calm`, try/catch; defaults on under
+  `prefers-reduced-motion`). Stops all motion, hides shooting stars/grain/
+  glows/comet trail/custom cursor, dims stars and squiggles, raises
+  `--text-dim`/`--text-mute`. JS effects check `isCalm()` at event time.
+  Any new animation or motion effect must respect both `html.calm` and
+  `prefers-reduced-motion` (the global rules cover CSS animations and
+  transitions, including pseudo-elements; JS-driven motion needs its own
+  `isCalm()` check).
+- **Contrast**: the aurora (`body::after`), bottom glows (`body::before`)
+  and `.hero-glow` were dimmed about 40% so `--text-mute` stays at or above
+  4.5:1 even over the brightest glow. `.project-spread` and `.sticker-card`
+  have solid backgrounds (`color-mix(in srgb, white 7%, var(--bg))`), not
+  translucent ones. Form fields have a `--text-mute` border (3:1). Re-check
+  contrast before brightening any glow or making a text panel translucent.
+- **Playground**: a responsive grid (`repeat(auto-fit, minmax(260px,
+  1fr))`), not the horizontal scroll-snap deck, and no "scroll for more"
+  label. The deck description further down is history.
+- **Experience section**: doesn't exist; its markup, CSS and scroll-spy
+  entry are gone. If it comes back, use the real internships on her resume
+  (`files/Jasmine-Bontha-Resume.pdf`), not placeholders.
+- **About**: new bio plus a `.about-facts` list (Currently / Tools /
+  Outside design). Only three finished fun-fact doodles remain (sewing,
+  heritage, horror), still on the placeholder spark art, which Jasmine
+  chose to keep for now.
+- **Case studies**: "Results" became **"What I'd test next"** (prose test
+  plans, no metric blocks). The Impact card says there's no usage data and
+  points there. Real, credited-without-names interview quotes are in Comet
+  Commute and Elevator. Quick facts: four short facts, then a
+  `.qf-wide`/`.qf-full` second row for "My contributions"/"Feedback".
+  Comet Commute and Elevator share the same team (Pj Jones, Jackson Lux,
+  Neal Tembe, Jasmine). DreamScape was a 4-person team; Jasmine led visual
+  design and hand-sketched the wireframes (`case-dreamscape-sketches.jpg`).
+  Its placeholder research image was replaced by four "how a nightmare
+  feels" cards from the team's research doc.
+- **EcoLink** has no asterisk anywhere (it's still baked into the app
+  screenshots themselves, which can't be fixed in code).
+- **Footer**: a minimal footer on every page (links incl. Email/LinkedIn/
+  Resume, an accessibility note, copyright). The "Thanks for stopping by /
+  GET IN TOUCH" block is gone; contact lives in `#contact`.
+- **Resume**: `files/Jasmine-Bontha-Resume.pdf`, opens in a new tab, linked
+  from hero, nav, contact and footer. Jasmine chose to publish it with her
+  phone number on it.
+- **Testing without Playwright**: headless Chrome works
+  (`"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+  --headless=new --screenshot`). Its minimum window width is 500px, so
+  check phone widths by loading the page in a 375px `<iframe>`.
+  `--enable-logging=stderr` prints console errors.
+
 ## Tech stack & constraints
 
 - Static single-page site: `index.html` holds Home/About/Projects/
@@ -199,7 +273,7 @@ once **Lucky's First Day** took its slot in the deck (see below) — the
 `sketch-dump.html` file and its tile no longer exist; don't re-add a
 dangling link to it. **Lucky's First Day** is the deck's other exception
 to the placeholder pattern: real, finished illustration work moved here
-from the Projects list (see the EcoLink*/Lucky's First Day entry above)
+from the Projects list (see the EcoLink/Lucky's First Day entry above)
 rather than a `[TBD]` experiment — it links straight out to its existing
 standalone site (`target="_blank" rel="noopener"`, the same real title
 and summary it had in Projects) since there's no page for it in this
@@ -642,7 +716,7 @@ drifting out of sync.
   biographical content Jasmine hasn't supplied yet, not something to
   invent, see rule 6 and the entry further down) → `#projects`
   (a stacked list of the 4 projects — Comet Commute, Elevator
-  Accessibility, DreamScape, EcoLink* — each a "project spread": one
+  Accessibility, DreamScape, EcoLink — each a "project spread": one
   unified bordered card split into a text half (title, one-line summary,
   tag pills, CTA) and a photo half sharing the same outline, every
   project fully visible without an interaction, each linking out to a
@@ -696,12 +770,12 @@ drifting out of sync.
   list bullets. Reuses `.page-hero`, `.card`, `.btn`, and the shared
   nav/footer rather than introducing new page chrome. The prev/next
   footer nav (`.case-prevnext`) cycles through all 4 in Projects-list
-  order (Comet Commute → Elevator Accessibility → DreamScape → EcoLink* →
+  order (Comet Commute → Elevator Accessibility → DreamScape → EcoLink →
   back to Comet Commute) — update all the affected `.case-prevnext` links
   in both neighboring pages if this order ever changes, not just the
   page(s) being added/removed.
 
-  **EcoLink*** (`ecolink.html`) replaced **Lucky's First Day** in the
+  **EcoLink** (`ecolink.html`) replaced **Lucky's First Day** in the
   Projects list at Jasmine's request — Lucky's First Day had no case-study
   page here (it was an existing standalone illustration site, linked to
   directly). Lucky's First Day itself wasn't dropped from the site: at
@@ -713,14 +787,14 @@ drifting out of sync.
   since it still has no page in this repo — it took the slot of a
   removed "Sketch Dump" tile, so the deck stayed at 3 tiles rather than
   growing to 4. See the Experiments-tiles entry below for how that tile
-  differs from its siblings. EcoLink* is a full
+  differs from its siblings. EcoLink is a full
   UX case study built from a real
   slide deck Jasmine provided (`Bontha_Jasmine_Final.pptx`) covering
   mission, problem framing, research/evidence, competitive analysis, user
   segments, a user narrative, and real designed app screens. Unlike the
   other 3 case studies (which use abstract placeholder line-art
   throughout, since none of those projects have real screens yet), most
-  of EcoLink*'s imagery is real: the three app screens she actually
+  of EcoLink's imagery is real: the three app screens she actually
   designed (dashboard, Climate Monitor, Drone Fleet — extracted from the
   deck and cropped into `images/case-ecolink-gallery-*.jpg`, and combined
   into `images/case-ecolink-wide.jpg` for the Hero/Final Solution mockup
@@ -737,9 +811,9 @@ drifting out of sync.
   DreamScape's deck's screens (`image-7-1`/`image-7-2`/`image-9-1` in the
   deck's media) already came pre-rendered as phone-mockup exports from her
   design tool (a real bezel/notch baked into the PNG on a solid black
-  canvas) rather than flat rectangular UI crops like EcoLink*'s — see the
+  canvas) rather than flat rectangular UI crops like EcoLink's — see the
   "polishing pre-framed screenshots" note below for how those differ from
-  EcoLink*'s raw-crop pipeline. `images/case-dreamscape-wide.jpg` (hero +
+  EcoLink's raw-crop pipeline. `images/case-dreamscape-wide.jpg` (hero +
   Final Solution) composites 3 of those screens (sleep dashboard,
   emotions/dream-story, Security & Privacy); the two Process split-visuals
   and the 3 Design Iterations gallery tiles use the same screens
@@ -805,14 +879,14 @@ drifting out of sync.
   The earlier haptic-wristband/multi-sensory research paragraph wasn't in
   the deck but was kept, since it was already real content on the page.
 
-  **Polishing pre-framed vs. raw-crop screenshots** — both EcoLink* and
+  **Polishing pre-framed vs. raw-crop screenshots** — both EcoLink and
   DreamScape's real screens went through a Pillow-based "make it look
   like a real device mockup" pass (done once, offline, output files
   committed as static JPGs — not a build step, nothing runs this at
   request time) rather than being used as flat screenshot crops, since
   flat crops read as noticeably less polished than the rest of the site's
   crafted-not-generic aesthetic. The two decks needed different handling:
-  - **EcoLink*'s** screens were flat rectangular UI exports with no
+  - **EcoLink's** screens were flat rectangular UI exports with no
     device chrome at all, so the phone bezel/notch/shadow had to be drawn
     from scratch around each one (rounded-rect bezel, a notch pill,
     `ImageFilter.GaussianBlur` drop shadow), then composited onto a solid
@@ -827,7 +901,7 @@ drifting out of sync.
     phone's own visible corner radius so the remaining black corner
     triangles (from the original square canvas) become transparent — only
     *then* add the same drop-shadow/indigo-background treatment as
-    EcoLink*. Don't skip the corner-masking step for pre-framed exports
+    EcoLink. Don't skip the corner-masking step for pre-framed exports
     like this — without it, faint black corner triangles show through
     against the site's non-black background.
   - In both cases, `object-fit: cover` inside `.case-visual-box` (a 4:3,
@@ -835,7 +909,7 @@ drifting out of sync.
     cut off its header/title — add `style="object-position: top"` on
     that `<img>` (or `left` for a wide, landscape flow image like
     DreamScape's BCI setup screens) rather than accepting the default
-    center crop, the same fix already needed for EcoLink*'s gallery.
+    center crop, the same fix already needed for EcoLink's gallery.
 
   As with the other case
   studies, Results/Impact stayed `[TBD]` (rule 6) since this was a
@@ -1192,14 +1266,14 @@ drifting out of sync.
   totaling ~23MB, `animation-flour-sack.mp4` alone is 16.7MB, since no
   video-compression tool (`ffmpeg`) is available in this environment to
   re-encode them (unlike the Pillow-based one-time image-processing pass
-  used for EcoLink*/DreamScape's screenshots — there was no equivalent
+  used for EcoLink/DreamScape's screenshots — there was no equivalent
   option here); if that ever becomes a real problem, re-encoding these
   down is the fix, not switching the loading strategy. Poster frames
   (`images/poster-animation-*.jpg`, one per clip) were extracted with
   `qlmanage -t` (macOS Quick Look, no `ffmpeg` needed) and compressed
   with `sips`, so each video shows a real frame instead of a blank/black
   box before playing. The Experiments deck's Animations tile
-  (`index.html`) got the same treatment as EcoLink*'s Projects
+  (`index.html`) got the same treatment as EcoLink's Projects
   thumbnail once real content existed: its `[TBD]` paragraph became a
   real one-liner, and its `.sticker-thumb` swapped from the old
   `images/playground-animations.svg` line-art icon to
