@@ -714,7 +714,7 @@ html.calm::view-transition-new(root) { animation: none; }
   align-items: center;
   /* Less padding on the left than the rest of the page so the logo sits
      close to the edge, at Jasmine's request. */
-  padding: 0 6% 0 2.5%;
+  padding: 0 6% 0 3.5%;
 }
 
 .logo {
@@ -744,7 +744,7 @@ html.calm::view-transition-new(root) { animation: none; }
    "Jasmine" wordmark). Sized by height so the art keeps its proportions. */
 .logo-mark {
   display: block;
-  height: 64px;
+  height: 56px;
   width: auto;
 }
 
@@ -828,9 +828,9 @@ html.calm::view-transition-new(root) { animation: none; }
 }
 
 @media (max-width: 760px) {
-  .nav-inner { display: flex; padding: 0 6% 0 3%; gap: 10px; }
+  .nav-inner { display: flex; padding: 0 6% 0 4%; gap: 10px; }
   .logo { margin-right: auto; }
-  .logo-mark { height: 54px; }
+  .logo-mark { height: 48px; }
   .nav-toggle { display: block; }
   .nav-links {
     position: fixed;
