@@ -370,30 +370,35 @@ h3 { font-family: 'Baloo 2', cursive; font-weight: 600; line-height: 1.15; }
   color: transparent;
 }
 
-/* Jasmine's own name in the hero — the same hand-drawn signature wordmark
-   used as the nav logo (images/logo-jasmine.png), swapped in for a plain
-   text rendering of her name. On its own line below "Hi! I'm" (display:
-   block does that on its own; no <br> needed alongside it — a trailing
-   <br> immediately before a block box is redundant and risks an extra
-   blank line in some browsers) and sized noticeably larger than the
-   surrounding text so it reads as the focal point of the greeting.
-   The source art's own canvas is ~36% dead space above the actual
-   letterforms (the comet swoosh arcs well above "Jasmine" before the
-   letters begin, measured directly off the PNG's alpha channel), so
-   sizing/positioning by the image's own box alone leaves a visually large
-   gap under "Hi! I'm" — the negative margin-top pulls the art up so the
-   *letters* sit close under "Hi! I'm" instead of the empty swoosh space
-   doing that job. A first pass at this used -.55em, which read as too
-   much overlap; Jasmine asked for it dialed back to just a slight
-   overlap, paired with nudging "Hi! I'm" itself right via text-indent on
-   .hero-text h1 — re-balance both together if this needs another pass,
-   rather than just one or the other. Sized in em so both stay
-   proportional as the hero heading's own responsive clamp() scales. */
+/* Jasmine's full name in the hero: her own hand-drawn "Jasmine" wordmark
+   (the same images/logo-jasmine.png as the nav logo) with "Bontha" set in
+   type underneath. The source art's letters ("asmine") sit on a baseline
+   ~55% of the way down its canvas; everything below that is empty except
+   the J's long tail sweeping down on the left (measured off the PNG's
+   alpha channel). The surname is tucked into that empty lower-right
+   pocket, under "asmine" and right of the J's tail, so the two words read
+   as one lockup instead of two stacked lines. The margins are fractions
+   of the wordmark's own 2.2em height, converted into the surname's
+   smaller em: re-measure the art before changing either size. */
 .hero-name-mark {
   display: block;
   height: 2.2em;
   width: auto;
-  margin-top: -.25em;
+  /* The J's top stroke reaches the very top of the canvas, so no
+     negative margin here or it collides with the eyebrow above. */
+  margin-top: .1em;
+}
+
+.hero-surname {
+  display: block;
+  font-size: .56em;
+  line-height: 1;
+  color: var(--text);
+  letter-spacing: .01em;
+  /* -(1 - .58) * 2.2em of the h1, in this span's .56em units */
+  margin-top: -1.62em;
+  /* ~30% of the wordmark's width (2.2em * 700/343), clearing the J's tail */
+  margin-left: 2.4em;
 }
 
 /* Single-hue accents for small emphasis words — an alternative to reaching
@@ -1094,12 +1099,19 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
      it they stack, where this offset would just crowd the left edge. */
   .hero-text { left: -24px; }
 }
-/* text-indent only touches the h1's first line ("Hi! I'm") — the name
-   wordmark below it is its own block box, on its own line, so this
-   doesn't shift it too. Nudges "Hi! I'm" right so the wordmark's
-   overlap with it (see .hero-name-mark) reads as slight, not heavy. */
-.hero-text h1 { font-size: clamp(3.2rem, 7.5vw, 6rem); margin-bottom: 22px; letter-spacing: -.01em; text-indent: .2em; }
-.hero-text h2 { font-family: 'Inter', sans-serif; font-weight: 400; color: var(--text-dim); margin-bottom: 36px; font-size: 1.2rem; line-height: 1.65; max-width: 520px; }
+.hero-text h1 { font-size: clamp(3.2rem, 7.5vw, 6rem); margin-bottom: 36px; letter-spacing: -.01em; }
+.hero-lede { font-family: 'Baloo 2', cursive; font-weight: 600; color: var(--text); margin-bottom: 12px; font-size: clamp(1.3rem, 2.2vw, 1.6rem); line-height: 1.35; max-width: 520px; }
+.hero-meta { color: var(--text-dim); margin-bottom: 34px; font-size: 1rem; line-height: 1.6; max-width: 520px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+/* Secondary button: same shape as .btn, outlined instead of filled, so
+   the primary action still reads first. */
+.btn--ghost {
+  background: transparent;
+  color: var(--text);
+  box-shadow: inset 0 0 0 1.5px var(--c-purple);
+}
+.btn--ghost:hover { box-shadow: inset 0 0 0 1.5px var(--c-purple), 0 10px 22px rgba(183, 159, 244, .2); }
 
 /* Hero content is above the fold and visible on first paint, so it gets a
    one-time entrance on load rather than the IntersectionObserver-driven
@@ -1108,15 +1120,17 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
    everything appearing at once. */
 .hero-text .eyebrow,
 .hero-text h1,
-.hero-text h2,
-.hero-text .btn {
+.hero-lede,
+.hero-meta,
+.hero-actions {
   opacity: 0;
   animation: hero-enter .8s cubic-bezier(.16,.8,.3,1) forwards;
 }
 .hero-text .eyebrow { animation-delay: .05s; }
 .hero-text h1 { animation-delay: .16s; }
-.hero-text h2 { animation-delay: .32s; }
-.hero-text .btn { animation-delay: .48s; }
+.hero-lede { animation-delay: .32s; }
+.hero-meta { animation-delay: .4s; }
+.hero-actions { animation-delay: .48s; }
 
 @keyframes hero-enter {
   from { opacity: 0; transform: translateY(22px); }
@@ -1209,6 +1223,26 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 }
 
 .about-copy p { color: var(--text-dim); font-size: 1.05rem; line-height: 1.8; margin-bottom: 18px; max-width: 46ch; }
+
+/* Small info block under the bio: a label/value list with a hairline
+   rule on the left, the About-sized cousin of .case-quickfacts. */
+.about-facts {
+  margin: 8px 0 30px;
+  padding-left: 18px;
+  border-left: 2px solid var(--c-purple);
+  display: grid;
+  gap: 12px;
+  max-width: 46ch;
+}
+.about-facts dt {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 2px;
+}
+.about-facts dd { margin: 0; color: var(--text); line-height: 1.5; }
 
 .avatar-frame {
   position: relative;

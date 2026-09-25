@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jasmine Bontha — UX Designer &amp; Graphic Artist</title>
-    <meta name="description" content="Portfolio of Jasmine Bontha, UX designer, graphic artist, and rabbit enthusiast.">
+    <title>Jasmine Bontha · Product Designer ✦ Illustrator</title>
+    <meta name="description" content="Portfolio of Jasmine Bontha, a product designer and illustrator focused on accessibility and neuroinclusive design.">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -94,10 +94,14 @@
             <div class="hero-glow" aria-hidden="true"></div>
 
             <div class="hero-text">
-                <p class="eyebrow">UX DESIGNER ✦ ILLUSTRATOR </p>
-                <h1>Hi! I'm <img class="hero-name-mark" src="images/logo-jasmine.png" alt="Jasmine"></h1>
-                <h2>I create people first designs that prioritize accessibility, genuine connection, and kindness. </h2>
-                <a class="btn" href="#projects">View Projects</a>
+                <p class="eyebrow">PRODUCT DESIGNER ✦ ILLUSTRATOR</p>
+                <h1 class="hero-name"><img class="hero-name-mark" src="images/logo-jasmine.png" alt="Jasmine"> <span class="hero-surname">Bontha</span></h1>
+                <p class="hero-lede">Product designer focused on accessibility and neuroinclusive design.</p>
+                <p class="hero-meta">ATEC student at UT Dallas · Seeking Summer 2027 UX/Product Design internships</p>
+                <div class="hero-actions">
+                    <a class="btn" href="#projects">View my work</a>
+                    <a class="btn btn--ghost" href="files/Jasmine-Bontha-Resume.pdf" target="_blank" rel="noopener">Resume <span class="sr-only">(PDF, opens in a new tab)</span></a>
+                </div>
             </div>
 
             <div class="mascot-wrap">
@@ -121,6 +125,73 @@
         </section>
 
 
+        <section id="projects" class="page-hero" style="min-height:auto; padding-bottom:0;">
+            <h2 class="reveal">Projects</h2>
+            <p class="eyebrow" style="margin-top:14px;">SELECTED WORK ✦</p>
+        </section>
+
+        <section aria-label="Projects" class="projects-list">
+            <article class="project-spread reveal-fade" style="--accent:#6cbeef; --accent-deep:#3058c3;">
+                <div class="project-card">
+                    <h3>Elevator Accessibility</h3>
+                    <p>Helping people who are blind or have low vision ride the Empire State Building's elevators on
+                        their own, with sound, vibration, and personalized keycards.</p>
+                    <div class="project-tags">
+                        <span>Team Project</span><span>Accessibility</span><span>March 2025</span>
+                    </div>
+                    <a class="btn" href="case-studies/elevator-accessibility.html">View Case Study <span class="arrow">→</span></a>
+                </div>
+                <a class="project-visual" href="case-studies/elevator-accessibility.html" aria-label="View Elevator Accessibility case study">
+                    <img src="images/orbit-elevator.jpg" alt="Elevator Accessibility">
+                </a>
+            </article>
+
+            <article class="project-spread reveal-fade" style="--accent:#b79ff4; --accent-deep:#7253d0;">
+                <div class="project-card">
+                    <h3>DreamScape</h3>
+                    <p>A speculative app that helps you hold on to your dreams and reflect on them, designed around
+                        one prompt: what might people use in the future?</p>
+                    <div class="project-tags">
+                        <span>Designathon</span><span>Speculative Design</span><span>Oct 2025</span>
+                    </div>
+                    <a class="btn" href="case-studies/dreamscape.html">View Case Study <span class="arrow">→</span></a>
+                </div>
+                <a class="project-visual" href="case-studies/dreamscape.html" aria-label="View DreamScape case study">
+                    <img src="images/orbit-dreamscape.jpg" alt="DreamScape">
+                </a>
+            </article>
+
+            <article class="project-spread reveal-fade" style="--accent:#90e369; --accent-deep:#28713e;">
+                <div class="project-card">
+                    <h3>EcoLink</h3>
+                    <p>An IoT platform that brings live climate and wildlife data together, so rangers, researchers,
+                        and citizen scientists can act while it still matters.</p>
+                    <div class="project-tags">
+                        <span>Solo Project</span><span>UX Research</span><span>2025</span>
+                    </div>
+                    <a class="btn" href="case-studies/ecolink.html">View Case Study <span class="arrow">→</span></a>
+                </div>
+                <a class="project-visual" href="case-studies/ecolink.html" aria-label="View EcoLink case study">
+                    <img src="images/orbit-ecolink.jpg" alt="EcoLink">
+                </a>
+            </article>
+
+            <article class="project-spread reveal-fade" style="--accent:#eea663; --accent-deep:#98521c;">
+                <div class="project-card">
+                    <h3>Comet Commute</h3>
+                    <p>Parking at UT Dallas can quietly ruin a student's morning. A concept that shows you where the
+                        open spots are, right inside the campus app you already have.</p>
+                    <div class="project-tags">
+                        <span>Team Project</span><span>UX Research</span><span>May 2025</span>
+                    </div>
+                    <a class="btn" href="case-studies/comet-commute.html">View Case Study <span class="arrow">→</span></a>
+                </div>
+                <a class="project-visual" href="case-studies/comet-commute.html" aria-label="View Comet Commute case study">
+                    <img src="images/orbit-comet.jpg" alt="Comet Commute">
+                </a>
+            </article>
+        </section>
+
         <section id="about" class="page-hero">
             <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
                 <defs>
@@ -137,13 +208,30 @@
                 <div class="about-copy reveal">
                     <h2>About</h2>
                     <p>
-                        Hey! I'm Jasmine! A UX designer and digital artist from McKinney, Texas, studying at UT Dallas. I've
-                        been interested in design all my life, and have been working on it professionally for a few years now.
+                        I'm Jasmine Bontha, a senior at UT Dallas studying Arts, Technology, and Emerging
+                        Communication with a focus on UX and product design. I design for people who get overlooked
+                        by default: users with disabilities, and especially neurodivergent users who experience
+                        interfaces differently.
                     </p>
                     <p>
-                        Outside of formal projects, I'm pretty much always drawing! I do commission work, and personal experimental work too! That's part of why illustration keeps finding its way into my UX work, and why
-                        I've embraced this style as part of my design identity. It allows me to blend my love for illustration with UX design!
+                        I'm also an illustrator. I've taken commission work since 2021, and drawing shapes how I
+                        design: I sketch before I wireframe, and I care about how an interface feels, not just how it
+                        functions.
                     </p>
+                    <dl class="about-facts">
+                        <div>
+                            <dt>Currently</dt>
+                            <dd>Seeking Summer 2027 UX / Product Design internships</dd>
+                        </div>
+                        <div>
+                            <dt>Tools</dt>
+                            <dd>Figma, Spline, Adobe Creative Suite, HTML/CSS</dd>
+                        </div>
+                        <div>
+                            <dt>Outside design</dt>
+                            <dd>Horror novels, learning to sew, and my rabbit</dd>
+                        </div>
+                    </dl>
                     <a class="btn" href="#contact" style="margin-top:10px; display:inline-block;">Say hello</a>
                 </div>
 
@@ -198,73 +286,6 @@
                     <div><h3>Horror</h3><p>I love to read horror novels and watch scary things!</p></div>
                 </div>
             </div>
-        </section>
-
-        <section id="projects" class="page-hero" style="min-height:auto; padding-bottom:0;">
-            <h2 class="reveal">Projects</h2>
-            <p class="eyebrow" style="margin-top:14px;">SELECTED WORK ✦</p>
-        </section>
-
-        <section aria-label="Projects" class="projects-list">
-            <article class="project-spread reveal-fade" style="--accent:#eea663; --accent-deep:#98521c;">
-                <div class="project-card">
-                    <h3>Comet Commute</h3>
-                    <p>Parking at UT Dallas can quietly ruin a student's morning. A concept that shows you where the
-                        open spots are, right inside the campus app you already have.</p>
-                    <div class="project-tags">
-                        <span>Team Project</span><span>UX Research</span><span>May 2025</span>
-                    </div>
-                    <a class="btn" href="case-studies/comet-commute.html">View Case Study <span class="arrow">→</span></a>
-                </div>
-                <a class="project-visual" href="case-studies/comet-commute.html" aria-label="View Comet Commute case study">
-                    <img src="images/orbit-comet.jpg" alt="Comet Commute">
-                </a>
-            </article>
-
-            <article class="project-spread reveal-fade" style="--accent:#6cbeef; --accent-deep:#3058c3;">
-                <div class="project-card">
-                    <h3>Elevator Accessibility</h3>
-                    <p>Helping people who are blind or have low vision ride the Empire State Building's elevators on
-                        their own, with sound, vibration, and personalized keycards.</p>
-                    <div class="project-tags">
-                        <span>Team Project</span><span>Accessibility</span><span>March 2025</span>
-                    </div>
-                    <a class="btn" href="case-studies/elevator-accessibility.html">View Case Study <span class="arrow">→</span></a>
-                </div>
-                <a class="project-visual" href="case-studies/elevator-accessibility.html" aria-label="View Elevator Accessibility case study">
-                    <img src="images/orbit-elevator.jpg" alt="Elevator Accessibility">
-                </a>
-            </article>
-
-            <article class="project-spread reveal-fade" style="--accent:#b79ff4; --accent-deep:#7253d0;">
-                <div class="project-card">
-                    <h3>DreamScape</h3>
-                    <p>A speculative app that helps you hold on to your dreams and reflect on them, designed around
-                        one prompt: what might people use in the future?</p>
-                    <div class="project-tags">
-                        <span>Designathon</span><span>Speculative Design</span><span>Oct 2025</span>
-                    </div>
-                    <a class="btn" href="case-studies/dreamscape.html">View Case Study <span class="arrow">→</span></a>
-                </div>
-                <a class="project-visual" href="case-studies/dreamscape.html" aria-label="View DreamScape case study">
-                    <img src="images/orbit-dreamscape.jpg" alt="DreamScape">
-                </a>
-            </article>
-
-            <article class="project-spread reveal-fade" style="--accent:#90e369; --accent-deep:#28713e;">
-                <div class="project-card">
-                    <h3>EcoLink*</h3>
-                    <p>An IoT platform that brings live climate and wildlife data together, so rangers, researchers,
-                        and citizen scientists can act while it still matters.</p>
-                    <div class="project-tags">
-                        <span>Solo Project</span><span>UX Research</span><span>2025</span>
-                    </div>
-                    <a class="btn" href="case-studies/ecolink.html">View Case Study <span class="arrow">→</span></a>
-                </div>
-                <a class="project-visual" href="case-studies/ecolink.html" aria-label="View EcoLink* case study">
-                    <img src="images/orbit-ecolink.jpg" alt="EcoLink*">
-                </a>
-            </article>
         </section>
 
         <section id="playground" class="page-hero" style="min-height:auto; padding-bottom:0;">
