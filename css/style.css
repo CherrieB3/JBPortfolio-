@@ -712,7 +712,9 @@ html.calm::view-transition-new(root) { animation: none; }
   grid-template-columns: auto repeat(5, auto) auto;
   justify-content: space-between;
   align-items: center;
-  padding: 0 8%;
+  /* Less padding on the left than the rest of the page so the logo sits
+     close to the edge, at Jasmine's request. */
+  padding: 0 6% 0 2.5%;
 }
 
 .logo {
@@ -737,11 +739,9 @@ html.calm::view-transition-new(root) { animation: none; }
   .nav-links { grid-template-columns: subgrid; }
 }
 
-/* Jasmine's own hand-drawn "JB" monogram with a star and a small
-   handwritten "you matter." (images/logo-jb.png, real art; the hero
-   still uses the separate "Jasmine" wordmark). Sized by height so the
-   art keeps its proportions. As tall as the 76px bar comfortably allows,
-   because the "you matter." lettering is small within the art. */
+/* Jasmine's own hand-drawn "JB" monogram with a star
+   (images/logo-jb.png, real art; the hero still uses the separate
+   "Jasmine" wordmark). Sized by height so the art keeps its proportions. */
 .logo-mark {
   display: block;
   height: 64px;
@@ -828,7 +828,7 @@ html.calm::view-transition-new(root) { animation: none; }
 }
 
 @media (max-width: 760px) {
-  .nav-inner { display: flex; padding: 0 6%; gap: 10px; }
+  .nav-inner { display: flex; padding: 0 6% 0 3%; gap: 10px; }
   .logo { margin-right: auto; }
   .logo-mark { height: 54px; }
   .nav-toggle { display: block; }
