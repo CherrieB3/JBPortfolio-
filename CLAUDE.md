@@ -51,7 +51,7 @@ older entry below conflicts with this list, **this list wins**:
   white handwritten "you matter." beside it; she asked for that removed,
   so only the monogram's connected shape was kept (the letters were
   separate shapes in the art). Saved at 192px tall (3x), displayed at
-  `height: 56px` (48px on mobile). The nav has less left padding
+  `height: 46px` (40px on mobile). The nav has less left padding
   (`3.5%`) than the rest of the page so the logo sits near the left edge,
   at her request. The hero `<h1>` still uses the separate
   `images/logo-jasmine.png` "Jasmine" wordmark; don't merge the two.

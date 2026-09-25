@@ -744,7 +744,7 @@ html.calm::view-transition-new(root) { animation: none; }
    "Jasmine" wordmark). Sized by height so the art keeps its proportions. */
 .logo-mark {
   display: block;
-  height: 56px;
+  height: 46px;
   width: auto;
 }
 
@@ -830,7 +830,7 @@ html.calm::view-transition-new(root) { animation: none; }
 @media (max-width: 760px) {
   .nav-inner { display: flex; padding: 0 6% 0 4%; gap: 10px; }
   .logo { margin-right: auto; }
-  .logo-mark { height: 48px; }
+  .logo-mark { height: 40px; }
   .nav-toggle { display: block; }
   .nav-links {
     position: fixed;
