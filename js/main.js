@@ -369,7 +369,11 @@ function initScrollReveal() {
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+  // threshold 0, not a fraction: a case-study chapter on a phone can be
+  // 3,000px+ tall, so "15% of it in view" left its first screenful blank
+  // and, on short phones, was never reached at all. Revealing as soon as
+  // its top edge clears the bottom 8% of the viewport works at any height.
+  }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
 
   els.forEach(el => io.observe(el));
 }

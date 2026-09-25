@@ -31,9 +31,41 @@ older entry below conflicts with this list, **this list wins**:
   under "asmine" (`.hero-surname`; see its CSS comment before resizing).
   Then a lede, an ATEC/internship line, and "View my work" + "Resume"
   (`.btn--ghost`) buttons.
-- **Page order**: hero → Projects → About → Playground → Contact →
-  footer. Project order (homepage and case-study prev/next):
-  Elevator Accessibility → DreamScape → EcoLink → Comet Commute → back.
+- **Page order**: hero → Projects → About (bio, facts, then
+  `#experience`) → Playground → Contact → footer. Project order
+  (homepage and case-study prev/next), set by Jasmine for hiring impact
+  (Sept 2026): DreamScape → EcoLink → Comet Commute → Elevator
+  Accessibility → back. DreamScape and EcoLink are flagships:
+  `.project-spread--featured` spans both grid columns, uses the 16:9
+  `case-*-wide.jpg` mockup instead of the square `orbit-*` crop, and has
+  a "Featured · role" kicker. Every card has a `.project-stats` row
+  (bold figure + label). Only put facts there that are on the case study
+  or resume.
+- **Hero proof**: `.hero-proof` pills under the meta line surface resume
+  highlights (PassionWorks 2026, 2 graphic design internships, freelance
+  since 2021). "Product Design Intern" at PassionWorks is Jasmine's own
+  wording; the resume PDF just says "Intern".
+- **Experience is back** (`#experience`, inside `#about`, below the
+  bio): PassionWorks, IntrustHR, Tomorrow's Leaders Today, freelance
+  illustration, all from `files/Jasmine-Bontha-Resume.pdf`. There's no
+  nav link for it, so the nav grid is unchanged. The brief also
+  mentioned "published app experience", but that isn't on the resume or
+  anywhere in the repo, so it isn't on the site yet. Ask Jasmine for the
+  real details before adding it.
+- **Contact** ends on a positioning statement (`.contact-statement`,
+  "Good design should work for everyone who shows up.") plus a
+  `.contact-pitch` line, not "Let's talk".
+- **Case-study chapters** (all 4): 01 Overview → 02 Research →
+  03 Insights (`.case-insight` cards: finding + a "So" line saying what
+  it changed) → 04 Design decisions (the old Process chapter) →
+  05 Process (the old Design Iterations) → 06 Outcome (the old Final
+  Solution, plus `.case-deliverables` "What we/I delivered" and a
+  "What I'd test next" `.case-subhead`) → 07 Reflection. A `.case-stats`
+  row of big figures sits under the quick facts. Insights restate
+  research already on the page. They never add new findings.
+- **Scroll reveal** uses `threshold: 0`. A fractional threshold left
+  tall case-study chapters blank on phones (a 3,600px chapter can never
+  be 15% on screen), so don't raise it.
 - **Nav**: one left-to-right row in page order: hand-drawn logo, Projects,
   About, Playground, Contact, Resume, then Calm mode. At Jasmine's request
   (Sept 2026) the logo moved from the centered middle slot to the far
@@ -74,11 +106,10 @@ older entry below conflicts with this list, **this list wins**:
 - **Playground**: a responsive grid (`repeat(auto-fit, minmax(260px,
   1fr))`), not the horizontal scroll-snap deck, and no "scroll for more"
   label. The deck description further down is history.
-- **Experience section**: doesn't exist; its markup, CSS and scroll-spy
-  entry are gone. If it comes back, use the real internships on her resume
-  (`files/Jasmine-Bontha-Resume.pdf`), not placeholders.
-- **About**: new bio plus a `.about-facts` list (Currently / Tools /
-  Outside design). Only three finished fun-fact doodles remain (sewing,
+- **About**: leads with a product-design line (`.about-lead`), then a
+  bio tying her projects and PassionWorks to accessibility, with
+  illustration third. The `.about-facts` list is What I do / Tools /
+  Education / Outside design. Only three finished fun-fact doodles remain (sewing,
   heritage, horror), still on the placeholder spark art, which Jasmine
   chose to keep for now.
 - **Case studies**: "Results" became **"What I'd test next"** (prose test

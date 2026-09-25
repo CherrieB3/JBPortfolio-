@@ -1053,7 +1053,7 @@ section[aria-label="Playground content"] { padding: 48px 8% 70px; }
 /* One-page navigation: clicking a nav link jumps to #about/#projects/
    #playground/#contact. Offset the landing spot by the fixed nav's height
    so the section heading doesn't end up hidden underneath it. */
-#about, #projects, #playground, #contact { scroll-margin-top: var(--nav-h); }
+#about, #experience, #projects, #playground, #contact { scroll-margin-top: var(--nav-h); }
 
 footer {
   position: relative;
@@ -1207,6 +1207,27 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
 .hero-meta { color: var(--text-dim); margin-bottom: 34px; font-size: 1rem; line-height: 1.6; max-width: 520px; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
 
+/* Resume highlights in the hero, so the 10-second read already includes
+   real work experience, not just a title. Quiet solid pills (not buttons:
+   no hover, no border) that wrap cleanly at any width. */
+.hero-proof {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -16px 0 30px;
+  padding: 0;
+  font-size: .85rem;
+  color: var(--text-dim);
+  max-width: 560px;
+}
+.hero-proof li {
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: color-mix(in srgb, white 8%, var(--bg));
+}
+.hero-proof strong { color: var(--text); font-weight: 600; }
+
 /* Secondary button: same shape as .btn, outlined instead of filled, so
    the primary action still reads first. */
 .btn--ghost {
@@ -1225,6 +1246,7 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
 .hero-text h1,
 .hero-lede,
 .hero-meta,
+.hero-proof,
 .hero-actions {
   opacity: 0;
   animation: hero-enter .8s cubic-bezier(.16,.8,.3,1) forwards;
@@ -1232,7 +1254,7 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
 .hero-text .eyebrow { animation-delay: .05s; }
 .hero-text h1 { animation-delay: .16s; }
 .hero-lede { animation-delay: .32s; }
-.hero-meta { animation-delay: .4s; }
+.hero-meta, .hero-proof { animation-delay: .4s; }
 .hero-actions { animation-delay: .48s; }
 
 @keyframes hero-enter {
@@ -1346,6 +1368,45 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
   margin-bottom: 2px;
 }
 .about-facts dd { margin: 0; color: var(--text); line-height: 1.5; }
+
+.about-copy .about-lead {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 600;
+  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+  line-height: 1.35;
+  color: var(--text);
+  margin: 6px 0 16px;
+}
+
+/* Work history from the resume, as a plain row of entries (dates, place,
+   role, one or two lines of what she did), so the portfolio carries the
+   experience before anyone opens the PDF. A thin rainbow-token rule on top
+   of each entry ties it to the palette without boxing it into a card. */
+.experience { margin-top: 72px; position: relative; z-index: 1; }
+.experience-title { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 26px; }
+.experience-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px 28px;
+}
+.experience-list li { border-top: 2px solid var(--exp-accent, var(--c-purple)); padding-top: 16px; }
+.experience-list li:nth-child(1) { --exp-accent: var(--c-red); }
+.experience-list li:nth-child(2) { --exp-accent: var(--c-yellow); }
+.experience-list li:nth-child(3) { --exp-accent: var(--c-green); }
+.experience-list li:nth-child(4) { --exp-accent: var(--c-blue); }
+.experience-when {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 6px;
+}
+.experience-list h4 { font-family: 'Baloo 2', cursive; font-weight: 600; font-size: 1.3rem; line-height: 1.2; }
+.experience-role { color: var(--text); font-size: .92rem; margin: 2px 0 10px; }
+.experience-list p:not(.experience-when):not(.experience-role) { color: var(--text-dim); font-size: .92rem; line-height: 1.6; }
 
 .avatar-frame {
   position: relative;
@@ -1808,9 +1869,14 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
   flex: 1 1 260px;
   display: block;
   min-height: 220px;
+  position: relative;
 }
 
+/* Absolutely positioned so the photo fills whatever height the text sets,
+   instead of a tall screenshot stretching the whole card. */
 .project-visual img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1827,8 +1893,47 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
    cut off a normal outside focus ring, so draw this one inset. */
 .project-visual:focus-visible { outline-offset: -5px; }
 
+/* Flagship projects (DreamScape, EcoLink) span both columns with a bigger
+   image and title, so the strongest work is what a recruiter sees first
+   and largest. The two team projects stay in the 2-up row below. */
+.project-spread--featured { grid-column: 1 / -1; min-height: 400px; }
+.project-spread--featured .project-card { flex: 1 1 360px; padding: 44px; font-size: 1rem; }
+.project-spread--featured .project-visual { flex: 1.35 1 420px; }
+.project-spread--featured h3 { font-size: clamp(1.9rem, 3vw, 2.5rem); }
+.project-spread--featured .project-card > p { max-width: 52ch; }
+
+.project-card .project-kicker {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 8px;
+}
+
+/* Scannable project facts: a bold figure plus a short label, the small
+   cousin of the case-study stat cards. */
+.project-stats {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin: 0 0 16px;
+  padding: 0;
+}
+.project-stats li { color: var(--text-dim); font-size: .88rem; line-height: 1.3; }
+.project-stats strong {
+  display: block;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
 @media (max-width: 760px) {
   .projects-list { grid-template-columns: 1fr; gap: 32px; }
+  .project-spread--featured { min-height: 0; }
+  .project-spread--featured .project-card { padding: 32px; }
   .project-spread { flex-direction: column; }
   /* No row to stretch against once stacked — .project-visual needs its
      own sizing instead of matching the text panel's height. */
@@ -1838,6 +1943,23 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
 /* =========================================================
    Contact
    ========================================================= */
+
+/* The site's closing line: a positioning statement instead of a generic
+   "Let's talk", sized down from the section-title scale so a full
+   sentence fits in two or three lines. */
+.page-hero .contact-statement {
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  max-width: 17ch;
+  line-height: 1.08;
+}
+.contact-pitch {
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 56ch;
+  margin-top: 22px;
+  position: relative;
+}
 
 .contact-grid {
   display: grid;
@@ -2309,6 +2431,86 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   max-width: 68ch;
 }
 
+/* "At a glance" stat row under the quick facts: a big figure plus a short
+   label, so team size, timeline, and scope scan in a couple of seconds.
+   Only real, countable facts from the page go here (rule 6). */
+.case-stats {
+  list-style: none;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 34px 8% 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 28px;
+}
+.case-stats li { display: flex; flex-direction: column; gap: 4px; }
+.case-stat-num {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  line-height: 1;
+  color: var(--case-accent, var(--c-blue));
+}
+.case-stat-label { color: var(--text-dim); font-size: .95rem; line-height: 1.4; max-width: 22ch; }
+
+/* Insights: what we learned (the card) and what it changed (the "So"
+   line), so research visibly turns into decisions. Static cards, no
+   hover (they aren't links). */
+.case-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+  margin: 24px 0 28px;
+}
+.case-insight { display: flex; flex-direction: column; }
+.case-insight h3 { font-size: 1.35rem; margin-bottom: 12px; }
+.case-chapter .case-insight-num {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--case-accent, var(--c-blue));
+  margin-bottom: 10px;
+}
+.case-chapter .case-insight p { font-size: 1rem; line-height: 1.65; }
+.case-chapter .case-insight-so {
+  margin: auto 0 0;
+  padding: 14px 0 0 14px;
+  border-left: 2px solid var(--case-accent, var(--c-blue));
+  color: var(--text);
+}
+.case-insight-so span {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-right: 4px;
+}
+
+/* Outcome sub-sections (deliverables, what I'd test next). */
+.case-subhead { font-size: clamp(1.4rem, 2.4vw, 1.8rem); margin: 56px 0 18px; }
+.case-deliverables {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 14px 40px;
+  max-width: 900px;
+}
+.case-deliverables li {
+  position: relative;
+  padding: 0 0 0 26px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.case-deliverables li::before {
+  content: '✦';
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--case-accent, var(--c-blue));
+}
+
 /* Prev/next case-study nav, echoing the reference format's footer links. */
 .case-prevnext {
   max-width: 1320px;
@@ -2349,7 +2551,8 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
 
 @media (max-width: 760px) {
   .case-chapter { padding: 60px 6% 60px; }
-  .case-quickfacts { padding-left: 6%; padding-right: 6%; }
+  .case-quickfacts, .case-stats { padding-left: 6%; padding-right: 6%; }
+  .case-stats { grid-template-columns: repeat(2, 1fr); gap: 22px; }
   .case-prevnext { padding-left: 6%; padding-right: 6%; }
   .case-overview-grid { grid-template-columns: 1fr; }
 }

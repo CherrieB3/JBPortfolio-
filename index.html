@@ -107,7 +107,12 @@
                 <p class="eyebrow">PRODUCT DESIGNER ✦ ILLUSTRATOR</p>
                 <h1 class="hero-name"><img class="hero-name-mark" src="images/logo-jasmine.png" alt="Jasmine"> <span class="hero-surname">Bontha</span></h1>
                 <p class="hero-lede">Product designer focused on accessibility and inclusive design.</p>
-                <p class="hero-meta">ATEC student at UT Dallas · Seeking Summer 2027 UX/Product Design internships</p>
+                <p class="hero-meta">ATEC senior at UT Dallas · Seeking Summer 2027 UX/Product Design internships</p>
+                <ul class="hero-proof" aria-label="Experience highlights">
+                    <li><strong>PassionWorks</strong> product design intern, 2026</li>
+                    <li><strong>2</strong> graphic design internships</li>
+                    <li><strong>Freelance</strong> illustrator since 2021</li>
+                </ul>
                 <div class="hero-actions">
                     <a class="btn" href="#projects">View my work</a>
                     <a class="btn btn--ghost" href="files/Jasmine-Bontha-Resume.pdf" target="_blank" rel="noopener">Resume <span class="sr-only">(PDF, opens in a new tab)</span></a>
@@ -141,48 +146,51 @@
         </section>
 
         <section aria-label="Projects" class="projects-list">
-            <article class="project-spread reveal-fade" style="--accent:#6cbeef; --accent-deep:#3058c3;">
+            <!-- Flagships first and full width (DreamScape, EcoLink), then the
+                 two team projects side by side. Order matches the case-study
+                 prev/next loop. .project-stats only holds facts that are on the
+                 case-study page or the resume. -->
+            <article class="project-spread project-spread--featured reveal-fade" style="--accent:#b79ff4; --accent-deep:#7253d0;">
                 <div class="project-card">
-                    <h3>Elevator Accessibility</h3>
-                    <p>Helping people who are blind or have low vision ride the Empire State Building's elevators on
-                        their own, with sound, vibration, and personalized keycards.</p>
-                    <div class="project-tags">
-                        <span>Team Project</span><span>Accessibility</span><span>March 2025</span>
-                    </div>
-                    <a class="btn" href="case-studies/elevator-accessibility.html">View Case Study <span class="arrow">→</span></a>
-                </div>
-                <a class="project-visual" href="case-studies/elevator-accessibility.html" aria-label="View Elevator Accessibility case study">
-                    <img src="images/orbit-elevator.jpg" alt="">
-                </a>
-            </article>
-
-            <article class="project-spread reveal-fade" style="--accent:#b79ff4; --accent-deep:#7253d0;">
-                <div class="project-card">
+                    <p class="project-kicker">Featured · Visual design lead</p>
                     <h3>DreamScape</h3>
-                    <p>A speculative app that helps you hold on to your dreams and reflect on them, designed around
-                        one prompt: what might people use in the future?</p>
+                    <p>You wake up from a vivid dream, and minutes later it's gone. A speculative app that helps people
+                        hold on to their dreams and reflect on them safely, with privacy on by default and care
+                        around painful ones.</p>
+                    <ul class="project-stats">
+                        <li><strong>24 hr</strong> designathon</li>
+                        <li><strong>4</strong> person team</li>
+                        <li><strong>Hi-fi</strong> Figma prototype</li>
+                    </ul>
                     <div class="project-tags">
-                        <span>Designathon</span><span>Speculative Design</span><span>Oct 2025</span>
+                        <span>UX Designathon</span><span>Visual Design</span><span>Oct 2025</span>
                     </div>
                     <a class="btn" href="case-studies/dreamscape.html">View Case Study <span class="arrow">→</span></a>
                 </div>
                 <a class="project-visual" href="case-studies/dreamscape.html" aria-label="View DreamScape case study">
-                    <img src="images/orbit-dreamscape.jpg" alt="">
+                    <img src="images/case-dreamscape-wide.jpg" alt="">
                 </a>
             </article>
 
-            <article class="project-spread reveal-fade" style="--accent:#90e369; --accent-deep:#28713e;">
+            <article class="project-spread project-spread--featured reveal-fade" style="--accent:#90e369; --accent-deep:#28713e;">
                 <div class="project-card">
+                    <p class="project-kicker">Featured · Solo research &amp; design</p>
                     <h3>EcoLink</h3>
-                    <p>An IoT platform that brings live climate and wildlife data together, so rangers, researchers,
-                        and citizen scientists can act while it still matters.</p>
+                    <p>Rangers and researchers are trying to protect wildlife with tools that don't talk to each other.
+                        An IoT platform that brings live climate and wildlife data together, so the people on the
+                        ground can act while it still matters.</p>
+                    <ul class="project-stats">
+                        <li><strong>Solo</strong> end to end</li>
+                        <li><strong>7</strong> user groups mapped</li>
+                        <li><strong>3</strong> connected screens</li>
+                    </ul>
                     <div class="project-tags">
-                        <span>Solo Project</span><span>UX Research</span><span>2025</span>
+                        <span>UX Research</span><span>Product Design</span><span>Oct–Nov 2025</span>
                     </div>
                     <a class="btn" href="case-studies/ecolink.html">View Case Study <span class="arrow">→</span></a>
                 </div>
                 <a class="project-visual" href="case-studies/ecolink.html" aria-label="View EcoLink case study">
-                    <img src="images/orbit-ecolink.jpg" alt="">
+                    <img src="images/case-ecolink-wide.jpg" alt="">
                 </a>
             </article>
 
@@ -191,13 +199,36 @@
                     <h3>Comet Commute</h3>
                     <p>Parking at UT Dallas can quietly ruin a student's morning. A concept that shows you where the
                         open spots are, right inside the campus app you already have.</p>
+                    <ul class="project-stats">
+                        <li><strong>2</strong> personas</li>
+                        <li><strong>3</strong> concepts explored</li>
+                    </ul>
                     <div class="project-tags">
-                        <span>Team Project</span><span>UX Research</span><span>May 2025</span>
+                        <span>Team of 4</span><span>UX Research</span><span>May 2025</span>
                     </div>
                     <a class="btn" href="case-studies/comet-commute.html">View Case Study <span class="arrow">→</span></a>
                 </div>
                 <a class="project-visual" href="case-studies/comet-commute.html" aria-label="View Comet Commute case study">
                     <img src="images/orbit-comet.jpg" alt="">
+                </a>
+            </article>
+
+            <article class="project-spread reveal-fade" style="--accent:#6cbeef; --accent-deep:#3058c3;">
+                <div class="project-card">
+                    <h3>Elevator Accessibility</h3>
+                    <p>Helping people who are blind or have low vision ride the Empire State Building's elevators on
+                        their own, with sound, vibration, and personalized keycards.</p>
+                    <ul class="project-stats">
+                        <li><strong>2</strong> audiences</li>
+                        <li><strong>2</strong> storyboards</li>
+                    </ul>
+                    <div class="project-tags">
+                        <span>Team of 4</span><span>Accessibility</span><span>March 2025</span>
+                    </div>
+                    <a class="btn" href="case-studies/elevator-accessibility.html">View Case Study <span class="arrow">→</span></a>
+                </div>
+                <a class="project-visual" href="case-studies/elevator-accessibility.html" aria-label="View Elevator Accessibility case study">
+                    <img src="images/orbit-elevator.jpg" alt="">
                 </a>
             </article>
         </section>
@@ -217,24 +248,41 @@
             <div class="about-grid">
                 <div class="about-copy reveal">
                     <h2>About</h2>
-                    <p>
-                        I'm Jasmine Bontha, a senior at UT Dallas studying Arts, Technology, and Emerging
-                        Communication with a focus on UX and product design. I design for people who get overlooked
-                        by default, especially people with disabilities.
+                    <p class="about-lead">
+                        I design for the people products tend to forget.
                     </p>
                     <p>
-                        I'm also an illustrator. I've taken commission work since 2021, and drawing shapes how I
-                        design: I sketch before I wireframe, and I care about how an interface feels, not just how it
-                        functions.
+                        I'm Jasmine, a product designer finishing my degree in Arts, Technology, and Emerging
+                        Communication at UT Dallas. My projects start with someone who's struggling: a blind visitor
+                        hunting for elevator buttons, a commuter circling a full lot before class, a ranger with five
+                        tools that don't talk to each other. I research what's really in their way, then design the
+                        system around them, not just the screen.
+                    </p>
+                    <p>
+                        This summer at PassionWorks, I worked alongside artists with developmental disabilities to
+                        launch a new owl plush product line, and designed the production templates and workflows
+                        behind it. It's the kind of work I want to keep doing: listening first, then making things
+                        easier for everyone involved.
+                    </p>
+                    <p>
+                        I'm also an illustrator, taking commissions since 2021. Drawing shapes how I design: I sketch
+                        before I wireframe, I care about type and color, and I want an interface to feel good, not just
+                        work.
                     </p>
                     <dl class="about-facts">
                         <div>
-                            <dt>Currently</dt>
-                            <dd>Seeking Summer 2027 UX / Product Design internships</dd>
+                            <dt>What I do</dt>
+                            <dd>UX research, user flows, wireframing, prototyping, storyboarding, accessibility, visual
+                                identity</dd>
                         </div>
                         <div>
                             <dt>Tools</dt>
-                            <dd>Figma, Spline, Adobe Creative Suite, HTML/CSS</dd>
+                            <dd>Figma, Adobe Creative Suite, Spline, HTML/CSS, GitHub</dd>
+                        </div>
+                        <div>
+                            <dt>Education</dt>
+                            <dd>UT Dallas, BA in Arts, Technology, and Emerging Communication, Marketing minor ·
+                                3.8 GPA · Honors College · UX Club</dd>
                         </div>
                         <div>
                             <dt>Outside design</dt>
@@ -250,6 +298,39 @@
                             alt="Jasmine Bontha smiling, with a hand-illustrated rainbow shooting-star ring around the portrait">
                     </div>
                 </div>
+            </div>
+
+            <div class="experience reveal-fade" id="experience">
+                <h3 class="experience-title">Experience</h3>
+                <ol class="experience-list">
+                    <li>
+                        <p class="experience-when">May–Aug 2026</p>
+                        <h4>PassionWorks</h4>
+                        <p class="experience-role">Product Design Intern · Athens, OH</p>
+                        <p>Worked with artists with developmental disabilities and studio staff to launch a new owl
+                            plush product line. Designed production templates and workflows for more consistent,
+                            efficient making.</p>
+                    </li>
+                    <li>
+                        <p class="experience-when">Jun–Jul 2025</p>
+                        <h4>IntrustHR</h4>
+                        <p class="experience-role">Graphic Design Intern · Frisco, TX</p>
+                        <p>Set typography and color standards for the brand, and designed 5+ reusable social media
+                            templates used across multiple campaigns.</p>
+                    </li>
+                    <li>
+                        <p class="experience-when">May–Jul 2025</p>
+                        <h4>Tomorrow's Leaders Today</h4>
+                        <p class="experience-role">Graphic Design Intern · Frisco, TX</p>
+                        <p>Designed 10+ digital and print pieces for youth programs and community outreach, and
+                            worked with UX researchers on insights that shaped design changes.</p>
+                    </li>
+                    <li>
+                        <p class="experience-when">2021–now</p>
+                        <h4>Freelance Illustration</h4>
+                        <p class="experience-role">Illustrator · Commissions</p>
+                    </li>
+                </ol>
             </div>
 
             <!-- Sketchbook doodles — floating around the About content rather
@@ -372,15 +453,18 @@
             <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#dc7bf0" /></svg>
             <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#6cbeef" /></svg>
             <svg class="mini-spark spark-c" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#efd96e" /></svg>
-            <h2 class="reveal">Let's talk</h2>
-            <p class="eyebrow" style="margin-top:14px;">Since you made it all the way here, why not send a message!</p>
+            <p class="eyebrow">LET'S TALK ✦</p>
+            <h2 class="reveal contact-statement">Good design should work for everyone who shows up.</h2>
+            <p class="contact-pitch">I'm looking for a Summer 2027 UX or product design internship on a team that
+                treats accessibility as part of the design, not a checklist at the end. If that sounds like your
+                team, I'd love to hear from you.</p>
         </section>
 
         <section class="contact-body">
             <div class="contact-grid reveal-fade">
                 <div class="contact-direct">
                     <a href="mailto:jflower2k6@gmail.com">✉ jflower2k6@gmail.com</a>
-                    <a href="https://www.linkedin.com/in/jasmine-b-1a2929231/" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/jasmine-b-1a2929231/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
                     <a href="files/Jasmine-Bontha-Resume.pdf" target="_blank" rel="noopener">Resume <span class="sr-only">(PDF, opens in a new tab)</span></a>
                 </div>
 
