@@ -123,12 +123,12 @@ function initContactForm() {
         headers: { Accept: 'application/json' },
       });
       if (!response.ok) throw new Error('Form submission failed');
-      statusEl.textContent = "Thanks for reaching out — I'll get back to you soon!";
+      statusEl.textContent = "Thanks for reaching out! I'll get back to you soon.";
       statusEl.className = 'contact-form-status is-success';
       form.reset();
     } catch (err) {
       console.error('Contact form submission failed:', err);
-      statusEl.textContent = "That didn't go through — mind trying again, or emailing me directly?";
+      statusEl.textContent = "That didn't go through. Mind trying again, or emailing me directly?";
       statusEl.className = 'contact-form-status is-error';
     } finally {
       sendBtn.disabled = false;
@@ -150,10 +150,20 @@ function initContactForm() {
 // purely a bonus preview, never the only way to play one.
 function initAnimationHoverPlay() {
   const videos = document.querySelectorAll('.animation-tile video');
-  if (!videos.length) return;
+  // A GIF can't be paused, so its tile shows a still poster frame and only
+  // swaps to the animated file on hover (never in Calm mode). A looping
+  // GIF left running in the grid would ignore reduced motion entirely.
+  const gifs = document.querySelectorAll('.animation-tile img[data-hover-src]');
+  if (!videos.length && !gifs.length) return;
 
   const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (!canHover) return;
+
+  gifs.forEach(img => {
+    const still = img.getAttribute('src');
+    img.addEventListener('mouseenter', () => { if (!isCalm()) img.src = img.dataset.hoverSrc; });
+    img.addEventListener('mouseleave', () => { img.src = still; });
+  });
 
   videos.forEach(video => {
     // Checked on each hover rather than once, so turning Calm mode on
@@ -527,7 +537,7 @@ function initNav() {
 // that don't have these section ids (the case-study pages), where the
 // static match in initNav() above already highlights "Projects".
 function initScrollSpy() {
-  const sections = ['about', 'experience', 'projects', 'playground', 'contact']
+  const sections = ['projects', 'about', 'playground', 'contact']
     .map(id => document.getElementById(id))
     .filter(Boolean);
   if (!sections.length) return;
