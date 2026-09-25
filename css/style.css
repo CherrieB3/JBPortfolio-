@@ -737,13 +737,14 @@ html.calm::view-transition-new(root) { animation: none; }
   .nav-links { grid-template-columns: subgrid; }
 }
 
-/* Jasmine's own hand-drawn signature wordmark (real art, not a system
-   font rendering of her name). Sized by height, not width, so the source
-   art's proportions (a wide signature with a comet swoosh above it) stay
-   intact. */
+/* Jasmine's own hand-drawn "JB" monogram with a star and a small
+   handwritten "you matter." (images/logo-jb.png, real art; the hero
+   still uses the separate "Jasmine" wordmark). Sized by height so the
+   art keeps its proportions. As tall as the 76px bar comfortably allows,
+   because the "you matter." lettering is small within the art. */
 .logo-mark {
   display: block;
-  height: 52px;
+  height: 64px;
   width: auto;
 }
 
@@ -829,7 +830,7 @@ html.calm::view-transition-new(root) { animation: none; }
 @media (max-width: 760px) {
   .nav-inner { display: flex; padding: 0 6%; gap: 10px; }
   .logo { margin-right: auto; }
-  .logo-mark { height: 44px; }
+  .logo-mark { height: 54px; }
   .nav-toggle { display: block; }
   .nav-links {
     position: fixed;

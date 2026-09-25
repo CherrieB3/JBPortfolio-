@@ -46,6 +46,12 @@ older entry below conflicts with this list, **this list wins**:
   menu button has `aria-controls="primary-links"`, closes on Escape, and a
   closed mobile menu uses `visibility: hidden` so it can't be tabbed into.
   Same markup on all 7 pages. On mobile: logo left, menu + Calm buttons right.
+- **Nav logo**: `images/logo-jb.png`, Jasmine's hand-drawn "JB" monogram
+  with a star and a white handwritten "you matter." (white strokes, so it
+  only reads on the dark nav). Cropped from her 1673px source and saved at
+  192px tall (3x); displayed at `height: 64px` (54px on mobile) so the
+  small lettering stays legible. The hero `<h1>` still uses the separate
+  `images/logo-jasmine.png` "Jasmine" wordmark; don't merge the two.
 - **Calm mode**: `.calm-toggle` in the nav (`aria-pressed`), class
   `html.calm` set by an inline `<head>` script on every page before first
   paint (localStorage key `calm`, try/catch; defaults on under
