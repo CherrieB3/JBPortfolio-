@@ -20,7 +20,10 @@ cleanup) changed several decisions described further down. Where an
 older entry below conflicts with this list, **this list wins**:
 
 - **Positioning**: Jasmine is a senior (ATEC, UT Dallas) positioning as a
-  *product designer focused on accessibility and neuroinclusive design*,
+  *product designer focused on accessibility and inclusive design*
+  (Jasmine asked not to lead with "neuroinclusive": she is neurodivergent
+  but doesn't want it as the portfolio's main focus, so keep it out of
+  headlines and taglines),
   seeking Summer 2027 UX/Product Design internships. Title everywhere is
   "Product Designer ✦ Illustrator" (`<title>`, hero eyebrow, meta).
 - **Hero**: no "Hi! I'm". The `<h1>` is her hand-drawn wordmark
