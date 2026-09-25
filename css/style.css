@@ -697,43 +697,45 @@ html.calm::view-transition-new(root) { animation: none; }
   pointer-events: none;
 }
 
+/* One row, left to right in page order: logo, the section links, Resume,
+   then Calm mode. The bar is a single grid with one column per item, and
+   the link list joins it as a subgrid, so justify-content spreads the
+   leftover width into identical gaps between every item: logo-to-link
+   and link-to-link spacing come out the same. (Browsers without subgrid
+   fall back to the list spacing its own links evenly.) The logo is
+   also first in the markup, so screen readers and keyboard users meet
+   the items in the same order they're drawn. */
 .nav-inner {
   position: relative;
   height: var(--nav-h);
-  display: flex;
+  display: grid;
+  grid-template-columns: auto repeat(5, auto) auto;
+  justify-content: space-between;
   align-items: center;
   padding: 0 8%;
 }
 
-/* The logo comes first in the markup, outside the link list, so screen
-   readers announce "Jasmine Bontha, home" before the links instead of in
-   the middle of them. Visually it still sits in the center of the bar:
-   it's positioned over an empty middle column the link grid leaves for
-   it (2 links on the left, 3 on the right, each half the same total
-   width so the gap lands at the true center). */
 .logo {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+  grid-column: 1;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
 }
 
 .nav-links {
-  flex: 1;
+  grid-column: 2 / 7;
   display: grid;
-  grid-template-columns: repeat(2, 3fr) 150px repeat(3, 2fr);
+  grid-template-columns: repeat(5, auto);
+  justify-content: space-between;
   align-items: center;
-  justify-items: center;
   list-style: none;
   font-family: 'Baloo 2', cursive;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
 }
-.nav-links li:nth-child(3) { grid-column: 4; }
+@supports (grid-template-columns: subgrid) {
+  .nav-links { grid-template-columns: subgrid; }
+}
 
 /* Jasmine's own hand-drawn signature wordmark (real art, not a system
    font rendering of her name). Sized by height, not width, so the source
@@ -762,13 +764,10 @@ html.calm::view-transition-new(root) { animation: none; }
 .nav-links a[data-page="contact"] { color: var(--c-blue); }
 .nav-links a[data-page="resume"] { color: var(--c-purple); }
 
-/* Calm mode switch (see initCalmMode() in js/main.js). Sits in the nav's
-   right-hand padding on desktop so it doesn't shift the centered logo. */
+/* Calm mode switch (see initCalmMode() in js/main.js): the last item in
+   the nav row. */
 .calm-toggle {
-  position: absolute;
-  right: 1.6%;
-  top: 50%;
-  transform: translateY(-50%);
+  grid-column: 7;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -783,10 +782,9 @@ html.calm::view-transition-new(root) { animation: none; }
 .calm-toggle svg { width: 16px; height: 16px; flex: none; }
 .calm-toggle[aria-pressed="true"] { background: var(--d-purple); border-color: var(--d-purple); color: #fff; }
 .calm-toggle[aria-pressed="true"] svg path { fill: currentColor; }
-/* Too little room in the padding for the text label between the mobile
-   breakpoint and a wide desktop: show the icon alone (the label stays in
+/* Narrower desktops don't have room for the text label: show the icon alone (the label stays in
    the accessibility tree via .sr-only, so the button keeps its name). */
-@media (max-width: 1280px) {
+@media (max-width: 1100px) {
   .calm-toggle { padding: 7px; }
   .calm-toggle .calm-label {
     position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -829,11 +827,10 @@ html.calm::view-transition-new(root) { animation: none; }
 }
 
 @media (max-width: 760px) {
-  .nav-inner { padding: 0 6%; gap: 10px; }
-  .logo { position: static; transform: none; margin-right: auto; }
+  .nav-inner { display: flex; padding: 0 6%; gap: 10px; }
+  .logo { margin-right: auto; }
   .logo-mark { height: 44px; }
   .nav-toggle { display: block; }
-  .calm-toggle { position: static; transform: none; }
   .nav-links {
     position: fixed;
     top: calc(var(--nav-h) + 4px);

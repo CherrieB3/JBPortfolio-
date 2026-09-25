@@ -31,12 +31,18 @@ older entry below conflicts with this list, **this list wins**:
 - **Page order**: hero → Projects → About → Playground → Contact →
   footer. Project order (homepage and case-study prev/next):
   Elevator Accessibility → DreamScape → EcoLink → Comet Commute → back.
-- **Nav**: the logo link comes *first* in the markup, outside the `<ul>`,
-  and is centered with CSS over an empty middle grid column (2 links left,
-  3 right). Links: Projects, About, Playground, Contact, Resume. The menu
-  button has `aria-controls="primary-links"`, closes on Escape, and a
+- **Nav**: one left-to-right row in page order: hand-drawn logo, Projects,
+  About, Playground, Contact, Resume, then Calm mode. At Jasmine's request
+  (Sept 2026) the logo moved from the centered middle slot to the far
+  left; this supersedes the "keep the logo in the middle" notes under
+  "Spacing & layout" below. `.nav-inner` is a 7-column grid with
+  `justify-content: space-between` and the `<ul>` joins it as a
+  `subgrid`, so every item gets the same gap. Keep that when adding or
+  removing a link (update the `repeat(5, auto)` counts and `grid-column`
+  spans). The logo is also first in the markup, outside the `<ul>`. The
+  menu button has `aria-controls="primary-links"`, closes on Escape, and a
   closed mobile menu uses `visibility: hidden` so it can't be tabbed into.
-  Same markup on all 7 pages. On mobile the logo shows in the bar.
+  Same markup on all 7 pages. On mobile: logo left, menu + Calm buttons right.
 - **Calm mode**: `.calm-toggle` in the nav (`aria-pressed`), class
   `html.calm` set by an inline `<head>` script on every page before first
   paint (localStorage key `calm`, try/catch; defaults on under
