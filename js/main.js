@@ -227,7 +227,8 @@ function initTiltCards() {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   const MAX_TILT = 8; // degrees at the card's edge; halved near its center
 
-  document.querySelectorAll('.card').forEach(card => {
+  // Only cards that are links or buttons tilt; static cards stay still.
+  document.querySelectorAll('a.card, button.card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const px = (e.clientX - rect.left) / rect.width - 0.5;
@@ -268,18 +269,18 @@ function initRabbitEgg() {
 }
 
 function hopRabbit() {
-  const colors = ['#f8a0c8', '#acdff7', '#f6e093', '#b8efd4', '#d5c0f6', '#fed5a4', '#9fe9d3'];
+  const colors = ['#dc7bf0', '#6cbeef', '#efd96e', '#90e369', '#b79ff4', '#eea663', '#7ce3bd'];
   const hop = document.createElement('div');
   hop.className = 'rabbit-hop';
   hop.setAttribute('aria-hidden', 'true');
   // Same line-art rabbit silhouette used elsewhere on the site — no emoji.
   hop.innerHTML = `
     <svg class="rabbit-hop-glyph" viewBox="0 0 60 60" fill="none">
-      <path d="M20,25 C15,10 8,0 15,2 C24,5 26,18 24,28" stroke="#d5c0f6" stroke-width="3" fill="none" stroke-linecap="round" />
-      <path d="M32,25 C30,8 26,-2 34,2 C41,6 40,18 36,28" stroke="#d5c0f6" stroke-width="3" fill="none" stroke-linecap="round" />
-      <ellipse cx="30" cy="45" rx="24" ry="18" stroke="#d5c0f6" stroke-width="3" fill="none" />
-      <circle cx="22" cy="42" r="2.5" fill="#d5c0f6" />
-      <circle cx="34" cy="42" r="2.5" fill="#d5c0f6" />
+      <path d="M20,25 C15,10 8,0 15,2 C24,5 26,18 24,28" stroke="#b79ff4" stroke-width="3" fill="none" stroke-linecap="round" />
+      <path d="M32,25 C30,8 26,-2 34,2 C41,6 40,18 36,28" stroke="#b79ff4" stroke-width="3" fill="none" stroke-linecap="round" />
+      <ellipse cx="30" cy="45" rx="24" ry="18" stroke="#b79ff4" stroke-width="3" fill="none" />
+      <circle cx="22" cy="42" r="2.5" fill="#b79ff4" />
+      <circle cx="34" cy="42" r="2.5" fill="#b79ff4" />
     </svg>`;
   document.body.appendChild(hop);
 
@@ -349,7 +350,9 @@ function initStarfield() {
   // lavender, weighted toward coral, matching a moodboard reference
   // Jasmine shared (coral-pink stars, glowing teal clouds, deep indigo
   // night) more than the earlier gold-heavy mix.
-  const STAR_COLORS = ['#f9a291', '#f9a291', '#73e2f2', '#d5c0f6', '#f8a0c8', '#f0c44a'];
+  // Mostly white and periwinkle, like the sparkles on Jasmine's Carrd site,
+  // with a few pops of the vivid rainbow.
+  const STAR_COLORS = ['#ffffff', '#e2e7fc', '#e2e7fc', '#9aa9f4', '#dc7bf0', '#6cbeef'];
 
   const frag = document.createDocumentFragment();
   for (let i = 0; i < count; i++) {
@@ -430,7 +433,7 @@ function initCustomCursor() {
   });
   document.addEventListener('mouseover', () => { cursor.style.opacity = '1'; });
 
-  const BURST_COLORS = ['#f8a0c8', '#acdff7', '#f6e093', '#b8efd4', '#d5c0f6', '#fed5a4', '#9fe9d3'];
+  const BURST_COLORS = ['#dc7bf0', '#6cbeef', '#efd96e', '#90e369', '#b79ff4', '#eea663', '#7ce3bd'];
   const BURST_COUNT = 7;
 
   function spawnBurst(x, y) {

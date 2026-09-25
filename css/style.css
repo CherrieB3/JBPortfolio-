@@ -99,7 +99,7 @@
    floating in space" rather than a technical/corporate one. This was
    first tried as a FULL light-mode flip (cream background, dark text)
    and Jasmine didn't like that — the background is back to the
-   original dark cosmic void (#050314). What stuck from the pastel pass:
+   original dark cosmic void (#07092a). What stuck from the pastel pass:
    the accent palette itself, Baloo 2 as the display font, and softened/
    recolored versions of the decorative extras added alongside it
    (drifting clouds, occasional shooting stars, the floating mail
@@ -115,6 +115,11 @@
    is for AA-safe text on the light nav/paper surfaces, and for white text
    sitting on top of a button/badge fill — --c-* is too light for that.
    ========================================================= */
+/* CURRENT PALETTE (supersedes the history above): shifted to match
+   Jasmine's own Carrd site (sqeakerz.carrd.co), a saturated cobalt-navy
+   sky, white/periwinkle sparkles, a vivid rainbow, and violet buttons.
+   Same token names, new values; see CLAUDE.md "Art direction" for the
+   contrast-checked table. */
 :root {
   /* space + surfaces — dark cosmic base (Jasmine's call after seeing the
      full light-cream version: keep the pastel accent palette, but back on
@@ -122,22 +127,22 @@
      near-black, per a moodboard reference Jasmine shared (a glowing
      cyan/teal night scene) — a lighter, more saturated "moonlit" dark
      rather than a flat void. */
-  --bg: #1c1840;
-  --bg-soft: #241f4d;
+  --bg: #161966;
+  --bg-soft: #1f247b;
   --panel: rgba(255, 255, 255, .05);
   --panel-border: rgba(255, 255, 255, .1);
-  --paper: #fffbf4;
-  --ink: #3d3350;
+  --paper: #f4faf8;
+  --ink: #1d2162;
   /* The nav's own surface — a smidge darker than --bg, not the light
      "paper" surface used for planet-card tooltips and Free Draw's paper
      texture (those stay light/cream on purpose; only the nav itself
      moved to dark). */
-  --nav-bg: #161233;
+  --nav-bg: #0e1045;
 
   /* text on dark */
   --text: #ffffff;
-  --text-dim: #d3d4e6;
-  --text-mute: #9d9fc0;
+  --text-dim: #dde0fb;
+  --text-mute: #b0b6e5;
 
   /* soft pastel tier — decorative use (glows, thin borders, dots),
      never as a fill under white text (see note above). Red and teal
@@ -148,30 +153,30 @@
      tier below) at Jasmine's request for a bit more punch than the very
      dusty original pastel pass — still a soft palette, not a return to
      neon. The deep tier's boost was capped smaller and re-checked against
-     white and #fffbf4 (the paper/nav surface) so every AA text-contrast
+     white and #f4faf8 (the paper/nav surface) so every AA text-contrast
      pairing documented in CLAUDE.md still holds; --d-green has the
      tightest margin (~4.6:1) — don't push its saturation any further
      without re-checking contrast. */
-  --c-red: #f9a291;
-  --c-orange: #fed5a4;
-  --c-yellow: #f6e093;
-  --c-green: #b8efd4;
-  --c-blue: #acdff7;
-  --c-purple: #d5c0f6;
-  --c-pink: #f8a0c8;
+  --c-red: #f17d89;
+  --c-orange: #eea663;
+  --c-yellow: #efd96e;
+  --c-green: #90e369;
+  --c-blue: #6cbeef;
+  --c-purple: #b79ff4;
+  --c-pink: #dc7bf0;
   /* Added from Jasmine's cosmic-creature moodboard reference — a mint/teal
      that the original 6-hue rainbow didn't have. Accent-only, like pink:
      no --d-teal counterpart, since it isn't used as nav/text-on-white. */
-  --c-teal: #73e2f2;
+  --c-teal: #60dbed;
 
   /* deep tier — saturated enough for AA-safe text-on-cream AND for white
      text sitting on top of it as a button/badge fill */
-  --d-red: #b13c5a;
-  --d-orange: #a45518;
-  --d-gold: #806418;
-  --d-green: #2e815b;
-  --d-blue: #28658f;
-  --d-purple: #6d4ba1;
+  --d-red: #b13556;
+  --d-orange: #98521c;
+  --d-gold: #6e580c;
+  --d-green: #28713e;
+  --d-blue: #3058c3;
+  --d-purple: #7253d0;
 
   --gradient-rainbow: linear-gradient(90deg, var(--c-red), var(--c-orange), var(--c-yellow), var(--c-green), var(--c-blue), var(--c-purple));
 
@@ -208,11 +213,11 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 22% 14%, rgba(127, 217, 230, .12), transparent 30%),
-    radial-gradient(circle at 78% 18%, rgba(214, 198, 240, .1), transparent 32%),
-    radial-gradient(circle at 18% 98%, rgba(240, 168, 154, .18), transparent 42%),
-    radial-gradient(circle at 50% 102%, rgba(127, 217, 230, .2), transparent 46%),
-    radial-gradient(circle at 82% 98%, rgba(214, 198, 240, .18), transparent 42%);
+    radial-gradient(circle at 22% 14%, rgba(96, 219, 237, .12), transparent 30%),
+    radial-gradient(circle at 78% 18%, rgba(183, 159, 244, .1), transparent 32%),
+    radial-gradient(circle at 18% 98%, rgba(241, 125, 137, .18), transparent 42%),
+    radial-gradient(circle at 50% 102%, rgba(96, 219, 237, .2), transparent 46%),
+    radial-gradient(circle at 82% 98%, rgba(183, 159, 244, .18), transparent 42%);
   z-index: -2;
   pointer-events: none;
 }
@@ -229,10 +234,10 @@ body::after {
   position: fixed;
   inset: -15% -20%;
   background:
-    radial-gradient(ellipse 34% 125% at 12% 118%, rgba(127, 217, 230, .34), transparent 60%),
-    radial-gradient(ellipse 30% 115% at 38% 124%, rgba(240, 168, 154, .26), transparent 58%),
-    radial-gradient(ellipse 32% 125% at 65% 118%, rgba(214, 198, 240, .28), transparent 60%),
-    radial-gradient(ellipse 28% 110% at 90% 124%, rgba(127, 217, 230, .24), transparent 56%);
+    radial-gradient(ellipse 34% 125% at 12% 118%, rgba(96, 219, 237, .34), transparent 60%),
+    radial-gradient(ellipse 30% 115% at 38% 124%, rgba(241, 125, 137, .26), transparent 58%),
+    radial-gradient(ellipse 32% 125% at 65% 118%, rgba(183, 159, 244, .28), transparent 60%),
+    radial-gradient(ellipse 28% 110% at 90% 124%, rgba(96, 219, 237, .24), transparent 56%);
   filter: blur(55px);
   mix-blend-mode: screen;
   z-index: -2;
@@ -280,7 +285,7 @@ body::after {
   /* Warm gold by default — set per-star in JS (initStarfield()) to one of
      a few soft pastel hues for variety, rather than plain white, to match
      the site's pastel Bee-and-PuppyCat palette. */
-  background: var(--star-color, #f0c44a);
+  background: var(--star-color, #e2e7fc);
   border-radius: 50%;
   animation: star-twinkle var(--dur, 3.4s) ease-in-out infinite;
   animation-delay: var(--delay, 0s);
@@ -319,7 +324,7 @@ body::after {
      the left end is the leading edge. Bright-at-left/fade-at-right is
      what makes the head lead the direction of travel instead of trailing
      behind it. */
-  background: linear-gradient(90deg, #fffbf4, #f0c44a 40%, transparent);
+  background: linear-gradient(90deg, #f4faf8, #e2e7fc 40%, transparent);
   opacity: 0;
   transform-origin: right center;
   rotate: -22deg;
@@ -470,8 +475,8 @@ a { color: inherit; }
        the "click me" badge below, so the glow doesn't compete with the
        badge's own outline/text at that larger size. */
     filter:
-      drop-shadow(0 0 4px rgba(179, 220, 240, .9))
-      drop-shadow(0 0 10px rgba(179, 220, 240, .6));
+      drop-shadow(0 0 4px rgba(108, 190, 239, .9))
+      drop-shadow(0 0 10px rgba(108, 190, 239, .6));
   }
 
   /* Grows into the "click me" badge's size over anything clickable — the
@@ -789,14 +794,14 @@ a { color: inherit; }
 }
 
 @keyframes star-glow-pulse {
-  from { filter: drop-shadow(0 0 10px rgba(224, 189, 90, .85)) drop-shadow(0 0 22px rgba(240, 168, 201, .5)); }
-  to   { filter: drop-shadow(0 0 18px rgba(224, 189, 90, 1)) drop-shadow(0 0 34px rgba(240, 168, 201, .7)); }
+  from { filter: drop-shadow(0 0 10px rgba(154, 169, 244, .85)) drop-shadow(0 0 22px rgba(220, 123, 240, .5)); }
+  to   { filter: drop-shadow(0 0 18px rgba(154, 169, 244, 1)) drop-shadow(0 0 34px rgba(220, 123, 240, .7)); }
 }
 
 @keyframes scroll-pulse {
-  0% { filter: drop-shadow(0 0 10px rgba(224, 189, 90, .85)) drop-shadow(0 0 22px rgba(240, 168, 201, .5)); }
-  35% { filter: drop-shadow(0 0 20px rgba(224, 189, 90, 1)) drop-shadow(0 0 40px rgba(240, 168, 201, .85)); }
-  100% { filter: drop-shadow(0 0 10px rgba(224, 189, 90, .85)) drop-shadow(0 0 22px rgba(240, 168, 201, .5)); }
+  0% { filter: drop-shadow(0 0 10px rgba(154, 169, 244, .85)) drop-shadow(0 0 22px rgba(220, 123, 240, .5)); }
+  35% { filter: drop-shadow(0 0 20px rgba(154, 169, 244, 1)) drop-shadow(0 0 40px rgba(220, 123, 240, .85)); }
+  100% { filter: drop-shadow(0 0 10px rgba(154, 169, 244, .85)) drop-shadow(0 0 22px rgba(220, 123, 240, .5)); }
 }
 
 .comet-star svg {
@@ -816,30 +821,35 @@ a { color: inherit; }
   padding: 16px 32px;
   border: none;
   border-radius: 50px;
-  background: var(--d-blue);
+  background: var(--d-purple);
   color: white;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 6px 20px rgba(179, 220, 240, .18);
+  box-shadow: 0 6px 20px rgba(183, 159, 244, .22);
   transition: transform .3s cubic-bezier(.2,.8,.3,1.3), box-shadow .3s ease;
 }
 
-.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(179, 220, 240, .28); }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(183, 159, 244, .34); }
 .btn:active { transform: translateY(-1px) scale(1.01); }
 .btn:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid var(--c-yellow); outline-offset: 3px; }
 
 .card {
-  /* A more solid, clearly-bordered panel — less "invisible glass," more
-     defined edge — rather than relying on a soft glow to read as a card. */
+  /* A solid panel with no outline: the darker fill alone separates it
+     from the page, rather than a border or a soft glow. */
   position: relative;
-  background: rgba(255, 255, 255, .07);
-  border: 1.5px solid rgba(255, 255, 255, .18);
+  /* Solid, a step darker than the page background (starting from the
+     nav's own darker indigo, --nav-bg, and deepening slightly toward the
+     bottom corner) rather than a translucent white wash, so each tile
+     reads as a distinct, grounded panel. Derived from existing tokens,
+     no new color. */
+  background: linear-gradient(160deg, var(--nav-bg), color-mix(in srgb, var(--nav-bg) 78%, black));
+  border: none;
   border-radius: var(--radius-lg);
   padding: 40px;
-  box-shadow: 0 14px 28px -20px rgba(61,51,79,.6);
-  transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease, border-color .3s ease;
+  box-shadow: 0 14px 28px -20px rgba(7, 8, 36,.6);
+  transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease;
   /* Magnetic tilt toward the cursor (initTiltCards() in js/main.js sets
      these two custom properties on mousemove) — 0deg at rest, so a card
      that's never hovered renders identically to before this existed. */
@@ -847,10 +857,14 @@ a { color: inherit; }
   --tilt-y: 0deg;
 }
 
-.card:hover {
+/* Hover motion only on cards that actually go somewhere or do something
+   (a link or button). Static content cards (case-study Overview/Research/
+   feature cards, the About fallback list) stay still, since a card that
+   reacts to the mouse promises a click, and clicking it would do nothing. */
+a.card:hover,
+button.card:hover {
   transform: perspective(800px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) translateY(-6px);
-  border-color: var(--c-blue);
-  box-shadow: 0 18px 32px -18px rgba(61,51,79,.6);
+  box-shadow: 0 18px 32px -18px rgba(7, 8, 36,.6);
 }
 .card h3 { font-family: 'Baloo 2', cursive; margin-bottom: 12px; font-size: 1.4rem; }
 .card p { color: var(--text-dim); }
@@ -858,8 +872,8 @@ a { color: inherit; }
 
 /* Rainbow accent-dot — a small colored "planet" badge reused on About's
    doodle fallback grid, cycling through the palette so each card reads
-   as its own little world instead of a plain identical tile. Quiet at
-   rest, glows on hover. */
+   as its own little world instead of a plain identical tile. No hover
+   glow: these cards are static, so they don't react to the mouse. */
 .doodles-fallback .card {
   position: relative;
   overflow: hidden;
@@ -873,11 +887,6 @@ a { color: inherit; }
   border-radius: 50%;
   background: var(--dot, var(--c-blue));
   transition: transform .3s ease, box-shadow .3s ease;
-}
-
-.doodles-fallback .card:hover::before {
-  transform: scale(1.6);
-  box-shadow: 0 0 14px var(--dot, var(--c-blue));
 }
 
 .doodles-fallback .card:nth-child(1) { --dot: var(--c-orange); }
@@ -924,29 +933,6 @@ section[aria-label="Experience content"] { padding: 30px 8% 56px; }
 section[aria-label="Playground content"] { padding: 48px 8% 70px; }
 .contact-body { padding: 34px 8% 150px; }
 
-/* Running-head margin label — an editorial-magazine device (the sideways
-   folio/section number printed in a page's gutter) rather than a plain
-   heading. Sits in the left margin, opposite the comet trail's right-edge
-   rail, so the page reads like it has two intentional margins instead of
-   one centered column. */
-.section-mark {
-  position: absolute;
-  left: 2.5%;
-  top: 10%;
-  writing-mode: vertical-rl;
-  font-family: var(--font-mono);
-  font-size: .72rem;
-  letter-spacing: 3px;
-  color: var(--text-mute);
-  opacity: .55;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@media (max-width: 900px) {
-  .section-mark { display: none; }
-}
-
 /* One-page navigation: clicking a nav link jumps to #about/#projects/
    #playground/#contact. Offset the landing spot by the fixed nav's height
    so the section heading doesn't end up hidden underneath it. */
@@ -989,9 +975,9 @@ footer::before {
   background: linear-gradient(
     to bottom,
     transparent 55%,
-    rgba(247, 212, 171, .18) 70%,
-    rgba(240, 168, 201, .28) 85%,
-    rgba(237, 219, 156, .3) 100%
+    rgba(238, 166, 99, .18) 70%,
+    rgba(220, 123, 240, .28) 85%,
+    rgba(239, 217, 110, .3) 100%
   );
 }
 
@@ -1061,44 +1047,6 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   position: relative;
 }
 
-.hero-clouds {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Puffy, hand-cut-feeling shapes built from a few overlapping soft
-   radial-gradients rather than one flat oval — closer to a doodled cloud
-   than a geometric blob. Soft lavender-white (not flat white) and kept to
-   low opacity so they read as pale moonlit clouds drifting through the
-   dark sky — atmosphere, not a focal element. */
-.hero-cloud {
-  position: absolute;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 30% 60%, rgba(230, 224, 245, .4), transparent 55%),
-    radial-gradient(circle at 60% 35%, rgba(230, 224, 245, .32), transparent 60%),
-    radial-gradient(circle at 75% 65%, rgba(230, 224, 245, .36), transparent 55%);
-  filter: blur(3px);
-  opacity: .6;
-  animation: cloud-drift 55s linear infinite;
-}
-
-.hero-cloud-a { width: 260px; height: 90px; top: 12%; left: -20%; animation-duration: 60s; }
-.hero-cloud-b { width: 180px; height: 70px; top: 55%; left: -30%; animation-duration: 75s; animation-delay: -20s; opacity: .45; }
-.hero-cloud-c { width: 130px; height: 55px; top: 78%; left: -15%; animation-duration: 48s; animation-delay: -10s; opacity: .4; }
-
-@keyframes cloud-drift {
-  from { translate: 0 0; }
-  to { translate: 140vw 0; }
-}
-
-@media (max-width: 700px) {
-  .hero-clouds { display: none; }
-}
-
 /* Soft blurred nebula blob sitting behind the hero text — fills the left/
    background area with color now that the comet ribbon is gone, reusing
    the rainbow palette + blur technique already used for body::before/
@@ -1112,9 +1060,9 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   aspect-ratio: 1;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 35% 35%, rgba(213, 192, 246, .38), transparent 62%),
-    radial-gradient(circle at 68% 55%, rgba(115, 226, 242, .24), transparent 64%),
-    radial-gradient(circle at 48% 78%, rgba(248, 160, 200, .22), transparent 62%);
+    radial-gradient(circle at 35% 35%, rgba(183, 159, 244, .38), transparent 62%),
+    radial-gradient(circle at 68% 55%, rgba(96, 219, 237, .24), transparent 64%),
+    radial-gradient(circle at 48% 78%, rgba(220, 123, 240, .22), transparent 62%);
   filter: blur(70px);
   z-index: 0;
   pointer-events: none;
@@ -1212,8 +1160,8 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
      art in Jasmine's cosmic-creature moodboard reference, without going as
      far as literally re-rendering the illustration in that style. */
   filter:
-    drop-shadow(-2px 0 1px rgba(240, 168, 201, .35))
-    drop-shadow(2px 0 1px rgba(168, 224, 207, .35));
+    drop-shadow(-2px 0 1px rgba(220, 123, 240, .35))
+    drop-shadow(2px 0 1px rgba(144, 227, 105, .35));
 }
 
 @keyframes float {
@@ -1297,7 +1245,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   padding: 0;
   cursor: pointer;
   animation: float 7.5s ease-in-out infinite;
-  filter: drop-shadow(0 6px 16px rgba(61, 51, 79, .4));
+  filter: drop-shadow(0 6px 16px rgba(7, 8, 36, .4));
   transition: transform .3s;
 }
 
@@ -1345,7 +1293,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   color: var(--ink);
   border-radius: var(--radius-sm);
   padding: 20px 22px;
-  box-shadow: 0 30px 70px rgba(61, 51, 79, .5), 0 6px 18px rgba(61, 51, 79, .3);
+  box-shadow: 0 30px 70px rgba(7, 8, 36, .5), 0 6px 18px rgba(7, 8, 36, .3);
   opacity: 0;
   transform: translateY(8px) rotate(-2deg) scale(.96);
   pointer-events: none;
@@ -1357,16 +1305,16 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
    the DOM, so h4 here was a skipped heading level (WCAG 1.3.1). Matches
    the level already used by .doodles-fallback's equivalent content. */
 .planet-card h3 { font-family: 'Baloo 2', cursive; margin-bottom: 6px; }
-.planet-card p { font-size: .92rem; color: #3a3660; }
+.planet-card p { font-size: .92rem; color: #2a3085; }
 /* .tbd's sitewide color (--text-mute) is tuned for the dark page
    background (6.5:1 there) — on .planet-card's light --paper surface it
    drops to ~2.5:1 and fails AA. This override keeps the same "muted
    placeholder" feel at an equivalent 6.5:1 against --paper instead. */
-.planet-card .tbd { color: #5c5780; }
+.planet-card .tbd { color: #535997; }
 .planet-card code, .doodles-fallback code {
   font-family: monospace;
   font-size: .85em;
-  background: rgba(16, 12, 38, .08);
+  background: rgba(10, 11, 45, .08);
   padding: 1px 5px;
   border-radius: 4px;
 }
@@ -1439,7 +1387,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   border-radius: var(--radius-md);
   padding: 30px 24px;
   text-align: center;
-  box-shadow: 0 14px 26px -18px rgba(61, 51, 79, .6);
+  box-shadow: 0 14px 26px -18px rgba(7, 8, 36, .6);
   transition: transform .3s cubic-bezier(.2,.7,.3,1.1), box-shadow .3s ease, border-color .3s ease;
   /* Clips .sticker-thumb's bled top corners to the card's own radius. */
   overflow: hidden;
@@ -1487,7 +1435,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 .sticker-card:hover {
   transform: translateY(-7px);
   border-color: var(--c-pink);
-  box-shadow: 0 18px 30px -16px rgba(61, 51, 79, .55);
+  box-shadow: 0 18px 30px -16px rgba(7, 8, 36, .55);
 }
 
 /* playground/animations.html's real gallery of animation clips — a grid
@@ -1537,7 +1485,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   align-items: center;
   justify-content: center;
   padding: 60px 24px;
-  background: rgba(5, 3, 20, .88);
+  background: rgba(7, 9, 42, .88);
 }
 
 .theater-modal[hidden] { display: none; }
@@ -1619,7 +1567,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
 .rabbit-hop-glyph {
   display: block;
   width: 100%; height: 100%;
-  filter: drop-shadow(0 0 10px rgba(214, 198, 240, .6));
+  filter: drop-shadow(0 0 10px rgba(183, 159, 244, .6));
 }
 
 @keyframes rabbit-hop-across {
@@ -1714,14 +1662,7 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   border: 1.5px solid var(--panel-border);
   border-radius: 26px;
   overflow: hidden;
-  box-shadow: 0 14px 26px -18px rgba(61, 51, 79, .6);
-  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
-}
-
-.project-spread:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: 0 18px 30px -16px rgba(61, 51, 79, .55);
+  box-shadow: 0 14px 26px -18px rgba(7, 8, 36, .6);
 }
 
 .project-card {
@@ -1775,10 +1716,11 @@ footer .socials a:focus-visible::after { left: 0; right: 0; }
   transition: transform .4s ease;
 }
 
-/* The photo gets a subtle zoom off the whole card's hover, not its own —
-   one unified hover state for the merged card, matching the reference,
-   rather than the text and photo halves reacting independently. */
-.project-spread:hover .project-visual img { transform: scale(1.05); }
+/* The card itself doesn't react to hover, since clicking its text does
+   nothing. Only the parts that are links do: the photo zooms when you
+   hover the photo, and the button has its own hover. */
+.project-visual:hover img,
+.project-visual:focus-visible img { transform: scale(1.05); }
 
 @media (max-width: 760px) {
   .projects-list { grid-template-columns: 1fr; gap: 32px; }
@@ -1903,8 +1845,8 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   animation: mini-pulse 2.6s ease-in-out infinite;
   pointer-events: none;
   filter:
-    drop-shadow(-1.5px 0 1px rgba(240, 168, 201, .4))
-    drop-shadow(1.5px 0 1px rgba(168, 224, 207, .4));
+    drop-shadow(-1.5px 0 1px rgba(220, 123, 240, .4))
+    drop-shadow(1.5px 0 1px rgba(144, 227, 105, .4));
 }
 
 .hero-spark-a { top: -6%; right: 4%; width: 22px; height: 22px; }

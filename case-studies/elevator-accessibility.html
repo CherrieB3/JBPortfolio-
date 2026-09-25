@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elevator Accessibility — Case Study — Jasmine Bontha</title>
-    <meta name="description" content="A concept for helping visually impaired users navigate elevators independently, combining audio guidance, haptic feedback, and RFID personalization.">
+    <title>Elevator Accessibility | Case Study | Jasmine Bontha</title>
+    <meta name="description" content="A concept that uses sound, vibration, and personalized keycards to help people who are blind or have low vision ride the Empire State Building's elevators on their own, with confidence.">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
@@ -20,7 +20,7 @@
                 <li><a href="../index.html#about" data-page="about">About</a></li>
                 <li><a href="../index.html#projects" data-page="projects">Projects</a></li>
                 <li class="logo-slot">
-                    <a class="logo" href="../index.html" aria-label="Jasmine Bontha — Home">
+                    <a class="logo" href="../index.html" aria-label="Jasmine Bontha, Home">
                         <img class="logo-mark" src="../images/logo-jasmine.png" alt="Jasmine">
                     </a>
                 </li>
@@ -37,12 +37,13 @@
             <a class="case-back" href="../index.html#projects"><span class="arrow">←</span> Back to Projects</a>
             <p class="eyebrow">TEAM PROJECT • ACCESSIBILITY &amp; INCLUSIVE DESIGN • MARCH 2025</p>
             <h1>Elevator Accessibility</h1>
-            <p class="case-hook">A concept for making elevators easier and safer for visually impaired users to
-                navigate independently, combining audio guidance, haptic feedback, and personalized RFID access.</p>
+            <p class="case-hook">Most of us never think twice about riding an elevator. For someone who is blind or
+                has low vision, a packed elevator in the Empire State Building can mean hunting for buttons and
+                guessing which floor they're on. We designed ways to help them ride on their own, with confidence.</p>
         </section>
 
         <div class="case-mockup reveal">
-            <img src="../images/case-elevator-wide.svg" alt="Placeholder — swap in the featured concept screen or mockup">
+            <img src="../images/case-elevator-wide.jpg" alt="Three pieces of the concept: a 3D model of the tourist headphones with their swappable parts pulled apart, a mockup of arrow-shaped call buttons with braille, and a photo of a real elevator button panel">
         </div>
 
         <dl class="case-quickfacts reveal">
@@ -52,15 +53,15 @@
             </div>
             <div>
                 <dt>Team</dt>
-                <dd>Team project</dd>
+                <dd>Pj Jones, Jackson Lux, Neal Tembe, and me</dd>
             </div>
             <div>
                 <dt>Timeline</dt>
-                <dd>March 2025</dd>
+                <dd>March 2025, Interaction Design I</dd>
             </div>
             <div>
                 <dt>Methods</dt>
-                <dd>Research synthesis, concept prototyping</dd>
+                <dd>Research, storyboarding, concept prototyping, 3D modeling</dd>
             </div>
         </dl>
 
@@ -69,19 +70,21 @@
             <div class="case-overview-grid">
                 <div class="card">
                     <h3>Problem</h3>
-                    <p>Navigating elevators poses real challenges for visually impaired users: buttons that are hard
-                        to locate, minimal audio feedback, braille panels that become inaccessible in crowded
-                        elevators, and accessibility standards that are inconsistent from building to building.</p>
+                    <p>Imagine stepping into an elevator you can't see. The buttons are hard to find, there's barely
+                        any sound telling you what floor you're on, and when the car is packed you can't even reach the
+                        braille. At the Empire State Building, where crowds of tourists ride up to the observation
+                        decks every day, the elevators technically meet ADA requirements, but they weren't designed
+                        with visually impaired riders in mind.</p>
                 </div>
                 <div class="card">
                     <h3>Goal</h3>
-                    <p>Make navigation safer and more intuitive through RFID keycard integration, auditory feedback,
-                        and tactile button enhancements — reducing confusion and promoting independence in public
-                        and corporate buildings.</p>
+                    <p>Help visually impaired riders get where they're going on their own, without the guesswork,
+                        whether they work in the building every day or are visiting for the first time. We explored
+                        personalized keycards, audio guidance, and better tactile buttons to get there.</p>
                 </div>
                 <div class="card">
                     <h3>Impact</h3>
-                    <p class="tbd">This was a course concept, not a shipped product, so there's no real usage data
+                    <p class="tbd">This was a class concept, not a shipped product, so there's no real usage data
                         yet. [TBD: add outcomes if this gets built or tested.]</p>
                 </div>
             </div>
@@ -89,153 +92,229 @@
 
         <section class="case-chapter case-chapter--tint reveal">
             <div class="case-chapter-header"><span class="num">02</span><h2>Research</h2></div>
-            <p>Our research looked at existing technologies that assist visually impaired users through sensory
-                feedback. One study proposing a haptic wristband to guide users influenced our decision to build
-                similar guidance into a headphone-based concept instead — other haptic navigation devices we looked
-                at were functional but too bulky for everyday use, which pushed us toward a lighter, more wearable
-                solution. An article on multi-sensory navigation aids further shaped our decision to combine audio
-                cues with haptic feedback.</p>
+            <p>We started by learning how visually impaired people actually find their way through an elevator
+                today, one step at a time. Then we looked closely at the Empire State Building itself: who rides its
+                elevators, where they're going, and what's already there to help.</p>
             <div class="case-callout-grid">
                 <div class="card">
-                    <h3>Key problems identified</h3>
+                    <h3>How people find their way today</h3>
+                    <ol class="case-list case-list--numbered">
+                        <li>Find the recess in the wall where the elevator is, then feel along either side for the
+                            call buttons.</li>
+                        <li>Those buttons usually have no special markings. There are just two of them, one for up
+                            and one for down.</li>
+                        <li>Inside, check either side of the door for the button panel, then read the braille to
+                            find your floor.</li>
+                        <li>Floor buttons are usually split into two columns, evens and odds.</li>
+                        <li>Finally, check the braille outside the door to make sure you got off on the right
+                            floor.</li>
+                    </ol>
+                </div>
+                <div class="card">
+                    <h3>The Empire State Building</h3>
                     <ul class="case-list">
-                        <li>Difficulty locating elevator buttons and identifying the correct floor</li>
-                        <li>Minimal audio or haptic feedback, leading to confusion mid-ride</li>
-                        <li>Crowded conditions that make braille panels hard to reach or read</li>
-                        <li>Inconsistent accessibility standards from one elevator to the next</li>
+                        <li>Three floors are for tourists: the 80th, the 86th, and the 102nd.</li>
+                        <li>It's ADA compliant and welcomes service animals, but it isn't especially focused on
+                            accessibility.</li>
+                        <li>From our research, the elevators seem to use a touch interface.</li>
+                        <li>The tourist elevators give audio info and play a video on the ceiling, an experience
+                            built around seeing.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>What's there now, and where it falls short</h3>
+                    <ul class="case-list">
+                        <li>There's braille, hand guards, and an elevator attendant, but the attendant presses the
+                            button and then isn't in the car for the whole ride.</li>
+                        <li>With how packed these elevators get, the braille can be hard to reach at all.</li>
+                        <li>There's a little audio, like a chime when you arrive, but not enough to really know where
+                            you are.</li>
                     </ul>
                 </div>
             </div>
             <blockquote class="case-quote">
-                <p class="tbd">[TBD — add a real quote from a research interview or accessibility consultant once
-                    we have one on record.]</p>
+                <p class="tbd">[TBD: add a real quote from a research interview or accessibility consultant once we
+                    have one on record.]</p>
                 <cite>Research participant</cite>
             </blockquote>
-            <figure>
-                <div class="case-visual-box">
-                    <img src="../images/case-elevator-research.svg" alt="Placeholder — swap in the competitive/comparative research board">
+            <div class="case-split-visual">
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-elevator-panel.jpg" alt="A tall elevator button panel with two columns of floor buttons for the upper floors, each with a small braille label">
+                    </div>
+                    <figcaption>A typical floor panel: two columns of small buttons with small braille labels. Now
+                        picture reaching it in a crowded car.</figcaption>
+                </figure>
+                <div>
+                    <h3>Learning from other tools</h3>
+                    <p>We also looked at tools that already help visually impaired people through sound and touch.
+                        One study used a haptic wristband to guide people, and it got us thinking about putting that
+                        kind of guidance into headphones instead. The other haptic navigation devices we found worked,
+                        but they were too bulky to wear every day, which pushed us toward something lighter. An
+                        article on navigation aids that use more than one sense convinced us to pair audio cues with
+                        vibration.</p>
                 </div>
-                <figcaption>[Add: research board or comparison matrix]</figcaption>
-            </figure>
+            </div>
         </section>
 
         <section class="case-chapter reveal">
             <div class="case-chapter-header"><span class="num">03</span><h2>Process</h2></div>
-            <p>No single fix covered every situation — a crowded car, an unfamiliar building, a rider who'd rather
-                skip extra hardware.</p>
+            <p>The Empire State Building serves two very different groups: people who work there and ride the same
+                elevators every day, and tourists who are visiting once. A single fix wasn't going to work for both.</p>
             <p class="case-quote" style="padding-left:20px; font-size:1.3rem;">
-                So we split the concept into two layers: a wearable for real-time guidance, and baseline interface
-                changes that help everyone, device or not.
+                So we designed three pieces: a keycard for employees, headphones for tourists, and small changes to
+                the elevator itself that help everyone, device or not.
             </p>
             <div class="case-split-visual">
                 <div>
-                    <h3>Tourist Headphones</h3>
+                    <h3>Employee RFID keycards</h3>
                     <ul class="case-list">
-                        <li>Bluetooth-enabled headphones that deliver audio guidance at specific trigger zones</li>
-                        <li>Open-back, adjustable design for comfort and awareness of surrounding sound</li>
-                        <li>Hot-swappable parts for quick maintenance and hygiene</li>
-                        <li>Haptic vibration alerts when nearing other headphone users, to help prevent collisions</li>
+                        <li>Employees already carry keycards to get into the building and onto certain floors.</li>
+                        <li>Each card could hold a personal profile with language settings, favorite floors, and
+                            accessibility features.</li>
+                        <li>Those features could include voice guidance, doors that close more slowly, and automatic
+                            floor selection, so there's no searching for buttons or wondering what floor you're on.</li>
                     </ul>
                 </div>
                 <figure>
                     <div class="case-visual-box">
-                        <img src="../images/case-elevator-solution.svg" alt="Placeholder — swap in the headphone concept sketch">
+                        <img src="../images/case-elevator-rfid.jpg" alt="A hand tapping a white keycard against a wall-mounted card reader beside a glass door">
                     </div>
-                    <figcaption>[Add: Tourist Headphones concept sketch]</figcaption>
+                    <figcaption>Representative imagery: employees already tap keycards like this every day.</figcaption>
                 </figure>
             </div>
             <div class="case-split-visual case-split-visual--reverse">
                 <div>
-                    <h3>Quality-of-life elevator changes</h3>
+                    <h3>Small changes to the elevator itself</h3>
                     <ul class="case-list">
-                        <li>Replacing circular call buttons with directional arrow buttons for easier orientation</li>
-                        <li>Pairing classic braille buttons with a digital RFID pad for personalized interaction</li>
-                        <li>Adding auditory floor cues for real-time feedback and better spatial awareness</li>
+                        <li>Swap the round call buttons for arrow-shaped ones, so you can feel which way is up.</li>
+                        <li>Keep the classic, familiar buttons with braille, and add a digital pad that responds to
+                            the RFID cards.</li>
+                        <li>Announce each floor out loud, so you always know where you are.</li>
                     </ul>
+                    <p>The catch: these changes broaden the scope of the project, and there are edge cases we'd still
+                        need to work through.</p>
                 </div>
                 <figure>
                     <div class="case-visual-box">
-                        <img src="../images/case-elevator-research.svg" alt="Placeholder — swap in the interface change diagram">
+                        <img src="../images/case-elevator-buttons.jpg" alt="Mockup of an elevator call panel with a triangle pointing up and a triangle pointing down, each with braille dots">
                     </div>
-                    <figcaption>[Add: interface-change diagram]</figcaption>
+                    <figcaption>Our arrow-shaped call buttons, with braille on each.</figcaption>
+                </figure>
+            </div>
+            <div class="case-split-visual">
+                <div>
+                    <h3>Tourist headphones</h3>
+                    <ul class="case-list">
+                        <li>A Bluetooth system that plays audio guidance when you reach certain spots in the
+                            building.</li>
+                        <li>A comfortable, open-back design, so you can still hear what's going on around you.</li>
+                        <li>An adjustable fit for all different head sizes and shapes.</li>
+                        <li>Parts that swap out quickly, for easy repairs and cleaning between visitors.</li>
+                        <li>A vibration when you get close to someone else wearing a pair, so you don't bump into
+                            each other.</li>
+                    </ul>
+                    <p>The catch: they only make sense in the busiest parts of the building, and they could be a
+                        problem for someone who also has trouble hearing.</p>
+                </div>
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-elevator-headphones.jpg" alt="3D model of the tourist headphones, with the ear cup cover, batteries, and circuit board pulled apart to show the swappable parts">
+                    </div>
+                    <figcaption>A 3D model of the headphones, pulled apart to show the swappable parts.</figcaption>
                 </figure>
             </div>
         </section>
 
         <section class="case-chapter case-chapter--tint reveal">
             <div class="case-chapter-header"><span class="num">04</span><h2>Design Iterations</h2></div>
-            <p>Concept sketches and flow iterations from this project — swap the placeholders below for the real
-                artifacts as they're scanned/exported.</p>
-            <div class="case-gallery">
-                <figure>
-                    <div class="case-visual-box">
-                        <img src="../images/case-elevator-research.svg" alt="Placeholder — swap in early sketch">
-                    </div>
-                    <figcaption>[Add: early headphone sketch]</figcaption>
-                </figure>
-                <figure>
-                    <div class="case-visual-box">
-                        <img src="../images/case-elevator-solution.svg" alt="Placeholder — swap in a mid-fidelity wireframe">
-                    </div>
-                    <figcaption>[Add: mid-fidelity interface wireframe]</figcaption>
-                </figure>
-                <figure>
-                    <div class="case-visual-box">
-                        <img src="../images/case-elevator-wide.svg" alt="Placeholder — swap in a revised iteration">
-                    </div>
-                    <figcaption>[Add: revised iteration after feedback]</figcaption>
-                </figure>
+            <p>We storyboarded both ideas to see how they'd feel from the rider's side.</p>
+            <h3>Storyboard: Jeff and the headphones</h3>
+            <div class="case-mockup" style="margin-top:20px;">
+                <img src="../images/case-elevator-storyboard-headphones.jpg" alt="Nine-panel storyboard of Jeff, a blind visitor with a cane, picking up free audio-guide headphones at the Empire State Building, riding the elevator, nearly bumping into another headphone wearer, getting a warning vibration, and enjoying the top with a friend">
             </div>
+            <ol class="case-list case-list--numbered" style="margin-top:28px;">
+                <li>Jeff arrives at the Empire State Building.</li>
+                <li>As he walks in, the PA system tells visitors about the audio guides to the right.</li>
+                <li>With his free pair of headphones, Jeff hears fun facts about the building while it guides him
+                    where he needs to go.</li>
+                <li>His audio cues get him to the elevator safely. They also tell him which floor it's heading to,
+                    and warn him right before it starts moving so he can steady himself.</li>
+                <li>Uh oh. Getting off the elevator, Jeff almost walks into someone else wearing headphones.</li>
+                <li>Luckily, the headphones can sense each other. They vibrate and let each person know someone is
+                    close.</li>
+                <li>So they avoid bumping into each other.</li>
+                <li>Now Jeff can reach the top of the Empire State Building safely.</li>
+                <li>He gets to enjoy the moment with his friend.</li>
+            </ol>
+            <h3 style="margin-top:56px;">Storyboard: the RFID keycard</h3>
+            <div class="case-mockup" style="margin-top:20px;">
+                <img src="../images/case-elevator-storyboard-rfid.jpg" alt="Five-panel storyboard: an employee is handed a keycard, walks to the elevator, taps it on the reader to unlock more floors, then a blind rider and a tourist each use the panel to reach their floors">
+            </div>
+            <ol class="case-list case-list--numbered" style="margin-top:28px;">
+                <li>Employees are given keycards.</li>
+                <li>The keycard lets them reach floors that aren't open to everyone.</li>
+                <li>They just tap it on the reader, and the other buttons unlock.</li>
+                <li>It also makes it easier for people who are blind to get to the observation deck.</li>
+                <li>And tourists can reach their floor without any room for error.</li>
+            </ol>
         </section>
 
         <section class="case-chapter reveal">
             <div class="case-chapter-header"><span class="num">05</span><h2>Final Solution</h2></div>
-            <p>Our concept enhanced elevator accessibility with three core features:</p>
+            <p>Our concept brings three pieces together, so help is there whether you work in the building or are
+                visiting for the day:</p>
             <div class="case-mockup">
-                <img src="../images/case-elevator-wide.svg" alt="Placeholder — swap in final concept renders or prototype screens">
+                <img src="../images/case-elevator-wide.jpg" alt="The final concept: the tourist headphones, the arrow-shaped braille call buttons, and the elevator panel they'd improve on">
             </div>
             <div class="case-feature-split">
                 <div class="card">
-                    <h3>Audio &amp; haptic guidance</h3>
-                    <p>Headphones that guide users and announce floors through sound and vibration.</p>
+                    <h3>Tourist headphones</h3>
+                    <p>Audio guidance through the building, floor announcements in the elevator, and a vibration
+                        when another wearer is close.</p>
                 </div>
                 <div class="card">
-                    <h3>Redesigned tactile interface</h3>
-                    <p>Directional arrow buttons and auditory floor cues for easier, independent navigation.</p>
+                    <h3>A friendlier panel</h3>
+                    <p>Arrow-shaped call buttons you can feel, classic braille buttons, and every floor announced out
+                        loud.</p>
                 </div>
                 <div class="card">
-                    <h3>Personalized RFID access</h3>
-                    <p>Keycards that automatically load a user's accessibility settings on entry.</p>
+                    <h3>Personalized keycards</h3>
+                    <p>Tap your card and the elevator loads your settings: your language, your floor, voice guidance,
+                        and slower doors.</p>
                 </div>
             </div>
         </section>
 
         <section class="case-chapter case-chapter--tint reveal">
             <div class="case-chapter-header"><span class="num">06</span><h2>Results</h2></div>
-            <p class="tbd">This was a course concept rather than a shipped product, so there's no real usage data to
-                report yet — these are the metrics we'd want to track if it were built and tested.</p>
+            <p class="tbd">This was a class concept, not a shipped product, so there's no real usage data to report
+                yet. These are the things we'd want to measure if it were built and tested.</p>
             <div class="case-impact-grid">
                 <div>
                     <div class="num"><span class="tbd">[TBD]</span></div>
-                    <div class="label">Reduction in wayfinding confusion</div>
+                    <div class="label">Less confusion finding the right floor</div>
                 </div>
                 <div>
                     <div class="num"><span class="tbd">[TBD]</span></div>
-                    <div class="label">Independent-navigation success rate</div>
+                    <div class="label">Rides completed without needing help</div>
                 </div>
                 <div>
                     <div class="num"><span class="tbd">[TBD]</span></div>
-                    <div class="label">Accessibility-consultant approval</div>
+                    <div class="label">Feedback from accessibility consultants</div>
                 </div>
             </div>
         </section>
 
         <section class="case-chapter reveal">
             <div class="case-chapter-header"><span class="num">07</span><h2>Reflection</h2></div>
-            <p class="case-reflection">Our goal was to create an inclusive, intuitive system that empowers visually
-                impaired users to navigate elevators independently and confidently. By combining haptic feedback,
-                audio guidance, and RFID personalization, our solution bridges the gap between accessibility and
-                modern design — proof that innovation and inclusivity can coexist in everyday environments.</p>
+            <p class="case-reflection">We wanted visually impaired riders to be able to step into an elevator and
+                get where they're going on their own, with confidence. Pairing sound, vibration, and personalized
+                keycards showed us that accessible design and modern design don't have to be separate things.</p>
+            <p>Every idea came with a catch. Headphones don't help someone who also has trouble hearing, and changing
+                the elevator itself opens up edge cases. Designing for more than one kind of person meant we needed
+                more than one answer. The small, everyday moments most people never think about are exactly where
+                good design can make the biggest difference.</p>
         </section>
 
         <nav class="case-prevnext" aria-label="More case studies">
@@ -253,7 +332,7 @@
     <footer>
         <div class="horizon-glow" aria-hidden="true"></div>
         <svg class="city-skyline" viewBox="0 0 600 140" preserveAspectRatio="none" aria-hidden="true">
-            <g fill="#251f30">
+            <g fill="#0a0b30">
                 <rect x="0" y="85" width="36" height="55" />
                 <rect x="30" y="55" width="26" height="85" />
                 <rect x="60" y="95" width="40" height="45" />
@@ -271,9 +350,9 @@
                 <rect x="535" y="95" width="38" height="45" />
                 <rect x="578" y="70" width="22" height="70" />
             </g>
-            <line x1="184" y1="25" x2="184" y2="8" stroke="#251f30" stroke-width="3" stroke-linecap="round" />
-            <circle cx="184" cy="6" r="2.5" fill="#f6e093" />
-            <g fill="#f6e093" opacity=".85">
+            <line x1="184" y1="25" x2="184" y2="8" stroke="#0a0b30" stroke-width="3" stroke-linecap="round" />
+            <circle cx="184" cy="6" r="2.5" fill="#efd96e" />
+            <g fill="#efd96e" opacity=".85">
                 <rect x="38" y="68" width="4" height="4" />
                 <rect x="46" y="80" width="4" height="4" />
                 <rect x="105" y="55" width="4" height="4" />
@@ -288,7 +367,7 @@
                 <rect x="516" y="75" width="4" height="4" />
             </g>
         </svg>
-        <h2 class="hand footer-title reveal">Let's build something <span class="gradient">amazing</span></h2>
+        <h2 class="hand footer-title reveal"><span class="gradient">Thanks for stopping by!</span></h2>
         <p class="eyebrow" style="margin-top:20px;">GET IN TOUCH</p>
         <a class="footer-email" href="mailto:jflower2k6@gmail.com">jflower2k6@gmail.com</a>
         <div class="socials">

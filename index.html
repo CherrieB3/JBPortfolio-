@@ -17,12 +17,12 @@
                 <!-- Full six-stop rainbow. reflect (not repeat) mirrors the run at each
                      tile boundary (red...purple...red) so there's no hard seam. -->
                 <linearGradient id="trailGradient" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
-                    <stop offset="0%" stop-color="#f3c4cf" />
-                    <stop offset="20%" stop-color="#fed5a4" />
-                    <stop offset="40%" stop-color="#f6e093" />
-                    <stop offset="60%" stop-color="#b8efd4" />
-                    <stop offset="80%" stop-color="#acdff7" />
-                    <stop offset="100%" stop-color="#d5c0f6" />
+                    <stop offset="0%" stop-color="#f0b1f6" />
+                    <stop offset="20%" stop-color="#eea663" />
+                    <stop offset="40%" stop-color="#efd96e" />
+                    <stop offset="60%" stop-color="#90e369" />
+                    <stop offset="80%" stop-color="#6cbeef" />
+                    <stop offset="100%" stop-color="#b79ff4" />
                 </linearGradient>
                 <clipPath id="trailReveal" clipPathUnits="userSpaceOnUse">
                     <rect id="trailRevealRect" x="0" y="0" width="0" height="0" />
@@ -50,7 +50,7 @@
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
                     d="M12,1 L14.25,8.1 L21.53,6.5 L16.5,12 L21.53,17.5 L14.25,15.9 L12,23 L9.75,15.9 L2.47,17.5 L7.5,12 L2.47,6.5 L9.75,8.1 Z"
-                    fill="#f0c44a" />
+                    fill="#e2e7fc" />
             </svg>
         </span>
     </button>
@@ -87,15 +87,6 @@
 
     <main id="main-content">
         <section class="hero">
-            <!-- Soft drifting clouds — slow, low-contrast, layered behind
-                 everything else in the hero. Plain rounded shapes rather than a
-                 literal cloud illustration, kept deliberately simple/hand-cut. -->
-            <div class="hero-clouds" aria-hidden="true">
-                <span class="hero-cloud hero-cloud-a"></span>
-                <span class="hero-cloud hero-cloud-b"></span>
-                <span class="hero-cloud hero-cloud-c"></span>
-            </div>
-
             <!-- Soft rainbow nebula glow, filling the space behind the hero
                  text now that the comet ribbon is gone — a blurred radial-
                  gradient blob (the same procedural technique as body::before/
@@ -120,24 +111,23 @@
                 </button>
                 <svg class="hero-spark hero-spark-a" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 C13 6 14 9 24 12 C14 15 13 18 12 24 C11 18 10 15 0 12 C10 9 11 6 12 0 Z"
-                        fill="#f8a0c8" />
+                        fill="#dc7bf0" />
                 </svg>
                 <svg class="hero-spark hero-spark-b" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 0 C13 6 14 9 24 12 C14 15 13 18 12 24 C11 18 10 15 0 12 C10 9 11 6 12 0 Z"
-                        fill="#9fe9d3" />
+                        fill="#7ce3bd" />
                 </svg>
             </div>
         </section>
 
 
         <section id="about" class="page-hero">
-            <span class="section-mark" aria-hidden="true">№ 01 — About</span>
             <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
                 <defs>
                     <linearGradient id="aboutRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#acdff7" />
-                        <stop offset="50%" stop-color="#d5c0f6" />
-                        <stop offset="100%" stop-color="#f8a0c8" />
+                        <stop offset="0%" stop-color="#6cbeef" />
+                        <stop offset="50%" stop-color="#b79ff4" />
+                        <stop offset="100%" stop-color="#dc7bf0" />
                     </linearGradient>
                 </defs>
                 <path d="M-20,180 C150,260 220,120 380,160 C520,190 560,80 700,120 C850,155 900,280 1020,220"
@@ -226,47 +216,46 @@
         </section>
 
         <section id="projects" class="page-hero" style="min-height:auto; padding-bottom:0;">
-            <span class="section-mark" aria-hidden="true">№ 02 — Projects</span>
             <h2 class="reveal">Projects</h2>
             <p class="eyebrow" style="margin-top:14px;">SELECTED WORK ✦</p>
         </section>
 
         <section aria-label="Projects" class="projects-list">
-            <article class="project-spread reveal-fade" style="--accent:#fed5a4; --accent-deep:#a45518;">
+            <article class="project-spread reveal-fade" style="--accent:#eea663; --accent-deep:#98521c;">
                 <div class="project-card">
                     <h3>Comet Commute</h3>
-                    <p>A concept for reducing parking stress at UT Dallas by bringing real-time availability and
-                        predictive suggestions into the campus app students already use.</p>
+                    <p>Parking at UT Dallas can quietly ruin a student's morning. A concept that shows you where the
+                        open spots are, right inside the campus app you already have.</p>
                     <div class="project-tags">
                         <span>Team Project</span><span>UX Research</span><span>May 2025</span>
                     </div>
                     <a class="btn" href="case-studies/comet-commute.html">View Case Study <span class="arrow">→</span></a>
                 </div>
                 <a class="project-visual" href="case-studies/comet-commute.html" aria-label="View Comet Commute case study">
-                    <img src="images/orbit-comet.svg" alt="Comet Commute">
+                    <img src="images/orbit-comet.jpg" alt="Comet Commute">
                 </a>
             </article>
 
-            <article class="project-spread reveal-fade" style="--accent:#acdff7; --accent-deep:#28658f;">
+            <article class="project-spread reveal-fade" style="--accent:#6cbeef; --accent-deep:#3058c3;">
                 <div class="project-card">
                     <h3>Elevator Accessibility</h3>
-                    <p>A concept for making elevators easier and safer for visually impaired users to navigate
-                        independently, combining audio guidance, haptic feedback, and personalized RFID access.</p>
+                    <p>Helping people who are blind or have low vision ride the Empire State Building's elevators on
+                        their own, with sound, vibration, and personalized keycards.</p>
                     <div class="project-tags">
                         <span>Team Project</span><span>Accessibility</span><span>March 2025</span>
                     </div>
                     <a class="btn" href="case-studies/elevator-accessibility.html">View Case Study <span class="arrow">→</span></a>
                 </div>
                 <a class="project-visual" href="case-studies/elevator-accessibility.html" aria-label="View Elevator Accessibility case study">
-                    <img src="images/orbit-elevator.svg" alt="Elevator Accessibility">
+                    <img src="images/orbit-elevator.jpg" alt="Elevator Accessibility">
                 </a>
             </article>
 
-            <article class="project-spread reveal-fade" style="--accent:#d5c0f6; --accent-deep:#6d4ba1;">
+            <article class="project-spread reveal-fade" style="--accent:#b79ff4; --accent-deep:#7253d0;">
                 <div class="project-card">
                     <h3>DreamScape</h3>
-                    <p>A speculative app for visualizing and reflecting on dreams, designed around the prompt: what
-                        might people use in the future?</p>
+                    <p>A speculative app that helps you hold on to your dreams and reflect on them, designed around
+                        one prompt: what might people use in the future?</p>
                     <div class="project-tags">
                         <span>Designathon</span><span>Speculative Design</span><span>Oct 2025</span>
                     </div>
@@ -277,11 +266,11 @@
                 </a>
             </article>
 
-            <article class="project-spread reveal-fade" style="--accent:#b8efd4; --accent-deep:#2e815b;">
+            <article class="project-spread reveal-fade" style="--accent:#90e369; --accent-deep:#28713e;">
                 <div class="project-card">
                     <h3>EcoLink*</h3>
-                    <p>An IoT-based platform connecting real-time climate and wildlife data for rangers,
-                        researchers, and citizen scientists.</p>
+                    <p>An IoT platform that brings live climate and wildlife data together, so rangers, researchers,
+                        and citizen scientists can act while it still matters.</p>
                     <div class="project-tags">
                         <span>Solo Project</span><span>UX Research</span><span>2025</span>
                     </div>
@@ -294,13 +283,12 @@
         </section>
 
         <section id="playground" class="page-hero" style="min-height:auto; padding-bottom:0;">
-            <span class="section-mark" aria-hidden="true">№ 03 — Playground</span>
             <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
                 <defs>
                     <linearGradient id="playgroundRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#b8efd4" />
-                        <stop offset="50%" stop-color="#f6e093" />
-                        <stop offset="100%" stop-color="#fed5a4" />
+                        <stop offset="0%" stop-color="#90e369" />
+                        <stop offset="50%" stop-color="#efd96e" />
+                        <stop offset="100%" stop-color="#eea663" />
                     </linearGradient>
                 </defs>
                 <path d="M-20,250 C100,150 180,340 300,260 C420,180 500,340 620,260 C740,180 820,340 940,260 C980,240 1000,250 1020,250"
@@ -312,9 +300,9 @@
                     fill="none" stroke="url(#squiggleGrad)" stroke-width="4" stroke-linecap="round" />
                 <defs>
                     <linearGradient id="squiggleGrad" x1="0" y1="0" x2="220" y2="0" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#f3c4cf" />
-                        <stop offset="50%" stop-color="#f6e093" />
-                        <stop offset="100%" stop-color="#d5c0f6" />
+                        <stop offset="0%" stop-color="#f0b1f6" />
+                        <stop offset="50%" stop-color="#efd96e" />
+                        <stop offset="100%" stop-color="#b79ff4" />
                     </linearGradient>
                 </defs>
             </svg>
@@ -356,21 +344,20 @@
         </section>
 
         <section id="contact" class="page-hero" style="min-height:auto; padding-bottom:0;">
-            <span class="section-mark" aria-hidden="true">№ 04 — Contact</span>
             <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
                 <defs>
                     <linearGradient id="contactRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#d5c0f6" />
-                        <stop offset="50%" stop-color="#f8a0c8" />
-                        <stop offset="100%" stop-color="#acdff7" />
+                        <stop offset="0%" stop-color="#b79ff4" />
+                        <stop offset="50%" stop-color="#dc7bf0" />
+                        <stop offset="100%" stop-color="#6cbeef" />
                     </linearGradient>
                 </defs>
                 <path d="M-20,300 C200,220 300,380 500,300 C700,220 800,380 1020,300"
                     stroke="url(#contactRibbon)" stroke-width="90" stroke-linecap="round" opacity=".18" />
             </svg>
-            <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#f8a0c8" /></svg>
-            <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#acdff7" /></svg>
-            <svg class="mini-spark spark-c" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#f6e093" /></svg>
+            <svg class="mini-spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#dc7bf0" /></svg>
+            <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#6cbeef" /></svg>
+            <svg class="mini-spark spark-c" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#efd96e" /></svg>
             <h2 class="reveal">Let's talk</h2>
             <p class="eyebrow" style="margin-top:14px;">Since you made it all the way here, why not send a message!</p>
         </section>
@@ -409,12 +396,12 @@
         <svg class="bg-squiggle" viewBox="0 0 1000 500" fill="none" preserveAspectRatio="none" aria-hidden="true">
             <defs>
                 <linearGradient id="footerRibbon" x1="0" y1="0" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#f3c4cf" />
-                    <stop offset="20%" stop-color="#fed5a4" />
-                    <stop offset="40%" stop-color="#f6e093" />
-                    <stop offset="60%" stop-color="#b8efd4" />
-                    <stop offset="80%" stop-color="#acdff7" />
-                    <stop offset="100%" stop-color="#d5c0f6" />
+                    <stop offset="0%" stop-color="#f0b1f6" />
+                    <stop offset="20%" stop-color="#eea663" />
+                    <stop offset="40%" stop-color="#efd96e" />
+                    <stop offset="60%" stop-color="#90e369" />
+                    <stop offset="80%" stop-color="#6cbeef" />
+                    <stop offset="100%" stop-color="#b79ff4" />
                 </linearGradient>
             </defs>
             <path d="M-20,250 C200,100 300,400 500,250 C700,100 800,400 1020,250"
@@ -428,7 +415,7 @@
              site's line-art convention. -->
         <div class="horizon-glow" aria-hidden="true"></div>
         <svg class="city-skyline" viewBox="0 0 600 140" preserveAspectRatio="none" aria-hidden="true">
-            <g fill="#251f30">
+            <g fill="#0a0b30">
                 <rect x="0" y="85" width="36" height="55" />
                 <rect x="30" y="55" width="26" height="85" />
                 <rect x="60" y="95" width="40" height="45" />
@@ -449,9 +436,9 @@
             <!-- A little antenna on the tallest tower, and a scatter of lit
                  windows — small, warm, hand-placed touches rather than a
                  repeating pattern. -->
-            <line x1="184" y1="25" x2="184" y2="8" stroke="#251f30" stroke-width="3" stroke-linecap="round" />
-            <circle cx="184" cy="6" r="2.5" fill="#f6e093" />
-            <g fill="#f6e093" opacity=".85">
+            <line x1="184" y1="25" x2="184" y2="8" stroke="#0a0b30" stroke-width="3" stroke-linecap="round" />
+            <circle cx="184" cy="6" r="2.5" fill="#efd96e" />
+            <g fill="#efd96e" opacity=".85">
                 <rect x="38" y="68" width="4" height="4" />
                 <rect x="46" y="80" width="4" height="4" />
                 <rect x="105" y="55" width="4" height="4" />

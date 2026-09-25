@@ -85,82 +85,70 @@ Reuse these tokens rather than inventing new ones so the site stays visually
 coherent as pages are added. Defined as CSS custom properties at the top of
 `css/style.css`.
 
-### Art direction: Bee and PuppyCat mood
+### Art direction: Jasmine's own Carrd site (current palette)
 
-The rainbow palette was repainted from vivid neon to soft, dusty pastel
-hues, at Jasmine's direction: capture the atmosphere, palette, softness,
-whimsy, and dreamy sci-fi feel of *Bee and PuppyCat* — "a magical mailbox
-floating in space" — without copying the show's characters/assets. **This
-was first tried as a full light-mode flip (cream background, dark plum
-text) and Jasmine rejected it** ("I don't like it") — the background is
-back to the site's original dark cosmic void (`#050314`). What survived
-from that attempt, by her explicit follow-up direction: the pastel accent
-palette itself, `Baloo 2` as the display font, and reworked/recolored
-versions of the decorative extras added alongside the light-mode attempt
-(drifting clouds, occasional shooting stars, the floating mail envelope,
-warm plum-tinted shadows instead of flat black). **Do not reintroduce a
-light/cream background** — that direction was tried and explicitly turned
-down; this is a dark theme with a pastel accent palette, not a light-mode
-palette. Every rainbow color token kept its **original name** (`--c-red`,
-`--d-blue`, `--text`, etc.) even though the hue changed, so every rule
-reading `var(--c-red)` picked up the new palette with zero changes to
-that rule — keep extending the palette this same way (new value, same
-slot) rather than introducing parallel new tokens.
+The whole palette was shifted to match a site Jasmine designed herself,
+**sqeakerz.carrd.co** (she shared a screenshot, since the site's CSS
+couldn't be fetched from this environment): a deep, saturated **cobalt
+navy** night sky with white/periwinkle four-point sparkles, a **vivid**
+rainbow (lime → sky → violet → magenta banner, full saturated rainbow in
+her art), electric cobalt accents, and **violet buttons**. This replaced
+the earlier *Bee and PuppyCat* dusty-pastel palette (and before that, a
+deep indigo `#1c1840`). What did NOT change: it's still a dark theme
+(a full light/cream mode was tried long ago and rejected, so don't bring
+that back), `Baloo 2` is still the display font, and every token kept
+its **original name** (`--c-red`, `--d-blue`, `--text`, etc.) with a new
+value, so every rule reading `var(--c-red)` picked up the new palette
+with no other changes. Keep extending the palette this same way (new
+value, same slot) rather than adding parallel tokens.
 
-**Color** — two tiers of the same rainbow, now pastel, back to their
-original functional meaning now that the background is dark again:
-soft/light (`--c-*`) is the vivid-on-dark decorative tier (glows, thin
-borders, small dots, planet fills); deep/muted (`--d-*`) is for AA-safe
-text on the light nav/paper surfaces, and for white text sitting on top
-of a button/badge fill — **the soft tier is too light for white text to
-sit on** (that's what broke during the brief light-mode attempt: `.btn`,
-`.playground-tab.is-active`, etc. were pointing at the soft tier and
-failed contrast; always reach for the deep tier for that). Every pair
-below was checked against both white and `#fdf3e7` (the paper/nav color)
-at build time — if you introduce a new slot, verify it the same way
-rather than eyeballing it. Jasmine later asked for the palette "a bit
-more saturated" — every value below was bumped (~+16% HSL saturation on
-the soft tier, ~+8% on the deep tier, hue/lightness held constant) and
-rechecked against the same two backgrounds; the deep tier's smaller boost
-was deliberate to keep every pairing at or above the 4.5:1 AA minimum
-(`--d-green` has the tightest margin, ~4.6:1 — don't push it further
-without rechecking contrast).
+**Color** — two tiers of the same rainbow. Soft (`--c-*`) is the vivid
+decorative tier for use on the dark background (glows, thin borders,
+dots, text accents); deep (`--d-*`) is for white text sitting on a
+button/badge fill and for text on the light `--paper` surface. **Never put
+white text on the soft tier.** Every pair below was contrast-checked at
+build time (soft tier ≥ 5.8:1 on `--bg`; deep tier ≥ 5.1:1 against both
+white and `--paper`); verify any new slot the same way rather than
+eyeballing it. After the first pass Jasmine asked to "tone down the
+saturation a little bit": every color in this palette (surfaces, both
+tiers, glows, stars, shadows, mockup backgrounds) was scaled to 80% of
+its HSL saturation with hue and lightness held, and the values below are
+that toned version. Nudge by that same kind of uniform scaling if asked
+again, rather than changing individual hues.
 
-| Slot | Soft (`--c-*`, decorative on dark) | Deep (`--d-*`, AA text-on-nav / white-on-fill) |
+| Slot | Soft (`--c-*`, decorative on dark) | Deep (`--d-*`, white-on-fill / text-on-paper) |
 |---|---|---|
-| Coral (was red) | `#f9a291` | `#b13c5a` |
-| Peach (was orange) | `#fed5a4` | `#a45518` |
-| Muted gold (was yellow) | `#f6e093` | `#806418` |
-| Pale mint (was green) | `#b8efd4` | `#2e815b` |
-| Sky blue (was blue) | `#acdff7` | `#28658f` |
-| Soft lavender (was purple) | `#d5c0f6` | `#6d4ba1` |
-| Rose pink (accent only) | `#f8a0c8` | — (reuse `--d-red` if a deep pink is needed) |
-| Glowing teal/cyan (accent only) | `#73e2f2` | — |
+| Red | `#f17d89` | `#b13556` |
+| Orange | `#eea663` | `#98521c` |
+| Yellow | `#efd96e` | `#6e580c` |
+| Lime green | `#90e369` | `#28713e` |
+| Sky / cobalt blue | `#6cbeef` | `#3058c3` |
+| Violet | `#b79ff4` | `#7253d0` |
+| Magenta (accent only) | `#dc7bf0` | — (reuse `--d-red` if needed) |
+| Cyan (accent only) | `#60dbed` | — |
 
-Background `#1c1840` — a deep indigo-violet "moonlit" night, not a flat
-near-black void (nudged there from `#050314` per a moodboard reference
-Jasmine shared: a glowing cyan/teal night scene). Nav/paper surfaces
-`#fffbf4`; body text on dark: `#ffffff` / `#d3d4e6` / `#9d9fc0` (heading /
-subhead / muted). Shadows (`rgba(61, 51, 79, …)`) are tinted warm plum
-rather than neutral black. The red slot leans coral-salmon (not
-dusty-rose-pink) and teal leans a more vivid glowing cyan (not muted
-mint-teal) specifically to match that reference — both the ambient
-`body::before`/`body::after` glow layers and the starfield's color mix
-(`STAR_COLORS` in `js/main.js`, weighted toward coral) were rebalanced to
-feature them more, alongside lavender, with gold/peach as a secondary
-warm accent rather than the dominant note. Star/spark glyphs that used to
-be a flat `fill="white"` are now warm gold (`#f0c44a`, bumped from an
-original `#e0bd5a` in the same later "more saturated" pass as the rainbow
-table below) — kept deliberately as that secondary warm accent; don't
-"fix" them back to white.
+Surfaces: `--bg` `#161966` (cobalt navy), `--bg-soft` `#1f247b`,
+`--nav-bg` `#0e1045` (the darker navy of the Carrd site's center column;
+also the top of the `.card` gradient), `--paper` `#f4faf8` (the Carrd
+card's pale mint-white), `--ink` `#1d2162`. Text on dark: `#ffffff` /
+`#dde0fb` / `#b0b6e5` (heading / subhead / muted, all ≥ 7.7:1 on `--bg`).
+Shadows are tinted deep navy (`rgba(7, 8, 36, …)`), not plum or black.
+Spark glyphs and the starfield (`STAR_COLORS` in `js/main.js`) are mostly
+white and periwinkle (`#e2e7fc`, `#9aa9f4`) like the Carrd sparkles, with
+a few magenta/sky pops; the old warm-gold sparks are gone. The baked-in
+backgrounds of the case-study mockup JPGs were remapped from the old
+indigo `(36, 31, 71)` to the new navy with a Pillow 3D LUT that only
+touched that background and its drop shadows, so the mockups still sit
+flush on the page. Any new composited image should use `(22, 25, 102)` as
+its background.
 
-`--gradient-rainbow` (rose→peach→gold→mint→sky→lavender) is the site's
+`--gradient-rainbow` (red→orange→yellow→lime→sky→violet) is the site's
 signature: nav underline, comet trail, hero ribbon, `.gradient` text
-accent. Buttons are deliberately solid color (`var(--d-blue)`), not
-gradient — a past `--gradient-cta` two-hue gradient was removed from
-`.btn` on purpose, so don't reintroduce a gradient fill there. Don't
-introduce off-palette colors — extend by opacity/tint of the rainbow set
-instead.
+accent. Buttons are deliberately solid color, now `var(--d-purple)`
+(violet, like the Carrd buttons), not gradient; a past `--gradient-cta`
+two-hue gradient was removed from `.btn` on purpose, so don't reintroduce
+a gradient fill there. Don't introduce off-palette colors; extend by
+opacity/tint of the rainbow set instead.
 
 **Type**
 - Display / headings / nav / logo: `Baloo 2`, weight 700 (400 for lighter
@@ -172,8 +160,7 @@ instead.
 - Hero H1 is intentionally oversized (`clamp(3.2rem, 7.5vw, 6rem)`) — this
   is the site's visual signature, not a bug to "fix" for looking large.
 - A third voice, `var(--font-mono)` (system monospace, no extra font
-  file), is reserved for "meta" marks: `.eyebrow` labels and the
-  `.section-mark` running-head labels below. Deliberate — a technical/
+  file), is reserved for "meta" marks like `.eyebrow` labels. Deliberate — a technical/
   editorial mono against the display and body faces is what keeps the
   type system reading as considered rather than one sans-everywhere
   template. Don't reuse it for body copy or headings.
@@ -183,13 +170,11 @@ portfolio" tells (perfectly centered layouts, identical padding on every
 section, symmetric everything): section padding is intentionally uneven
 (see the `section[aria-label=...]` / `.contact-body` overrides just below
 the base `section` rule in `css/style.css`, rather than one flat value
-everywhere), and `.section-mark` prints a small sideways running-head
-label (`№ 01 — About`, etc., `writing-mode: vertical-rl`) in the left
-margin of About/Experience/Projects/Playground/Contact — a magazine gutter-number
-device, opposite the comet trail's right-edge rail, so the page reads as
-having two considered margins instead of one centered column. Extend this
-pattern (uneven rhythm, a numbered mark) for any new top-level section
-rather than giving it the same padding as its neighbors. `.contact-grid`
+everywhere). Extend that uneven rhythm to any new top-level section rather
+than giving it the same padding as its neighbors. (There used to also be a
+`.section-mark`, a small sideways "№ 01 — About" running-head label in the
+left margin of each section. Jasmine asked for those removed, markup and
+CSS both, so don't bring them back.) `.contact-grid`
 is a deliberately asymmetric `.82fr 1.18fr` split (not an even 1fr/1fr)
 for the same reason. Playground's Experiments tiles (`.playground-deck`)
 are a horizontal scroll-snap "slide deck" rather than a static grid —
@@ -272,8 +257,14 @@ scale for any new heading level rather than defaulting new headings to
 700.
 
 **Cards: solid and bordered, not glass** — `.card`/`.sticker-card` use a
-visible `1.5px` border and a moderately opaque fill (`rgba(255,255,255,.07)`
-background over the dark bg), and their hover state is a color-changed
+visible `1.5px` border, except `.card` itself, which Jasmine asked to have
+**no outline at all** (`border: none`; the darker fill alone separates it
+from the page, so don't add a border back). `.card` is a **solid fill darker than
+the page**, not a translucent white wash, at Jasmine's request: a slight
+160deg gradient from `var(--nav-bg)` (`#161233`) down to
+`color-mix(in srgb, var(--nav-bg) 78%, black)`, derived from existing
+tokens rather than a new color. (`.sticker-card` keeps its own
+translucent fill.) Their hover state (clickable cards only) is a color-changed
 border + a plain shadow lift rather than a diffuse colored glow — keep
 new panel components in this register (clearly bordered, not a soft
 blurred glow standing in for definition). The signature glow effects
@@ -310,7 +301,17 @@ stacked on top of the rest of the site's existing motion/decoration.
   constant, subtle film-grain so nothing reads as a flat, untextured
   gradient. Disabled under `prefers-reduced-motion` and on narrow
   viewports (perf).
-- `.card` and `.sticker-card` get a magnetic cursor-tilt on hover
+- **No hover on things that don't do anything.** Jasmine's rule: only
+  cards/tiles that are real links or buttons react to the mouse. A hover
+  lift promises a click, so a static card that moves and then does
+  nothing on click feels broken. `.card:hover` is scoped to
+  `a.card:hover, button.card:hover`, `initTiltCards()` only selects
+  `a.card, button.card`, the About fallback list's dot glow was removed,
+  and `.project-spread` no longer lifts as a whole (see the Projects list
+  entry). Static content cards (case-study Overview/Research/feature
+  cards, `playground/color-studies.html`'s placeholder card) stay still.
+  Decide whether a new card is clickable before giving it any hover state.
+- Clickable `.card`s (links/buttons) get a magnetic cursor-tilt on hover
   (`initTiltCards()` in `js/main.js`, mouse-only) — they lean toward the
   pointer via `--tilt-x`/`--tilt-y` custom properties consumed inside
   each element's own `:hover` transform, layered on top of (not
@@ -374,16 +375,16 @@ stacked on top of the rest of the site's existing motion/decoration.
   wholesale — that combination was what read as too much.
 
 **Motif**
-- Cosmic theme, dark background with the pastel Bee-and-PuppyCat accent
-  palette (see "Art direction" above): starfield background (`.stars`,
-  pastel-colored dots, not plain white), soft radial-gradient glows,
-  slow-drifting clouds in the hero (`.hero-clouds` — pale lavender-white,
-  low opacity, read as moonlit clouds against the dark sky), occasional
-  shooting stars (`.shooting-star`, in the fixed `.shooting-stars` layer
+- Cosmic theme, dark cobalt-navy background with the Carrd-inspired
+  accent palette (see "Art direction" above): starfield background
+  (`.stars`, mostly white/periwinkle sparkles), soft radial-gradient glows,
+  occasional shooting stars (`.shooting-star`, in the fixed `.shooting-stars` layer
   on `index.html` only — long idle cycle, brief streak, so they're rare
   rather than a constant repeating effect), and a chibi
   astronaut-with-bunny-ears mascot (nods to "rabbit enthusiast").
-  Background planets/moons (formerly `.bg-planets`) were removed at
+  The hero's drifting clouds (`.hero-clouds`) were removed at Jasmine's
+  request, markup and CSS both; don't reintroduce them without
+  checking. Background planets/moons (formerly `.bg-planets`) were removed at
   Jasmine's request — don't reintroduce them without checking with her
   first.
 - **The sky stays put**: `.stars`, `.grain`, `.shooting-stars`, and the
@@ -411,7 +412,7 @@ stacked on top of the rest of the site's existing motion/decoration.
   recurring accent — logo, galaxy core, hero ribbon tip. Reuse it as a
   bullet/flourish rather than inventing a new icon for the same job.
 - Cards (`.card`): translucent white fill, soft border, rounded corners
-  (`30px`), lift + glow on hover.
+  (`30px`), lift + glow on hover only when the card is a link or button.
 
 **Spacing & layout**
 - Horizontal page padding: `8%`–`10%` (`6%` on mobile).
@@ -549,6 +550,12 @@ drifting out of sync.
   weren't provided. If a case study needs a stat or quote to feel complete,
   ask Jasmine for the real one or clearly mark it as a placeholder (e.g.
   `[metric TBD]`) rather than writing something plausible-sounding.
+- Project writing (case studies, Projects cards, captions, alt text, page
+  titles) should sound natural and human, lead with the people and how
+  they feel before the features, and use **no em dashes** (use commas,
+  periods, colons, or parentheses instead, not en dashes as a stand-in).
+  Jasmine asked for this across all 4 case studies. Warmer never means
+  invented: the no-fabrication rule below still applies.
 - Keep the tagline voice ("UX DESIGNER • PRODUCT DESIGNER • ARTIST") — short,
   uppercase, letter-spaced labels for meta info; warmer sentence-case for
   body copy.
@@ -724,9 +731,9 @@ drifting out of sync.
   implied to be Jasmine's own field photography.
 
   **DreamScape** later got the same treatment once Jasmine sent its own
-  slide deck (`DreamScape.pptx`) — Comet Commute and Elevator Accessibility
-  are still the only 2 case studies using abstract placeholder line-art
-  throughout, since neither of those has a real deck/screens yet.
+  slide deck (`DreamScape.pptx`). Comet Commute and Elevator Accessibility
+  later got real imagery too (see their entries just below), so no case
+  study uses abstract placeholder line-art throughout anymore.
   DreamScape's deck's screens (`image-7-1`/`image-7-2`/`image-9-1` in the
   deck's media) already came pre-rendered as phone-mockup exports from her
   design tool (a real bezel/notch baked into the PNG on a solid black
@@ -748,6 +755,55 @@ drifting out of sync.
   *also* still placeholder — swapping the case-study page's internal
   images doesn't update that separate thumbnail slot, which would need
   its own real square/circular crop if Jasmine wants that updated too.
+
+  **Comet Commute** got real imagery from its team deck (`Comet Commute -
+  Team WIP (Copy).pptx`), and its copy was filled out from the deck's own
+  text (interview method, full persona details, "key points we kept in
+  mind," the pressure-plate/own-app/honor-system iterations, the
+  wireframe notes, the storyboard captions, the final-solution
+  rationale). Every image slot is real now: `case-comet-journey-local.jpg`
+  / `-journey-distance.jpg` (the two hand-drawn Do/Think/Feel persona
+  journey maps), `case-comet-map.jpg` (UTD's color-coded parking map),
+  `case-comet-garage.jpg` (a garage's per-level availability sign —
+  captioned as a *reference* photo, since its sign reads "Gates E20–E38"
+  and it isn't a UTD structure), `case-comet-wireframe.jpg` (the parking
+  screen, phone-framed), `case-comet-storyboard.jpg` (the 7-panel "Alfred"
+  storyboard, re-laid out 4-over-3 in reading order and numbered — the
+  source's second row reads right-to-left), `case-comet-wide.jpg`
+  (hero + Final Solution: the wireframe phone beside 3 storyboard panels),
+  and `orbit-comet.jpg` (Projects-list thumbnail, 3:4 crop of the phone).
+  The wireframe on the deck's slide was built from native PowerPoint
+  shapes rather than one exported image, and Keynote couldn't be scripted
+  to render slides, so it was **rebuilt with Pillow** from the slide's own
+  parts (its orange header, UTD logo, bottom tab bar, and the exact lot
+  names/counts/dot colors) — the same content, re-laid out cleanly, not a
+  new design. Every 4:3 slot image was pre-composited onto the indigo
+  background at its box's own aspect ratio ("contain," not relying on
+  `object-fit: cover`), since the journey maps are wide and the campus map
+  is tall and either would lose content to a center crop. Results and the
+  interview quote stay `[TBD]` (rule 6) — the "Think" lines on the journey
+  maps are persona-journey writing, not real participant quotes, so don't
+  promote them into the `.case-quote` slot.
+
+  **Elevator Accessibility** got the same treatment from its team deck
+  (`Elevator Accessibility Project.pdf`, by Pj Jones, Jackson Lux, Neal
+  Tembe, and Jasmine, for ATCM 3337 Interaction Design I). The deck set
+  the project in the **Empire State Building** and split it into three
+  ideas for two audiences: employee RFID keycards, tourist headphones,
+  and quality-of-life elevator changes, each with its own real tradeoffs
+  (kept on the page as "The catch"). No PDF tools were installed, so pages
+  were rendered to PNG via PDFKit from JXA (`osascript -l JavaScript`),
+  then cropped with Pillow: `case-elevator-panel.jpg` (an elevator floor
+  panel photo), `-rfid.jpg` (stock keycard photo, captioned as
+  representative), `-buttons.jpg` (the team's arrow call-button mockup),
+  `-headphones.jpg` (the team's 3D headphone model, pulled apart),
+  `-storyboard-headphones.jpg` (9-panel "Jeff" storyboard) and
+  `-storyboard-rfid.jpg` (the RFID storyboard; its one empty 6th panel
+  and stray arrow were filled with the board's own gray so it reads as a
+  finished 5-panel board), `-wide.jpg` (hero + Final Solution), and
+  `orbit-elevator.jpg` (thumbnail, a 3:4 crop of the headphone model).
+  The earlier haptic-wristband/multi-sensory research paragraph wasn't in
+  the deck but was kept, since it was already real content on the page.
 
   **Polishing pre-framed vs. raw-crop screenshots** — both EcoLink* and
   DreamScape's real screens went through a Pillow-based "make it look
@@ -852,19 +908,11 @@ drifting out of sync.
   or fabricating content to fill it.
 - `images/` — the one exception to "no raster/external image assets": 5
   small swappable placeholder SVGs (`doodle-1.svg`…`doodle-5.svg`) used in
-  the About section; 3 more for Comet Commute/Elevator Accessibility
-  (still fully placeholder-only — no deck/screens exist for either yet):
-  `case-<project>-research.svg`, `case-<project>-solution.svg`, and
-  `case-<project>-wide.svg`, for `comet`/`elevator`; 1 more
-  (`case-dreamscape-research.svg`) for DreamScape's one remaining
-  placeholder slot (see its entry above — every other DreamScape case-study
-  image is real now); and 3 more (`orbit-comet.svg`, `orbit-elevator.svg`,
-  `orbit-dreamscape.svg`) for those same 3 projects' Projects-list
-  `.project-visual` photos — these reuse the exact motif from each
-  project's original thumbnail (circle, elevator shaft, crescent moon), a
-  full-bleed circular composition filling the square viewBox edge-to-edge,
-  so it still crops cleanly into the list's portrait (3:4) photo slot,
-  rather than a generic placeholder shared across all of them. All are
+  the About section; and 1 more (`case-dreamscape-research.svg`) for
+  DreamScape's one remaining placeholder slot (see its entry above). Comet
+  Commute's and Elevator Accessibility's old placeholder SVGs (including
+  their `orbit-*.svg` Projects-list thumbnails) were replaced by real
+  `.jpg`s and deleted — see their entries above. All placeholders are
   meant to be directly overwritten with Jasmine's own art or real
   screenshots — no HTML/CSS edits needed, just replace the file, the same
   swap-the-file pattern as the About page's doodle slots. `object-fit:
@@ -958,8 +1006,7 @@ drifting out of sync.
   (mkilgoredesign.com's "My experience" section: an intro line, then a
   plain multi-column row of past roles — company, role, date range —
   rather than a boxed timeline graphic). Reuses the site's existing
-  `.page-hero` + `.section-mark` header pattern (own `№ 02 —` numeral,
-  `<h2>`, eyebrow) then a separate content section, same two-section
+  `.page-hero` header pattern (`<h2>`, eyebrow) then a separate content section, same two-section
   split as Projects/Playground. `.experience-row` is a
   `grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))` grid —
   collapses to one column on mobile automatically, no dedicated media
@@ -971,8 +1018,7 @@ drifting out of sync.
   supply, so per rule 6 it's scaffolded as explicit placeholders rather
   than invented. Don't fill these in with plausible-sounding companies or
   dates; wait for Jasmine's real work history. Adding this section meant:
-  renumbering every `.section-mark` after it (Projects/Playground/Contact
-  each bumped up one); adding `#experience` to the `scroll-margin-top`
+  adding `#experience` to the `scroll-margin-top`
   selector in `css/style.css` and to `initScrollSpy()`'s `sections` array
   in `js/main.js`; adding an `Experience` link to both the nav (`data-page
   ="experience"`) and the footer `.socials` list; and the nav-balance
@@ -1025,15 +1071,14 @@ drifting out of sync.
   `.project-card`'s background is a low-opacity `color-mix(in srgb,
   var(--accent) 15%, transparent)` wash layered over the existing dark
   card background, reading as a colored tint rather than an opaque fill.
-  Hover is now one state on `.project-spread` (lift + border/shadow
-  color change), with the photo getting its own subtle zoom
-  (`.project-spread:hover .project-visual img { transform: scale(1.05)
-  }`) off that same hover rather than each half reacting independently.
-  Comet Commute, Elevator Accessibility, and DreamScape still use
-  placeholder line-art (`images/orbit-*.svg`, unchanged from Project
-  Orbit — see the `images/` entry above), not a real screenshot, since
-  none of those 3 projects have a real hero image yet (rule 6); EcoLink*'s
-  photo is real (see its entry above). On mobile (`flex-direction:
+  The spread itself has **no hover state**: clicking its text does
+  nothing (only the button and the photo are links), so per Jasmine's
+  "no interaction on things that don't do anything" rule it no longer
+  lifts. Only the link parts react: the photo zooms when the photo itself
+  is hovered or focused (`.project-visual:hover img`), and `.btn` has its
+  own hover.
+  All 4 Projects-list photos are real now (`orbit-comet.jpg`,
+  `orbit-elevator.jpg`, `orbit-dreamscape.jpg`, and `orbit-ecolink.jpg`). On mobile (`flex-direction:
   column`, `max-width: 760px`) there's no row to stretch the photo
   against, so it gets its own `aspect-ratio: 16/10; min-height: 180px`
   there instead.
