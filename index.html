@@ -14,6 +14,12 @@
             var d = document.documentElement, pref = null;
             try { pref = localStorage.getItem('calm'); } catch (e) {}
             if (pref === '1' || (pref === null && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) d.classList.add('calm');
+            /* The big hero intro plays once per browser session; later loads
+               get the quick entrance. See "First-visit hero intro" in style.css. */
+            try {
+                if (sessionStorage.getItem('introSeen')) d.classList.add('intro-seen');
+                else sessionStorage.setItem('introSeen', '1');
+            } catch (e) { d.classList.add('intro-seen'); }
         })();
     </script>
 </head>
@@ -137,6 +143,17 @@
 
         <section id="projects" class="page-hero" style="min-height:auto; padding-bottom:0;">
             <h2 class="reveal">Projects</h2>
+            <svg class="squiggle-underline" viewBox="0 0 220 20" aria-hidden="true">
+                <path d="M2,10 C20,2 35,18 55,10 C75,2 90,18 110,10 C130,2 145,18 165,10 C185,2 200,18 218,10"
+                    fill="none" stroke="url(#squiggleGrad)" stroke-width="4" stroke-linecap="round" />
+                <defs>
+                    <linearGradient id="squiggleGrad" x1="0" y1="0" x2="220" y2="0" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#f0b1f6" />
+                        <stop offset="50%" stop-color="#efd96e" />
+                        <stop offset="100%" stop-color="#b79ff4" />
+                    </linearGradient>
+                </defs>
+            </svg>
             <p class="eyebrow" style="margin-top:14px;">SELECTED WORK ✦</p>
         </section>
 
@@ -259,6 +276,10 @@
             <div class="about-grid">
                 <div class="about-copy reveal">
                     <h2>About</h2>
+                    <svg class="squiggle-underline" viewBox="0 0 220 20" aria-hidden="true">
+                        <path d="M2,10 C20,2 35,18 55,10 C75,2 90,18 110,10 C130,2 145,18 165,10 C185,2 200,18 218,10"
+                            fill="none" stroke="url(#squiggleGrad)" stroke-width="4" stroke-linecap="round" />
+                    </svg>
                     <p>
                         I'm Jasmine Bontha, a senior at UT Dallas studying Arts, Technology, and Emerging
                         Communication with a focus on UX and product design. I care to create inclusive designs that are accessible to all users, and I love to explore new technologies and designs.
@@ -354,13 +375,6 @@
             <svg class="squiggle-underline" viewBox="0 0 220 20" aria-hidden="true">
                 <path d="M2,10 C20,2 35,18 55,10 C75,2 90,18 110,10 C130,2 145,18 165,10 C185,2 200,18 218,10"
                     fill="none" stroke="url(#squiggleGrad)" stroke-width="4" stroke-linecap="round" />
-                <defs>
-                    <linearGradient id="squiggleGrad" x1="0" y1="0" x2="220" y2="0" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#f0b1f6" />
-                        <stop offset="50%" stop-color="#efd96e" />
-                        <stop offset="100%" stop-color="#b79ff4" />
-                    </linearGradient>
-                </defs>
             </svg>
             <p class="eyebrow" style="margin-top:14px;">EXPERIMENTS, SKETCHES &amp; ONE-OFFS</p>
             <p style="color:var(--text-dim); max-width:52ch; margin-top:14px;">
@@ -369,7 +383,7 @@
         </section>
 
         <section aria-label="Playground content">
-            <div class="playground-deck reveal-fade">
+            <div class="playground-deck stagger">
                 <a class="sticker-card" href="playground/animations.html">
                     <img class="sticker-thumb" src="images/playground-animations.jpg" alt="">
                     <h3>Animations</h3>
@@ -411,6 +425,10 @@
             <svg class="mini-spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#6cbeef" /></svg>
             <svg class="mini-spark spark-c" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#efd96e" /></svg>
             <h2 class="reveal">Let's talk</h2>
+            <svg class="squiggle-underline" viewBox="0 0 220 20" aria-hidden="true">
+                <path d="M2,10 C20,2 35,18 55,10 C75,2 90,18 110,10 C130,2 145,18 165,10 C185,2 200,18 218,10"
+                    fill="none" stroke="url(#squiggleGrad)" stroke-width="4" stroke-linecap="round" />
+            </svg>
             <p class="eyebrow" style="margin-top:14px;">Since you made it all the way here, why not send a message!</p>
         </section>
 

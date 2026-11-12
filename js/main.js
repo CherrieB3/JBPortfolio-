@@ -9,7 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initCometTrail();
   initStarfield();
   initCustomCursor();
+  initSplitHeadings();
   initScrollReveal();
+  initWarpJump();
+  initReadProgress();
   initTiltCards();
   initRabbitEgg();
   initMascotToggle();
@@ -349,27 +352,137 @@ function hopRabbit() {
   hop.addEventListener('animationend', () => hop.remove());
 }
 
+// Case-study reading progress: fills the nav's rainbow strip left to
+// right as you scroll (see .nav-underline.is-progress in css/style.css).
+// Only on pages with case-study chapters. It follows the scroll directly
+// rather than animating on its own, and Calm mode shows the plain strip.
+function initReadProgress() {
+  const strip = document.querySelector('.nav-underline');
+  if (!strip || !document.querySelector('.case-chapter')) return;
+  strip.classList.add('is-progress');
+
+  let queued = false;
+  const update = () => {
+    queued = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 1;
+    strip.style.setProperty('--read-progress', p.toFixed(4));
+  };
+  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+  window.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', queue);
+  update();
+}
+
+// Letter-by-letter headings: wraps each letter of the homepage section
+// titles and case-study chapter titles in a span so CSS can spring them
+// up one at a time (.split-heading in css/style.css), each flashing a
+// rainbow color. Screen readers get the whole word from an .sr-only copy;
+// the letter spans are aria-hidden so they aren't read one by one. Only
+// touches headings that are plain text, and drops their own .reveal rise
+// so the two don't stack.
+function initSplitHeadings() {
+  const SWEEP = ['var(--c-red)', 'var(--c-orange)', 'var(--c-yellow)', 'var(--c-green)', 'var(--c-blue)', 'var(--c-purple)'];
+  const heads = document.querySelectorAll(
+    '#projects > h2, #about h2, #playground > h2, #contact > h2, .case-chapter-header h2');
+  heads.forEach(h => {
+    if (h.children.length) return;
+    const text = h.textContent.trim();
+    if (!text) return;
+    const sr = document.createElement('span');
+    sr.className = 'sr-only';
+    sr.textContent = text;
+    const vis = document.createElement('span');
+    vis.setAttribute('aria-hidden', 'true');
+    let li = 0;
+    text.split(' ').forEach((word, wi) => {
+      if (wi) vis.append(' ');
+      const w = document.createElement('span');
+      w.className = 'split-word';
+      [...word].forEach(ch => {
+        const l = document.createElement('span');
+        l.className = 'split-letter';
+        l.textContent = ch;
+        l.style.setProperty('--li', li);
+        l.style.setProperty('--sweep', SWEEP[li % SWEEP.length]);
+        li++;
+        w.append(l);
+      });
+      vis.append(w);
+    });
+    h.replaceChildren(sr, vis);
+    h.classList.remove('reveal');
+    h.classList.add('split-heading');
+  });
+}
+
+// Hyperspace jump: clicking an in-page link (nav, "View my work", footer)
+// stretches the stars into streaks for as long as the smooth scroll runs,
+// then lets them snap back. Skipped in Calm mode / reduced motion, and for
+// the skip link, which is about getting somewhere, not a show.
+function initWarpJump() {
+  const stars = document.querySelector('.stars');
+  if (!stars) return;
+  let timer = 0;
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.classList.contains('skip-link') || isCalm()) return;
+    const id = a.getAttribute('href').slice(1);
+    if (id && !document.getElementById(id)) return;
+    const started = performance.now();
+    const stop = () => {
+      clearTimeout(timer);
+      // Hold the streaks at least ~400ms so even a short hop reads.
+      timer = setTimeout(() => stars.classList.remove('is-warping'),
+        Math.max(0, 400 - (performance.now() - started)));
+    };
+    stars.classList.add('is-warping');
+    clearTimeout(timer);
+    timer = setTimeout(stop, 1400); // fallback if no scroll happens
+    if ('onscrollend' in window) window.addEventListener('scrollend', stop, { once: true });
+  });
+}
+
 // Fades/rises .reveal, .reveal-fade, and .reveal-right elements in as they
 // enter the viewport. The "hidden" state is applied here, in JS, rather than as a
 // CSS default — so a visitor whose JS fails to load (or who has it
 // disabled) sees every element in its normal, fully visible resting
 // state instead of content that never appears. Fires once per element,
 // then stops observing it.
+//
+// Two kinds of stagger: children of a .stagger container get --i (their
+// index) for the CSS animation delay, and separate reveal elements that
+// enter view in the same moment (e.g. two project cards side by side)
+// get a short inline transition-delay in on-screen order, removed again
+// once they've landed so it never slows a later hover transition.
 function initScrollReveal() {
-  const els = document.querySelectorAll('.reveal, .reveal-fade, .reveal-right');
+  const els = document.querySelectorAll('.reveal, .reveal-fade, .reveal-right, .stagger, .squiggle-underline, .split-heading');
   if (!els.length) return;
 
   if (!('IntersectionObserver' in window)) return; // leave everything visible
 
   els.forEach(el => el.classList.add('is-hidden'));
+  document.querySelectorAll('.stagger').forEach(group => {
+    [...group.children].forEach((child, i) => child.style.setProperty('--i', i));
+  });
 
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.remove('is-hidden');
-        entry.target.classList.add('is-visible');
-        io.unobserve(entry.target);
+    const entering = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top ||
+        a.boundingClientRect.left - b.boundingClientRect.left);
+    let n = 0;
+    entering.forEach(entry => {
+      const el = entry.target;
+      if (el.matches('.reveal-fade, .reveal') && !isCalm() && n > 0) {
+        el.style.transitionDelay = `${n * 90}ms`;
+        el.style.setProperty('--reveal-delay', `${n * 90}ms`); // portal reveal follows it
+        el.addEventListener('transitionend', () => { el.style.transitionDelay = ''; }, { once: true });
       }
+      if (el.matches('.reveal-fade, .reveal')) n++;
+      el.classList.remove('is-hidden');
+      el.classList.add('is-visible');
+      io.unobserve(el);
     });
   // threshold 0, not a fraction: a case-study chapter on a phone can be
   // 3,000px+ tall, so "15% of it in view" left its first screenful blank

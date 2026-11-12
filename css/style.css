@@ -445,6 +445,65 @@ a { color: inherit; }
 .reveal-right.is-hidden { opacity: 0; transform: translateX(70px); }
 .reveal-right.is-visible { opacity: 1; transform: translateX(0); }
 
+/* Staggered entrance for a group of cards (.stagger on their container):
+   each child fades and rises in turn, --i * 85ms apart (--i is set by
+   initScrollReveal()). Uses an animation on the `translate` property, not
+   a transition on `transform`, so it never fights a child's own hover
+   transform or transition. Calm mode and reduced motion cut it to
+   instant via the global rules below. */
+.stagger.is-hidden > * { opacity: 0; }
+.stagger.is-visible > * {
+  animation: stagger-in .7s cubic-bezier(.16,.8,.3,1) both;
+  animation-delay: calc(var(--i, 0) * 85ms);
+}
+@keyframes stagger-in {
+  from { opacity: 0; translate: 0 22px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+/* Portal reveal: project-card mockups and case-study mockups open through
+   an expanding circle as they scroll in, settling from a slight zoom. On
+   the <img> via clip-path and the separate `scale` property, so the
+   hover zoom on .project-visual img (a transform) still works on top.
+   --reveal-delay keeps it in step with the card's staggered fade. */
+.project-spread.is-hidden .project-visual img,
+.case-mockup.is-hidden img { clip-path: circle(0% at 50% 55%); }
+.project-spread.is-visible .project-visual img,
+.case-mockup.is-visible img {
+  animation: portal-open 1.15s cubic-bezier(.65,.05,.25,1) both;
+  animation-delay: calc(.15s + var(--reveal-delay, 0ms));
+}
+@keyframes portal-open {
+  from { clip-path: circle(0% at 50% 55%); scale: 1.14; filter: brightness(1.6) saturate(1.2); }
+  60%  { filter: brightness(1.08); }
+  to   { clip-path: circle(80% at 50% 55%); scale: 1; filter: none; }
+}
+
+/* Letter-by-letter headings (initSplitHeadings() in js/main.js wraps
+   each letter; screen readers get the plain word from an .sr-only copy).
+   Letters spring up in turn with a small overshoot, each flashing a
+   rainbow color (--sweep) before settling to the heading's own color. */
+.split-word { display: inline-block; white-space: nowrap; }
+.split-letter { display: inline-block; }
+.split-heading.is-hidden .split-letter { opacity: 0; }
+.split-heading.is-visible .split-letter {
+  animation: letter-spring .8s cubic-bezier(.3,1.45,.5,1) both;
+  animation-delay: calc(var(--li, 0) * 38ms);
+}
+@keyframes letter-spring {
+  from { opacity: 0; translate: 0 .6em; rotate: 12deg; color: var(--sweep); }
+  45%  { opacity: 1; color: var(--sweep); }
+  to   { opacity: 1; translate: 0 0; rotate: 0deg; }
+}
+
+/* Hyperspace jump: clicking an in-page link (initWarpJump()) stretches
+   the stars into vertical streaks for the length of the smooth scroll.
+   Uses `scale`, since each star's twinkle animation owns `transform`. */
+.stars { transition: filter .35s ease; }
+.stars .star { transition: scale .35s cubic-bezier(.3,.7,.3,1); }
+.stars.is-warping { filter: brightness(2); }
+.stars.is-warping .star { scale: 1 28; }
+
 /* Reduced motion: every animation and transition on the site (pseudo-
    elements included) jumps straight to its end state. A near-zero
    duration instead of `animation: none` so anything that animates in
@@ -799,6 +858,25 @@ html.calm::view-transition-new(root) { animation: none; }
   width: 100%;
   background: var(--gradient-rainbow);
 }
+
+/* Reading progress on case-study pages (initReadProgress() in
+   js/main.js adds .is-progress and keeps --read-progress at 0-1): the
+   rainbow strip dims to a track and a full-brightness copy fills in left
+   to right as you read. Calm mode keeps the plain full strip. */
+.nav-underline.is-progress {
+  background:
+    linear-gradient(rgba(14, 16, 69, .62), rgba(14, 16, 69, .62)),
+    var(--gradient-rainbow);
+}
+.nav-underline.is-progress::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-rainbow);
+  clip-path: inset(0 calc((1 - var(--read-progress, 0)) * 100%) 0 0);
+}
+html.calm .nav-underline.is-progress { background: var(--gradient-rainbow); }
+html.calm .nav-underline.is-progress::after { display: none; }
 
 /* A slim gold hairline trimming the nav just above its signature rainbow
    strip — a small "royal" accent, requested but then deliberately kept to
@@ -1282,6 +1360,96 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* First-visit hero intro (once per browser session: the inline <head>
+   script in index.html adds html.intro-seen on later loads, which falls
+   back to the quick entrance above). The "Jasmine" wordmark writes itself
+   on left to right with a glowing pen-tip spark riding the edge, "Bontha"
+   slides up into its pocket, then the astronaut swoops in on a curved
+   comet path and settles into its float. Calm mode and reduced motion cut
+   all of it to the end state via the global rules. */
+html:not(.intro-seen) .hero-text h1 { opacity: 1; animation: none; position: relative; }
+html:not(.intro-seen) .hero-name-mark {
+  animation: write-on 1.2s .2s cubic-bezier(.65,.05,.36,1) both;
+}
+@keyframes write-on {
+  from { clip-path: inset(0 100% 0 0); filter: drop-shadow(0 0 14px rgba(255, 255, 255, .75)); }
+  85%  { filter: drop-shadow(0 0 8px rgba(183, 159, 244, .55)); }
+  to   { clip-path: inset(0 0 0 0); filter: none; }
+}
+/* The pen tip: a small glow that travels the wordmark's width (2.2em tall
+   x 700/343 ratio = ~4.5em wide) in step with the wipe, then fades. */
+html:not(.intro-seen) .hero-text h1::after {
+  content: '';
+  position: absolute;
+  top: .95em;
+  left: 0;
+  width: 16px; height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 30%, rgba(220, 123, 240, .8) 45%, transparent 70%);
+  box-shadow: 0 0 18px 6px rgba(183, 159, 244, .55);
+  pointer-events: none;
+  opacity: 0;
+  /* Same duration, delay and easing as write-on, so it stays on the edge. */
+  animation:
+    pen-move 1.2s .2s cubic-bezier(.65,.05,.36,1) both,
+    pen-fade 1.2s .2s linear both;
+}
+@keyframes pen-move { from { translate: 0 0; } to { translate: 4.4em 0; } }
+@keyframes pen-fade {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+html:not(.intro-seen) .hero-surname {
+  animation: surname-rise .8s 1.05s cubic-bezier(.16,.8,.3,1) both;
+}
+@keyframes surname-rise {
+  from { opacity: 0; translate: 0 .45em; letter-spacing: .3em; }
+  to   { opacity: 1; translate: 0 0; letter-spacing: .01em; }
+}
+html:not(.intro-seen) .hero-lede { animation-delay: 1.2s; }
+html:not(.intro-seen) .hero-meta { animation-delay: 1.3s; }
+html:not(.intro-seen) .hero-actions { animation-delay: 1.4s; }
+
+/* The swoop uses the individual translate/rotate/scale properties, so it
+   never touches the wrapper's transform (where the hover/click scale on
+   .mascot-btn and the float on .mascot already live, on other elements). */
+html:not(.intro-seen) .mascot-wrap {
+  animation: mascot-swoop 1.6s .5s cubic-bezier(.22,.9,.3,1) both;
+}
+@keyframes mascot-swoop {
+  0%   { opacity: 0; translate: 42vw -50vh; rotate: -32deg; scale: .3; }
+  14%  { opacity: 1; }
+  55%  { translate: -3vw 3vh; rotate: 8deg; scale: 1.05; }
+  78%  { translate: .8vw -.8vh; rotate: -2.5deg; scale: .99; }
+  100% { opacity: 1; translate: 0 0; rotate: 0deg; scale: 1; }
+}
+/* Comet tail streaming back toward where she came from, fading out as
+   she lands. */
+html:not(.intro-seen) .mascot-wrap::before {
+  content: '';
+  position: absolute;
+  top: 38%; left: 50%;
+  width: 70%; height: 10px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, .9), rgba(183, 159, 244, .6) 30%, rgba(108, 190, 239, .3) 60%, transparent);
+  filter: blur(2px);
+  transform-origin: left center;
+  rotate: -40deg;
+  pointer-events: none;
+  opacity: 0;
+  animation: comet-tail 1.6s .5s ease-out both;
+}
+@keyframes comet-tail {
+  0%   { opacity: 0; scale: 1.6 1; }
+  12%  { opacity: .9; }
+  50%  { opacity: .55; scale: 1 1; }
+  75%  { opacity: 0; scale: .2 1; }
+  100% { opacity: 0; scale: 0 1; }
+}
+
 /* Transform lives on the button, not .mascot itself — .mascot already
    drives its own transform via the float animation below, and a second,
    directly-set transform on the same element would just be overridden
@@ -1731,7 +1899,8 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
   .theater-close { top: 16px; right: 16px; }
 }
 
-/* A hand-drawn squiggle under the Playground heading, in the site's
+/* A hand-drawn squiggle under each homepage section heading (it started
+   as Playground's alone), in the site's
    rainbow gradient, that draws itself in on load — this page is the one
    explicitly licensed to feel rougher and more sketchbook (CLAUDE.md),
    so its hero gets a flourish the other page-heroes don't. */
@@ -1742,15 +1911,15 @@ footer .footer-note { color: var(--text-dim); font-size: .85rem; line-height: 1.
   margin-top: 6px;
 }
 
+/* Draws itself in when it scrolls into view (initScrollReveal() adds
+   .is-hidden/.is-visible), under each homepage section heading. Without
+   JS it just sits there fully drawn. */
 .squiggle-underline path {
   stroke-dasharray: 320;
-  stroke-dashoffset: 320;
-  animation: draw-squiggle 1.1s .3s ease forwards;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.1s .25s cubic-bezier(.45,.05,.25,1);
 }
-
-@keyframes draw-squiggle {
-  to { stroke-dashoffset: 0; }
-}
+.squiggle-underline.is-hidden path { stroke-dashoffset: 320; }
 
 /* The hidden "type rabbit" easter egg — see initRabbitEgg()/hopRabbit()
    in js/main.js. A silhouette bounds across the screen left to right in a
@@ -2232,7 +2401,11 @@ form.contact-form { display: flex; flex-direction: column; gap: 18px; }
   height: 1px;
   background: var(--panel-border);
   min-width: 40px;
+  transform-origin: left;
+  transition: transform 1s .3s cubic-bezier(.45,.05,.25,1);
 }
+/* The trailing rule draws out from the heading as its chapter reveals. */
+.case-chapter.is-hidden .case-chapter-header::after { transform: scaleX(0); }
 
 .case-chapter p {
   color: var(--text-dim);

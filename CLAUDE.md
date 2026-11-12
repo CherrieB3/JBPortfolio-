@@ -40,7 +40,9 @@ older entry below conflicts with this list, **this list wins**:
   UX design-a-thon redesign of BSW's "Help Me Decide" chat for new
   mothers, built from the team's deck (`Care Compass.pdf`); Jasmine did UX
   research, the lo-fi prototype and its testing, and the deck. Its
-  Reflection bullets are still `[TBD]` for her to write. Care Compass,
+  `[TBD]` Reflection chapter was removed at Jasmine's request (Nov 2026),
+  so it ends on 06 Outcome; add a 07 Reflection back only with her own
+  words. Care Compass,
   DreamScape and EcoLink are flagships:
   `.project-spread--featured` spans both grid columns, uses the 16:9
   `case-*-wide.jpg` mockup instead of the square `orbit-*` crop, and has
@@ -114,6 +116,38 @@ older entry below conflicts with this list, **this list wins**:
   `prefers-reduced-motion` (the global rules cover CSS animations and
   transitions, including pseudo-elements; JS-driven motion needs its own
   `isCalm()` check).
+- **Scroll motion (Nov 2026, Jasmine picked these three)**: a rainbow
+  `.squiggle-underline` draws in under each homepage section heading
+  (Projects, About, Playground, Let's talk; the shared `#squiggleGrad`
+  gradient lives in the Projects one); case-study chapter rules
+  (`.case-chapter-header::after`) draw out as each chapter reveals;
+  `.stagger` containers (playground deck, case-study quickfacts and
+  overview/insight/feature grids) cascade their children in (`--i` *
+  85ms, a `translate` animation so it never fights hover transforms),
+  and reveal elements entering together get a short inline delay; on
+  case-study pages `initReadProgress()` turns the nav's rainbow strip
+  into a reading-progress bar (plain full strip in Calm mode). All of it
+  is driven by `initScrollReveal()` and cut to instant by Calm mode /
+  reduced motion.
+- **"Wow" motion (Nov 2026, Jasmine picked all four, "bold but
+  polished")**: (1) a first-visit hero intro, once per browser session
+  (`sessionStorage` `introSeen`, set by the inline `<head>` script in
+  `index.html`, which adds `html.intro-seen` on later loads): the
+  wordmark writes on via `clip-path` with a pen-tip glow on `h1::after`
+  (`pen-move` must keep the same duration/delay/easing as `write-on`),
+  "Bontha" rises in, and the mascot swoops in on a curved path with a
+  comet tail (`mascot-swoop`, using the `translate`/`rotate`/`scale`
+  properties); (2) portal reveals: `.project-visual img` and
+  `.case-mockup img` open through an expanding `clip-path` circle;
+  (3) `initSplitHeadings()` splits homepage section titles and
+  case-study chapter titles into letters (`.sr-only` copy for screen
+  readers) that spring up with a rainbow color flash; (4)
+  `initWarpJump()` stretches the stars into streaks (`.stars.is-warping`)
+  while an in-page link smooth-scrolls. All of it is skipped or cut to
+  the end state by Calm mode and reduced motion. Headless Chrome doesn't
+  advance CSS animations in `--screenshot`, so to check a frame, inject
+  `document.getAnimations().forEach(a => { a.pause(); a.currentTime = T })`
+  into a scratch copy.
 - **Contrast**: the aurora (`body::after`), bottom glows (`body::before`)
   and `.hero-glow` were dimmed about 40% so `--text-mute` stays at or above
   4.5:1 even over the brightest glow. `.project-spread` and `.sticker-card`
