@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care Compass | Case Study | Jasmine Bontha</title>
+    <meta name="description" content="A redesign of Baylor Scott &amp; White's care-navigation chat for new mothers, made in a 24-hour UX design-a-thon: a chatbot that explains its reasoning so people know where to go for care, and why.">
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        /* Calm mode: set before first paint so there's no flash of motion.
+           Defaults to on when the OS asks for reduced motion. See initCalmMode(). */
+        (function () {
+            var d = document.documentElement, pref = null;
+            try { pref = localStorage.getItem('calm'); } catch (e) {}
+            if (pref === '1' || (pref === null && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) d.classList.add('calm');
+        })();
+    </script>
+</head>
+
+<body data-page="projects" style="--case-accent: var(--c-yellow);">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="stars"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="site-nav">
+        <nav class="nav-inner" aria-label="Primary">
+            <a class="logo" href="../index.html"><img class="logo-mark" src="../images/logo-jb.png" alt="Jasmine Bontha, home"></a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-links"><span aria-hidden="true">☰</span><span class="sr-only">Menu</span></button>
+            <ul class="nav-links" id="primary-links">
+                <li><a href="../index.html#projects" data-page="projects">Projects</a></li>
+                <li><a href="../index.html#about" data-page="about">About</a></li>
+                <li><a href="../index.html#playground" data-page="playground">Playground</a></li>
+                <li><a href="../index.html#contact" data-page="contact">Contact</a></li>
+                <li><a href="../files/Jasmine-Bontha-Resume.pdf" target="_blank" rel="noopener" data-page="resume">Resume<span class="sr-only"> (PDF, opens in a new tab)</span></a></li>
+            </ul>
+            <button class="calm-toggle" type="button" aria-pressed="false">
+                <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M21 5.5a11 11 0 1 0 6 16.2A12.5 12.5 0 0 1 21 5.5z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" /></svg>
+                <span class="calm-label">Calm mode</span>
+            </button>
+        </nav>
+        <div class="nav-underline" aria-hidden="true"></div>
+    </header>
+
+    <main id="main-content">
+        <section class="page-hero case-hero" style="min-height:auto; padding-bottom:0;">
+            <a class="case-back" href="../index.html#projects"><span class="arrow">←</span> Back to Projects</a>
+            <p class="eyebrow">24-HOUR UX DESIGN-A-THON • OCT 2026</p>
+            <h1>Care Compass</h1>
+            <p class="case-hook">It's 2 a.m. and a new mom spots a rash on her baby's hip. She's exhausted, she's
+                scared, and she doesn't know if this can wait until morning. Care Compass is our redesign of
+                Baylor Scott &amp; White's "Help Me Decide" chat, built so she can find it, trust it, and know
+                where to go for care, and why.</p>
+        </section>
+
+        <div class="case-mockup reveal">
+            <img src="../images/case-carecompass-wide.jpg" alt="Four Care Compass screens: the MyBSWHealth home screen greeting Lyla with the Care Compass button, a pop-up explaining what hives look like, a rash question with a photo of the baby attached, and a recommendation for a postpartum mother support group">
+        </div>
+
+        <dl class="case-quickfacts reveal" aria-label="Project at a glance">
+            <div>
+                <dt>Role</dt>
+                <dd>UX research &amp; testing</dd>
+            </div>
+            <div>
+                <dt>Team</dt>
+                <dd>4 people</dd>
+            </div>
+            <div>
+                <dt>Timeline</dt>
+                <dd>24 hours, Oct 2026</dd>
+            </div>
+            <div>
+                <dt>Tools</dt>
+                <dd>Figma, Figma AI, Claude</dd>
+            </div>
+            <div class="qf-wide qf-row-start">
+                <dt>Research</dt>
+                <dd>Cognitive walkthrough, 61-person survey, competitive analysis, usability test with 13 people</dd>
+            </div>
+            <div class="qf-wide">
+                <dt>Deliverables</dt>
+                <dd>Lo-fi and hi-fi Figma prototypes, persona, journey map, pitch deck</dd>
+            </div>
+            <div class="qf-wide qf-row-start">
+                <dt>My contributions</dt>
+                <dd>UX research, the lo-fi prototype and its user testing, and the pitch deck</dd>
+            </div>
+            <div class="qf-wide">
+                <dt>AI use</dt>
+                <dd>We used Claude to help with research, survey analysis, and copy, and to build a design system from the BSW app; Figma AI for prototype loading animations</dd>
+            </div>
+        </dl>
+
+        <section class="case-chapter reveal">
+            <div class="case-chapter-header"><span class="num">01</span><h2>Overview</h2></div>
+            <div class="case-overview-grid">
+                <div class="card">
+                    <h3>Problem</h3>
+                    <p>The MyBSWHealth app's "Help Me Decide" chat is supposed to point people to the right kind of
+                        care. But almost no one knows it exists, and the people who do find it call it repetitive,
+                        long, and hard to trust. It asks question after question and never says why.</p>
+                </div>
+                <div class="card">
+                    <h3>Goal</h3>
+                    <p>The prompt asked us to make the chat easy to find, trustworthy, and clear about the next
+                        step, and to keep it simple, inclusive, and transparent. We focused on new mothers, who are
+                        looking after their own recovery and their baby's health at the same time.</p>
+                </div>
+                <div class="card">
+                    <h3>Impact</h3>
+                    <p>This was a 24-hour design-a-thon concept, so there's no real-world usage data. We did test
+                        the lo-fi prototype with 13 people. See Process below.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-chapter case-chapter--tint reveal">
+            <div class="case-chapter-header"><span class="num">02</span><h2>Research</h2></div>
+            <p>We started by asking which group goes through a life-changing experience that might need extra
+                reassurance about health. New mothers stood out. About 9 in 10 new mothers search online after
+                birth when they have questions about their baby's health or their own (Slomian, 2017), and
+                first-time moms are about twice as likely to experience postpartum depression and breastfeeding
+                problems as experienced moms (Lacted, 2019).</p>
+            <p>To make it concrete, we built a persona: Lyla, 31, a data analyst in Dallas on maternity leave,
+                struggling with postpartum and missing the structure her job used to give her. She wants
+                trustworthy answers about her baby, support for her own recovery, and to make decisions without
+                sifting through conflicting advice online.</p>
+
+            <h3 class="case-subhead">Walking through the current chat</h3>
+            <p>We used Help Me Decide as someone with a mild fever, then as someone with severe abdominal pain,
+                to find where it breaks down.</p>
+            <div class="case-callout-grid">
+                <div class="card">
+                    <h3>Too much effort</h3>
+                    <p>It demands a lot of thinking from someone who's already exhausted.</p>
+                </div>
+                <div class="card">
+                    <h3>Repeated questions</h3>
+                    <p>It asked about symptoms we had already named and described.</p>
+                </div>
+                <div class="card">
+                    <h3>No reasons</h3>
+                    <p>It never explained its recommendations, and it didn't carry our answers over when it was
+                        time to book.</p>
+                </div>
+            </div>
+
+            <h3 class="case-subhead">Surveying 61 people</h3>
+            <p>We surveyed 61 people to understand how they look for care. Only 1 of 61 knew Help Me Decide
+                existed. 57 of 61 Google their symptoms at least sometimes, and 28 of 61 feel unsure about picking
+                the right kind of care. People aged 18 to 24 were the least sure (an average of 3.1 out of 5,
+                compared with 3.9 for everyone else).</p>
+            <figure class="case-sketch" style="max-width:1100px;">
+                <img src="../images/case-carecompass-survey.jpg" alt="Survey results: 1 of 61 knew the Help Me Decide feature existed, 57 of 61 Google their symptoms at least sometimes, and 28 of 61 feel unsure picking the right care, with bar charts of each answer">
+                <figcaption>Awareness, search habits, and confidence from our survey of 61 people.</figcaption>
+            </figure>
+            <p>We also asked what makes people trust a product enough to share health information:</p>
+            <div class="case-callout-grid">
+                <div class="card">
+                    <h3>72%</h3>
+                    <p>trust an AI tool when it explains the reasoning behind its answers.</p>
+                </div>
+                <div class="card">
+                    <h3>61%</h3>
+                    <p>trust an app more when a real nurse is available.</p>
+                </div>
+                <div class="card">
+                    <h3>59%</h3>
+                    <p>find products designed by medical professionals more trustworthy.</p>
+                </div>
+            </div>
+
+            <h3 class="case-subhead">Looking at the competition</h3>
+            <div class="case-callout-grid">
+                <div class="card">
+                    <h3>Mayo Clinic</h3>
+                    <p>Detailed, research-based content, but no way to type freely and no guidance on what to do
+                        next.</p>
+                </div>
+                <div class="card">
+                    <h3>Ubie Health &amp; Patient GPT</h3>
+                    <p>Conversational, built by doctors, and shows how many questions are left. Even so, users
+                        said they "can't trust it."</p>
+                </div>
+                <div class="card">
+                    <h3>AI search overviews</h3>
+                    <p>Instant, sourced, and adaptive, but not connected to your care or your doctor.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-chapter reveal">
+            <div class="case-chapter-header"><span class="num">03</span><h2>Insights</h2></div>
+            <p>Put together, the walkthrough, the survey, and the competitors pointed to five pain points: the
+                chat is hard to find, it repeats itself without context, people don't trust it, its next-step
+                advice has no reasoning, and people are wary about their privacy. Three findings shaped the
+                redesign most.</p>
+            <div class="case-insight-grid">
+                <div class="card case-insight">
+                    <p class="case-insight-num">Insight 01</p>
+                    <h3>You can't use what you can't find.</h3>
+                    <p>Only 1 of 61 people knew Help Me Decide existed, and most just Google their symptoms.</p>
+                    <p class="case-insight-so"><span>So</span> it moved to the home screen and got a clearer name: Care Compass.</p>
+                </div>
+                <div class="card case-insight">
+                    <p class="case-insight-num">Insight 02</p>
+                    <h3>Trust comes from reasons.</h3>
+                    <p>72% trust an AI tool that explains its reasoning, and the current chat never does.</p>
+                    <p class="case-insight-so"><span>So</span> the chat says why it's asking each question and why it recommends each next step.</p>
+                </div>
+                <div class="card case-insight">
+                    <p class="case-insight-num">Insight 03</p>
+                    <h3>She's already exhausted.</h3>
+                    <p>The current chat repeats questions and asks a lot of someone caring for a newborn.</p>
+                    <p class="case-insight-so"><span>So</span> it talks like a person, can look at a photo instead of asking more questions, and fills in the booking for her.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-chapter case-chapter--tint reveal">
+            <div class="case-chapter-header"><span class="num">04</span><h2>Design decisions</h2></div>
+            <p>We picked six things to change: where the chat lives, its name, a photo scan, a more
+                conversational approach, clear disclosures, and new care outcomes for mental health. Three of
+                them came with real tradeoffs.</p>
+            <div class="case-split-visual">
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-carecompass-start.jpg" alt="Side by side: the original Help Me Decide chat opening with a short emergency warning, and the redesigned Care Compass opening that explains what the chatbot is, says no data is saved, and lists emergency and crisis numbers">
+                    </div>
+                    <figcaption>Before and after: the original Help Me Decide opening (left) and the revised Care
+                        Compass opening (right).</figcaption>
+                </figure>
+                <div>
+                    <h3>Honest up front, without a wall of text</h3>
+                    <p>People were wary of the chat, so the first message now says what it is (an AI chatbot
+                        that uses clinician-guided logic), what it can and can't do, and that nothing you share is
+                        saved. Emergency and crisis numbers (911 and 988) stay in small text underneath, so
+                        they're always there without scaring someone with a mild question.</p>
+                </div>
+            </div>
+            <div class="case-split-visual case-split-visual--reverse">
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-carecompass-photo.jpg" alt="Two Care Compass screens: the user picks Take a Photo and attaches a picture of her baby, then the chat describes the rash as dry, rough, and a bit scaly, says only a pediatrician can confirm it, and asks whether it has changed">
+                    </div>
+                    <figcaption>The optional photo scan: a quick picture instead of a long description.</figcaption>
+                </figure>
+                <div>
+                    <h3>Faster answers vs. privacy</h3>
+                    <p>Describing a rash in words is hard when you're holding a crying baby. So she can snap a
+                        photo, and the chat looks at it and asks fewer questions. The photo is optional, the chat
+                        reminds her that only her pediatrician can confirm what it is, and everything she shares is
+                        deleted when the chat ends.</p>
+                </div>
+            </div>
+            <div class="case-split-visual">
+                <figure>
+                    <div class="case-visual-box">
+                        <img src="../images/case-carecompass-next-step.jpg" alt="Two Care Compass screens: the chat offers to make an appointment or explore support groups and recommends the Postpartum Mother Program, then asks whether to autofill the appointment with what she already shared">
+                    </div>
+                    <figcaption>New next steps: a postpartum support group, and booking with her answers already
+                        filled in.</figcaption>
+                </figure>
+                <div>
+                    <h3>More than "go see a doctor"</h3>
+                    <p>New mothers are vulnerable to postpartum depression and stress, and not every worry needs
+                        an appointment. So the chat can point to BSW's existing Postpartum Mother Program, with
+                        six months of online support from a nurse care advocate. When she does need a visit, it
+                        offers to fill in the booking with what she already said, and only if she says yes.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-chapter reveal">
+            <div class="case-chapter-header"><span class="num">05</span><h2>Process</h2></div>
+            <p>We built a lo-fi prototype around one scenario: Lyla's baby has a rash on her hip. The chat
+                responds with empathy, asks one question at a time, explains why each answer matters, and ends
+                with a clear recommendation and an offer to autofill the booking.</p>
+            <figure class="case-sketch" style="max-width:1100px;">
+                <img src="../images/case-carecompass-lofi.jpg" alt="Six gray lo-fi prototype screens of the Help Me Decide chat: the user says her baby has a rash on her hip, the chat asks the baby's age and temperature, recommends a pediatrician appointment with when and where to go, shows a photo screen, and asks to autofill the appointment">
+                <figcaption>The lo-fi prototype we tested, from first message to booking.</figcaption>
+            </figure>
+            <p>We tested it with 13 people. Every one of them found it straightforward and easy to understand.
+                Their time to finish was similar to the original app, but they didn't feel frustrated by the
+                questions, because each one came with a reason.</p>
+            <p class="case-quote" style="padding-left:20px; font-size:1.3rem;">
+                Testers said moving through it felt “smooth” and “intuitive,” and they liked hearing why the chat
+                was asking each question.
+            </p>
+            <div class="case-callout-grid">
+                <div class="card">
+                    <h3>11 of 13 loved the photo scan</h3>
+                    <p>They found it new and easy to use. Some worried about privacy, which is why the final
+                        design says plainly that photos are deleted when the chat ends.</p>
+                </div>
+                <div class="card">
+                    <h3>11 of 13 liked the pop-ups</h3>
+                    <p>Being able to see what a symptom like hives looks like helped. Some worried it could start
+                        to feel like a diagnosis.</p>
+                </div>
+                <div class="card">
+                    <h3>Only 1 of 13 noticed the progress tracker</h3>
+                    <p>It turned out to be redundant, and it clashed with the conversational feel.</p>
+                </div>
+                <div class="card">
+                    <h3>10 of 13 would trust it</h3>
+                    <p>But 3 of those 10 said that was only because of the BSW name. Trust in the brand was
+                        doing some of the work.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-chapter case-chapter--tint reveal">
+            <div class="case-chapter-header"><span class="num">06</span><h2>Outcome</h2></div>
+            <p>The final design walks Lyla from her first worry to the right care: she finds Care Compass on the
+                home screen, describes the rash in her own words or with a photo, hears why the chat recommends
+                what it does, books in a tap, and finds support for herself along the way.</p>
+            <div class="case-mockup">
+                <img src="../images/case-carecompass-wide.jpg" alt="Four Care Compass screens: the MyBSWHealth home screen greeting Lyla with the Care Compass button, a pop-up explaining what hives look like, a rash question with a photo of the baby attached, and a recommendation for a postpartum mother support group">
+            </div>
+            <div class="case-feature-split">
+                <div class="card">
+                    <h3>A chat that explains itself</h3>
+                    <p>Every question and recommendation comes with a reason, in a warm, conversational tone.</p>
+                </div>
+                <div class="card">
+                    <h3>Photo scan and pop-ups</h3>
+                    <p>Show instead of describe, and see what a symptom looks like before answering.</p>
+                </div>
+                <div class="card">
+                    <h3>Care beyond appointments</h3>
+                    <p>Support groups for postpartum mental health, plus booking that's already filled in.</p>
+                </div>
+            </div>
+            <figure class="case-sketch" style="max-width:1100px;">
+                <img src="../images/case-carecompass-journey.jpg" alt="Journey map of Lyla's night with Care Compass in five steps: opens the app, describes the rash and snaps a photo, gets the why, books in a tap, and finds support, with her face going from panicked to relieved">
+                <figcaption>Lyla's night with Care Compass: five steps from panic to relief.</figcaption>
+            </figure>
+            <h3 class="case-subhead">What I’d test next</h3>
+            <p>All 13 of our testers saw the lo-fi prototype, and I don't know how many of them were new
+                mothers. Next I'd test the hi-fi design with new moms specifically, ideally in a stressful
+                moment like the one we designed for. I'd want to know whether the explanations actually build
+                trust on their own, since 3 testers only trusted it because of the BSW name, and whether the
+                symptom pop-ups ever read like a diagnosis. Our team's next steps from the pitch were to build an
+                MVP with LLM engineers, add voice-to-text so a parent can describe symptoms hands-free, connect
+                the chat's answers straight into MyBSWHealth scheduling, and add a severity scale to flag
+                critical issues faster.</p>
+        </section>
+
+        <section class="case-chapter reveal">
+            <div class="case-chapter-header"><span class="num">07</span><h2>Reflection</h2></div>
+            <ul class="case-list">
+                <li><span class="tbd">[TBD: what you learned from running the research and testing in only 24 hours]</span></li>
+                <li><span class="tbd">[TBD: what you took away from the progress tracker testing well on paper but clashing with
+                    the conversation]</span></li>
+                <li><span class="tbd">[TBD: what designing a trustworthy AI for worried parents taught you about trust and
+                    transparency]</span></li>
+            </ul>
+        </section>
+
+        <nav class="case-prevnext" aria-label="More case studies">
+            <a href="elevator-accessibility.html">
+                <span class="dir-label">← Previous</span>
+                <span class="dir-title">Elevator Accessibility</span>
+            </a>
+            <a href="dreamscape.html">
+                <span class="dir-label">Next →</span>
+                <span class="dir-title">DreamScape</span>
+            </a>
+        </nav>
+    </main>
+
+    <footer>
+        <div class="horizon-glow" aria-hidden="true"></div>
+        <svg class="city-skyline" viewBox="0 0 600 140" preserveAspectRatio="none" aria-hidden="true">
+            <g fill="#0a0b30">
+                <rect x="0" y="85" width="36" height="55" />
+                <rect x="30" y="55" width="26" height="85" />
+                <rect x="60" y="95" width="40" height="45" />
+                <rect x="95" y="40" width="30" height="100" />
+                <rect x="130" y="75" width="45" height="65" />
+                <rect x="170" y="25" width="28" height="115" />
+                <rect x="205" y="90" width="38" height="50" />
+                <rect x="245" y="50" width="32" height="90" />
+                <rect x="282" y="80" width="48" height="60" />
+                <rect x="335" y="35" width="30" height="105" />
+                <rect x="370" y="95" width="40" height="45" />
+                <rect x="415" y="60" width="28" height="80" />
+                <rect x="448" y="85" width="45" height="55" />
+                <rect x="498" y="45" width="32" height="95" />
+                <rect x="535" y="95" width="38" height="45" />
+                <rect x="578" y="70" width="22" height="70" />
+            </g>
+            <line x1="184" y1="25" x2="184" y2="8" stroke="#0a0b30" stroke-width="3" stroke-linecap="round" />
+            <circle cx="184" cy="6" r="2.5" fill="#efd96e" />
+            <g fill="#efd96e" opacity=".85">
+                <rect x="38" y="68" width="4" height="4" />
+                <rect x="46" y="80" width="4" height="4" />
+                <rect x="105" y="55" width="4" height="4" />
+                <rect x="113" y="70" width="4" height="4" />
+                <rect x="140" y="90" width="4" height="4" />
+                <rect x="255" y="65" width="4" height="4" />
+                <rect x="263" y="78" width="4" height="4" />
+                <rect x="345" y="50" width="4" height="4" />
+                <rect x="353" y="65" width="4" height="4" />
+                <rect x="425" y="75" width="4" height="4" />
+                <rect x="508" y="60" width="4" height="4" />
+                <rect x="516" y="75" width="4" height="4" />
+            </g>
+        </svg>
+
+        <nav class="footer-links" aria-label="Footer">
+            <a href="../index.html#projects">Projects</a>
+            <a href="../index.html#about">About</a>
+            <a href="../index.html#playground">Playground</a>
+            <a href="../index.html#contact">Contact</a>
+            <a href="mailto:jflower2k6@gmail.com">Email</a>
+            <a href="https://www.linkedin.com/in/jasmine-b-1a2929231/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
+            <a href="../files/Jasmine-Bontha-Resume.pdf" target="_blank" rel="noopener">Resume<span class="sr-only"> (PDF, opens in a new tab)</span></a>
+        </nav>
+        <p class="footer-note">This site is built with descriptive alt text, keyboard navigation, and reduced-motion support.</p>
+        <p class="footer-note">© 2026 Jasmine Bontha</p>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

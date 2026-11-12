@@ -34,8 +34,14 @@ older entry below conflicts with this list, **this list wins**:
 - **Page order**: hero → Projects → About (bio, facts, then
   `#experience`) → Playground → Contact → footer. Project order
   (homepage and case-study prev/next), set by Jasmine for hiring impact
-  (Sept 2026): DreamScape → EcoLink → Comet Commute → Elevator
-  Accessibility → back. DreamScape and EcoLink are flagships:
+  (Sept 2026, with Care Compass added first in Nov 2026): Care Compass →
+  DreamScape → EcoLink → Comet Commute → Elevator Accessibility → back.
+  Care Compass (`case-studies/care-compass.html`, `--c-yellow`) is a 2026
+  UX design-a-thon redesign of BSW's "Help Me Decide" chat for new
+  mothers, built from the team's deck (`Care Compass.pdf`); Jasmine did UX
+  research, the lo-fi prototype and its testing, and the deck. Its
+  Reflection bullets are still `[TBD]` for her to write. Care Compass,
+  DreamScape and EcoLink are flagships:
   `.project-spread--featured` spans both grid columns, uses the 16:9
   `case-*-wide.jpg` mockup instead of the square `orbit-*` crop, and has
   a "Featured · …" kicker. Every card has the same `.project-meta` list
