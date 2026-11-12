@@ -61,7 +61,7 @@ older entry below conflicts with this list, **this list wins**:
   wording; the resume PDF just says "Intern".
 - **Experience is back** (`#experience`, inside `#about`, below the
   bio): PassionWorks, IntrustHR, Tomorrow's Leaders Today, freelance
-  illustration, all from `files/Jasmine-Bontha-Resume.pdf`. There's no
+  illustration, all from `files/BonthaJasmine_RESUME2026.pdf`. There's no
   nav link for it, so the nav grid is unchanged. The brief also
   mentioned "published app experience", but that isn't on the resume or
   anywhere in the repo, so it isn't on the site yet. Ask Jasmine for the
@@ -144,7 +144,7 @@ older entry below conflicts with this list, **this list wins**:
 - **Footer**: a minimal footer on every page (links incl. Email/LinkedIn/
   Resume, an accessibility note, copyright). The "Thanks for stopping by /
   GET IN TOUCH" block is gone; contact lives in `#contact`.
-- **Resume**: `files/Jasmine-Bontha-Resume.pdf`, opens in a new tab, linked
+- **Resume**: `files/BonthaJasmine_RESUME2026.pdf`, opens in a new tab, linked
   from hero, nav, contact and footer. Jasmine chose to publish it with her
   phone number on it.
 - **Testing without Playwright**: headless Chrome works
